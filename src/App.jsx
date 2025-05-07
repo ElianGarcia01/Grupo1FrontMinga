@@ -8,8 +8,6 @@ import StandarLayout from './layouts/StandarLayout'
 import AuthLayout from './layouts/AuthLayout'
 import Panel from './pages/Panel'
 
-
-
 const router = createBrowserRouter([
   {
     path: "/",
