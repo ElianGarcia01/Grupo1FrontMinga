@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import signInImage from "/assets/SignIn.jpg";
 import MingaM from "/assets/inga.png";
 import GoogleSignInButton from "../components/GoogleSignInButton";
+import "../css/SignInStyles.css";
 import Navbar from "../components/Navbar";
 
 const SignInForm = () => {
@@ -19,15 +20,15 @@ const SignInForm = () => {
       </div>
 
       <div className="flex flex-col md:flex-row min-h-screen">
-        {/* Fondo ilustración izquierda */}
+        {/* Fondo ilustrado del lado izquierdo */}
         <div
-          className="hidden md:block md:w-1/2 min-h-screen bg-cover bg-center"
+          className="hidden md:block md:w-1/2 min-h-screen bg-cover bg-center violet-border"
           style={{ backgroundImage: `url(${signInImage})` }}
         ></div>
 
         {/* Formulario y logo */}
-        <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center relative px-4">
-          <div className="bg-white w-full max-w-md px-8 py-8">
+        <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center px-4">
+          <form className="bg-white w-full max-w-md px-8 py-8">
             {/* Logo */}
             <div className="flex justify-center mt-6 mb-6">
               <img
@@ -37,17 +38,17 @@ const SignInForm = () => {
               />
             </div>
 
-            <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-center text-gray-800">
               Welcome <span className="text-indigo-600">back!</span>
             </h2>
 
-            <p className="text-md mb-8 text-center text-gray-600">
+            <p className="text-sm md:text-md mb-8 text-center text-gray-600">
               Discover manga, manhua and manhwa, track your progress, have fun,
               read manga
             </p>
 
             {/* Email */}
-            <div className="mb-4">
+            <div className="mb-6 text-sm md:text-md">
               <label className="block text-gray-700 mb-1">Email</label>
               <div className="relative">
                 <input
@@ -63,7 +64,7 @@ const SignInForm = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-6">
+            <div className="mb-6 text-sm md:text-md">
               <label className="block text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <input
@@ -81,25 +82,27 @@ const SignInForm = () => {
             {/* Botón Sign in */}
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 mb-4 shadow-[0_4px_14px_0_#F4B333]"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
+              py-2 px-4 rounded-lg transition duration-300 mb-4 cursor-pointer"
             >
               Sign in
+              <FontAwesomeIcon icon={faRightToBracket} className="ms-2" />
             </button>
 
-            {/* Google */}
+            {/* Google Button */}
             <GoogleSignInButton />
 
             {/* Links */}
-            <p className="mt-6 text-center text-md text-gray-600">
+            <p className="mt-6 text-center text-sm md:text-md text-gray-600">
               You don't have an account yet?{" "}
               <Link
-                to="/signup"
+                to="/auth/signup"
                 className="text-indigo-600 font-bold hover:underline"
               >
                 Sign up
               </Link>
             </p>
-            <p className="mt-2 text-center text-md text-gray-600">
+            <p className="mt-2 text-center text-sm md:text-md text-gray-600">
               Go back to{" "}
               <Link
                 to="/"
@@ -108,7 +111,7 @@ const SignInForm = () => {
                 home page
               </Link>
             </p>
-          </div>
+          </form>
         </div>
       </div>
     </div>

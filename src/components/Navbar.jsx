@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from "./Drawer";
 
 const Navbar = ({ reverse = false }) => {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
-
-  // Forzar lowercase para evitar fallos por mayúsculas seguridad 
-  const path = location.pathname.toLowerCase();
-  const hideOnAuthPages = ["/signin", "/signup"];
-
-  if (hideOnAuthPages.includes(path)) return null;
+  
+  const [open, setOpen] = useState(false)
 
   return (
     <>

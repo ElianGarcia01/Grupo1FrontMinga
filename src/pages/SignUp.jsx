@@ -4,13 +4,20 @@ import { Link } from "react-router-dom";
 import signUpImage from "/assets/SignUp.jpg";
 import MingaM from "/assets/inga.png";
 import GoogleSignUpButton from "../components/GoogleSignUpButton";
+import "../css/SignUpStyles.css";
+import Navbar from "../components/Navbar";
 
 const SignUpForm = () => {
   return (
-    <div className="w-full h-full flex items-center bg-white relative overflow-hidden">
-      {/* Contenido izquierdo */}
-      <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center px-4 z-10">
-        <div className="bg-white px-8 py-8 w-full max-w-md">
+    <div className="w-full h-full bg-white">
+      {/* Ocultar Navbar en mobile */}
+      <div className="hidden md:block">
+        <Navbar />
+      </div>
+
+      {/* Formulario y logo */}
+      <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center px-4">
+        <form className="bg-white px-8 py-8 w-full max-w-md">
           {/* Logo */}
           <div className="flex justify-center mt-6 mb-6">
             <img
@@ -20,17 +27,17 @@ const SignUpForm = () => {
             />
           </div>
 
-          <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">
+          <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-center text-gray-800">
             Welcome!
           </h2>
 
-          <p className="text-md mb-8 text-center text-gray-600">
+          <p className="text-sm md:text-md mb-8 text-center text-gray-600">
             Discover manga, manhua and manhwa, track your progress, have fun,
             read manga
           </p>
 
           {/* Email */}
-          <div className="mb-4">
+          <div className="mb-4 text-sm md:text-md">
             <label className="block text-gray-700 mb-1">Email</label>
             <div className="relative">
               <input
@@ -46,7 +53,7 @@ const SignUpForm = () => {
           </div>
 
           {/* Photo */}
-          <div className="mb-4">
+          <div className="mb-4 text-sm md:text-md">
             <label className="block text-gray-700 mb-1">Photo</label>
             <div className="relative">
               <input
@@ -62,7 +69,7 @@ const SignUpForm = () => {
           </div>
 
           {/* Password */}
-          <div className="mb-4">
+          <div className="mb-4 text-sm md:text-md">
             <label className="block text-gray-700 mb-1">Password</label>
             <div className="relative">
               <input
@@ -78,7 +85,7 @@ const SignUpForm = () => {
           </div>
 
           {/* Checkbox */}
-          <div className="mb-6 flex items-center text-sm">
+          <div className="mb-6 flex items-center text-xs md:text-sm">
             <input
               type="checkbox"
               id="sendNotifications"
@@ -92,44 +99,42 @@ const SignUpForm = () => {
           {/* Botón Sign up */}
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 mb-4 shadow-[0_4px_14px_0_#F4B333]"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold
+            py-2 px-4 rounded-lg transition duration-300 mb-4 cursor-pointer"
           >
             Sign up
           </button>
 
-          {/* Google */}
+          {/* Google Button */}
           <GoogleSignUpButton />
 
           {/* Links */}
-          <p className="mt-6 text-center text-md text-gray-600">
+          <p className="mt-6 text-center text-sm md:text-md text-gray-600">
             Already have an account?{" "}
             <Link
-              to="/signin"
+              to="/auth/signin"
               className="text-indigo-600 font-bold hover:underline"
             >
               Log in
             </Link>
           </p>
-          <p className="mt-2 text-center text-md text-gray-600">
+          <p className="mt-2 text-center text-sm md:text-md text-gray-600">
             Go back to{" "}
-            <Link
-              to="/"
-              className="text-indigo-600 font-bold hover:underline"
-            >
+            <Link to="/" className="text-indigo-600 font-bold hover:underline">
               home page
             </Link>
           </p>
-        </div>
+        </form>
       </div>
 
-      {/* Fondo derecho */}
-      <div
+        {/* Fondo ilustrado del lado derecho */}
+        <div
         className="hidden md:block md:w-1/2 min-h-screen fixed right-0 top-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${signUpImage})`, zIndex: 0 }}
       ></div>
 
       <div
-        className="hidden md:block fixed right-0 top-0 w-1/2 h-full bg-gradient-to-r from-violet-800/60 to-purple-500/40"
+        className="hidden md:block fixed right-0 top-0 w-1/2 h-full violet-shadow"
         style={{ zIndex: 1 }}
       ></div>
     </div>
