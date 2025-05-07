@@ -5,7 +5,8 @@ import SignInForm from './pages/SignIn'
 import SignUpForm from './pages/SignUp'
 import Home from './pages/Home'
 import StandarLayout from './layouts/StandarLayout'
-
+import AuthLayout from './layouts/AuthLayout'
+import Panel from './pages/Panel'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,16 @@ const router = createBrowserRouter([
         path: "",
         element: <Home />
       },
+      {
+        path: "panel",
+        element: <Panel />
+      }
+    ]
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
       {
         path: "signIn",
         element: <SignInForm />
