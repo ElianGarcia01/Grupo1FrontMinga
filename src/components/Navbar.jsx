@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from "./Drawer";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -18,11 +19,13 @@ const Navbar = () => {
         </button>
 
         {/* Logo a la derecha con animación */}
-        <img
-          src="/assets/logo1.png"
-          alt="Logo"
-          className="h-10 w-auto cursor-pointer transition-transform duration-300 hover:scale-110"
-        />
+        <Link to="">
+          <img
+            src="/assets/logo1.png"
+            alt="Logo"
+            className="h-10 w-auto cursor-pointer transition-transform duration-300 hover:scale-110"
+          />
+        </Link>
       </nav>
 
       {/* Drawer importado */}

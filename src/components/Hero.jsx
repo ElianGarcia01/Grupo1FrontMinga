@@ -18,10 +18,12 @@ export default function Hero() {
 
   return (
     <section
-      className="h-screen flex items-center justify-center relative bg-cover bg-center text-white"
+      className="min-h-screen flex items-center justify-center text-white"
       style={{ 
         backgroundImage: imageLoaded ? "url('/assets/backgrounds.jpg')" : "none",
-        backgroundColor: !imageLoaded ? "#1a1a1a" : "transparent" 
+        backgroundColor: !imageLoaded ? "#1a1a1a" : "transparent",
+        backgroundSize: '101%',
+        backgroundPosition: 'top' // Mueve la posicion de la imagen de fondo
       }}
     >
       <div className="absolute inset-0  bg-opacity-60"></div>
@@ -38,7 +40,8 @@ export default function Hero() {
           Explore our catalog to live the adventure of your life
         </p>
         <motion.button
-          className="mt-6 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-semibold text-white transition duration-300"
+          className="mt-6 px-6 py-3 bg-indigo-600 hover:bg-indigo-500
+          rounded-lg font-semibold text-white transition duration-300 cursor-pointer"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
