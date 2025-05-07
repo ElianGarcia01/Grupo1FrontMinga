@@ -35,7 +35,7 @@ const SignInForm = () => {
           className="bg-white px-8 py-6 w-full max-w-sm"
         >
           <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-            Welcome <span className="text-violet-700">back!</span>
+            Welcome <span className="text-indigo-600">back!</span>
           </h2>
 
           <p className="text-md mb-6 text-center text-gray-800">
@@ -78,7 +78,7 @@ const SignInForm = () => {
           {/* Boton Login */}
           <button
             type="submit"
-            className="w-full bg-violet-700 hover:bg-violet-900 text-white font-semibold py-2
+            className="w-full bg-indigo-600 hover:bg-indigo-800 text-white font-semibold py-2
           px-4 rounded-xl transition duration-300 cursor-pointer mb-4"
           >
             Login
