@@ -1,4 +1,5 @@
 import { HiX } from "react-icons/hi";
+import { NavLink } from "react-router-dom";
 
 const Drawer = ({ open, onClose }) => (
   <div
@@ -13,9 +14,9 @@ const Drawer = ({ open, onClose }) => (
       </button>
     </div>
     <ul className="px-4 space-y-4 mt-6">
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer">Home</li>
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer">Register</li>
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer">Log in</li>
+      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="" >Home</NavLink></li>
+      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="signUp">Register</NavLink></li>
+      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="signIn">Log In</NavLink></li>
     </ul>
   </div>
 );

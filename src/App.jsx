@@ -4,12 +4,17 @@ import AuthLayout from './layouts/AuthLayout'
 import NotFound from './pages/NotFound'
 import SignInForm from './pages/SignIn'
 import SignUpForm from './pages/SignUp'
+import Home from './pages/Home'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthLayout />,
     children: [
+      {
+        path: "",
+        element: <Home />
+      },
       {
         path: "signIn",
         element: <SignInForm />
