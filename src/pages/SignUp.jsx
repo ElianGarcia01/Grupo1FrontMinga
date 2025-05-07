@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import { Link } from "react-router-dom";
 import signUpImage from "/assets/SignUp.jpg";
 import MingaM from "/assets/inga.png";
 import "../css/SignUpStyles.css";
+import GoogleSignUpButton from "../components/GoogleSignUpButton";
 
 const SignUpForm = () => {
   return (
@@ -99,7 +99,7 @@ const SignUpForm = () => {
           </button>
 
           {/* Boton Google */}
-          <GoogleLoginButton />
+          <GoogleSignUpButton />
 
           {/* Enlace para redirigir al formulario de Sign in */}
           <p className="mt-6 text-center text-md text-gray-600">

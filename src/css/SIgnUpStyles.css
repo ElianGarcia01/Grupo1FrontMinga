@@ -1,5 +1,5 @@
 .violet-shadow {
-  background-color: rgba(90, 23, 152, 0.504); /* Fondo translúcido violeta */
-  z-index: -1
+  background-color: rgba(38, 0, 73, 0.603); /* Fondo translúcido violeta */
+  box-shadow: 0 8px 12px rgba(138, 43, 226, 0.6); /* Sombra violeta */
 }
 

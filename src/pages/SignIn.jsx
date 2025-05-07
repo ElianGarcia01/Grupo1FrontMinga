@@ -4,20 +4,21 @@ import {
   faEnvelope,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
-import GoogleLoginButton from "../components/GoogleLoginButton";
 import { Link } from "react-router-dom";
 import signInImage from "/assets/SignIn.jpg";
 import MingaM from "/assets/inga.png";
-
+import GoogleSignInButton from "../components/GoogleSignInButton";
+import "../css/SignInStyles.css"
 
 const SignInForm = () => {
   return (
     <div className="w-full h-full flex items-center bg-white">
       {/* Fondo Sign In en pantallas grandes */}
       <div
-        className="hidden md:block w-1/2 min-h-screen bg-cover bg-center "
-        style={{ backgroundImage: `url(${signInImage})` }}
+        className="hidden md:block violet-border w-1/2 min-h-screen bg-cover bg-center "
+        style={{ backgroundImage: `url(${signInImage})`, zIndex: 0 }}
       ></div>
+      
       <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center">
         {/* Logo Minga */}
         <div>
@@ -85,7 +86,7 @@ const SignInForm = () => {
           </button>
 
           {/* Boton Google */}
-          <GoogleLoginButton />
+          <GoogleSignInButton />
 
           {/* Enlace para redirigir al formulario de registro */}
           <p className="mt-6 text-center text-md text-gray-600">
