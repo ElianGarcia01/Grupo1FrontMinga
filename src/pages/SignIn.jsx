@@ -13,21 +13,23 @@ import Navbar from "../components/Navbar";
 const SignInForm = () => {
   return (
     <div className="w-full h-full bg-white">
-      <Navbar />
+      {/* Ocultar Navbar en mobile */}
+      <div className="hidden md:block">
+        <Navbar />
+      </div>
 
       <div className="flex flex-col md:flex-row min-h-screen">
-        {/* Fondo ilustración a la izquierda en pantallas grandes */}
+        {/* Fondo ilustración izquierda */}
         <div
           className="hidden md:block md:w-1/2 min-h-screen bg-cover bg-center"
           style={{ backgroundImage: `url(${signInImage})` }}
         ></div>
 
-        {/* Contenedor del logo y formulario */}
-        <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center relative">
-          {/* Formulario */}
+        {/* Formulario y logo */}
+        <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center relative px-4">
           <div className="bg-white w-full max-w-md px-8 py-8">
-            {/* Logo centrado */}
-            <div className="flex justify-center mb-4">
+            {/* Logo */}
+            <div className="flex justify-center mt-6 mb-6">
               <img
                 src={MingaM}
                 alt="Minga"
@@ -44,7 +46,7 @@ const SignInForm = () => {
               read manga
             </p>
 
-            {/* Input Email */}
+            {/* Email */}
             <div className="mb-4">
               <label className="block text-gray-700 mb-1">Email</label>
               <div className="relative">
@@ -60,7 +62,7 @@ const SignInForm = () => {
               </div>
             </div>
 
-            {/* Input Password */}
+            {/* Password */}
             <div className="mb-6">
               <label className="block text-gray-700 mb-1">Password</label>
               <div className="relative">
@@ -76,30 +78,30 @@ const SignInForm = () => {
               </div>
             </div>
 
-            {/* Botón Login */}
+            {/* Botón Sign in */}
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 mb-4"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 mb-4 shadow-[0_4px_14px_0_#F4B333]"
             >
               Sign in
             </button>
 
-            {/* Botón Google */}
+            {/* Google */}
             <GoogleSignInButton />
 
-            {/* Enlace a SignUp */}
+            {/* Links */}
             <p className="mt-6 text-center text-md text-gray-600">
-              you don't have an account yet? <Link
+              You don't have an account yet?{" "}
+              <Link
                 to="/signup"
                 className="text-indigo-600 font-bold hover:underline"
               >
                 Sign up
               </Link>
             </p>
-
-            {/* Enlace a Home */}
             <p className="mt-2 text-center text-md text-gray-600">
-              Go back to <Link
+              Go back to{" "}
+              <Link
                 to="/"
                 className="text-indigo-600 font-bold hover:underline"
               >

@@ -7,13 +7,12 @@ import GoogleSignUpButton from "../components/GoogleSignUpButton";
 
 const SignUpForm = () => {
   return (
-    <div className="w-full h-full flex items-center bg-white">
+    <div className="w-full h-full flex items-center bg-white relative overflow-hidden">
       {/* Contenido izquierdo */}
-      <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center">
-        {/* Formulario Sign Up */}
+      <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center px-4 z-10">
         <div className="bg-white px-8 py-8 w-full max-w-md">
-          {/* Logo Minga */}
-          <div className="flex justify-center mb-4">
+          {/* Logo */}
+          <div className="flex justify-center mt-6 mb-6">
             <img
               src={MingaM}
               alt="Minga"
@@ -30,7 +29,7 @@ const SignUpForm = () => {
             read manga
           </p>
 
-          {/* Input email */}
+          {/* Email */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-1">Email</label>
             <div className="relative">
@@ -46,7 +45,7 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          {/* Input photo */}
+          {/* Photo */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-1">Photo</label>
             <div className="relative">
@@ -62,7 +61,7 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          {/* Input password */}
+          {/* Password */}
           <div className="mb-4">
             <label className="block text-gray-700 mb-1">Password</label>
             <div className="relative">
@@ -78,11 +77,11 @@ const SignUpForm = () => {
             </div>
           </div>
 
-          {/* Checkbox Send Notifications */}
+          {/* Checkbox */}
           <div className="mb-6 flex items-center text-sm">
-            <input 
-              type="checkbox" 
-              id="sendNotifications" 
+            <input
+              type="checkbox"
+              id="sendNotifications"
               className="mr-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             />
             <label htmlFor="sendNotifications" className="text-gray-800">
@@ -90,31 +89,30 @@ const SignUpForm = () => {
             </label>
           </div>
 
-          {/* Boton Sign Up */}
+          {/* Botón Sign up */}
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2
-            px-4 rounded-lg transition-colors duration-300 mb-4"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 mb-4 shadow-[0_4px_14px_0_#F4B333]"
           >
             Sign up
           </button>
 
-          {/* Boton Google */}
+          {/* Google */}
           <GoogleSignUpButton />
 
-          {/* Enlace para redirigir al formulario de Sign in */}
+          {/* Links */}
           <p className="mt-6 text-center text-md text-gray-600">
-            Already have an account? <Link
+            Already have an account?{" "}
+            <Link
               to="/signin"
               className="text-indigo-600 font-bold hover:underline"
             >
               Log in
             </Link>
           </p>
-
-          {/* Enlace para redirigir a la pagina Home */}
           <p className="mt-2 text-center text-md text-gray-600">
-            Go back to <Link
+            Go back to{" "}
+            <Link
               to="/"
               className="text-indigo-600 font-bold hover:underline"
             >
@@ -124,14 +122,13 @@ const SignUpForm = () => {
         </div>
       </div>
 
-      {/* Fondo Sign Up en pantallas grandes */}
-      <div 
+      {/* Fondo derecho */}
+      <div
         className="hidden md:block md:w-1/2 min-h-screen fixed right-0 top-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${signUpImage})`, zIndex: 0 }}
       ></div>
 
-      {/* Sombra violeta sobre la imagen */}
-      <div 
+      <div
         className="hidden md:block fixed right-0 top-0 w-1/2 h-full bg-gradient-to-r from-violet-800/60 to-purple-500/40"
         style={{ zIndex: 1 }}
       ></div>
