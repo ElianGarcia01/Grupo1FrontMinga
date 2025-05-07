@@ -13,11 +13,26 @@ const Drawer = ({ open, onClose }) => (
         <HiX size={24} />
       </button>
     </div>
-    <ul className="px-4 space-y-4 mt-6">
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="" >Home</NavLink></li>
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="signUp">Register</NavLink></li>
-      <li className="hover:bg-white hover:text-indigo-600 p-2 rounded cursor-pointer"><NavLink to="signIn">Log In</NavLink></li>
-    </ul>
+    <nav className="px-4 space-y-4 mt-6">
+      <NavLink
+        to=""
+        className="hover:bg-white w-full hover:text-indigo-600 p-2 rounded block"
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="signUp"
+        className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+      >
+        Register
+      </NavLink>
+      <NavLink
+        to="signIn"
+        className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+      >
+        Log In
+      </NavLink>
+    </nav>
   </div>
 );
 

@@ -1,15 +1,16 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-import AuthLayout from './layouts/AuthLayout'
 import NotFound from './pages/NotFound'
 import SignInForm from './pages/SignIn'
 import SignUpForm from './pages/SignUp'
 import Home from './pages/Home'
+import StandarLayout from './layouts/StandarLayout'
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AuthLayout />,
+    element: <StandarLayout />,
     children: [
       {
         path: "",

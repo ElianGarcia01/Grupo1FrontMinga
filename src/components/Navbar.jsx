@@ -21,7 +21,6 @@ const Navbar = () => {
         <img
           src="/assets/logo1.png"
           alt="Logo"
-          
           className="h-10 w-auto cursor-pointer transition-transform duration-300 hover:scale-110"
         />
       </nav>
