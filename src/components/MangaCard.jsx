@@ -1,4 +1,8 @@
-const MangaCard = ({ title, type, image }) => {
+import { useNavigate } from "react-router-dom";
+
+const MangaCard = ({ manga }) => {
+  const { title, type, image } = manga;
+
   const getCategoryStyle = (type) => {
     switch (type) {
       case "Shōnen":
@@ -20,8 +24,15 @@ const MangaCard = ({ title, type, image }) => {
     .split(" ")
     .find((cls) => cls.startsWith("border-"));
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/details", { state: manga }); // 👈 ENVÍA EL OBJETO COMPLETO
+  };
+
   return (
     <div
+      onClick={handleClick}
       className={`flex bg-white cursor-pointer rounded-xl overflow-hidden shadow-lg border-l-8 ${borderColor} transition-transform hover:scale-[1.03]`}
     >
       <div className="flex items-center p-5 w-full min-h-[150px] md:min-h-[180px] lg:min-h-[200px]">

@@ -6,27 +6,32 @@ import { motion } from "framer-motion";
 
 const mockMangas = [
   {
+    id: 1,
     title: "Naruto: And That's Why You're Disqualified!! #8",
     type: "Shōnen",
     image:
       "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
   },
   {
+    id: 2,
     title: "Izuku Midoriya: Origin #1",
     type: "Shōnen",
     image: "./assets/MYHERO.png",
   },
   {
+    id: 3,
     title: "Shingeki no Kyojin",
     type: "Seinen",
     image: "/assets/ShingekiImage.webp",
   },
   {
+    id: 4,
     title: "Demon Slayer",
     type: "Seinen",
     image: "/assets/kimetsu.webp",
   },
 ];
+
 
 const categories = ["All", "Shōnen", "Seinen", "Shōjo", "Kodomo"];
 
@@ -87,12 +92,10 @@ export default function Panel() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {filteredMangas.map((manga, index) => (
+          {filteredMangas.map((manga) => (
             <MangaCard
-              key={index}
-              title={manga.title}
-              type={manga.type}
-              image={manga.image}
+              key={manga.id}
+              manga={manga}
             />
           ))}
         </motion.div>

@@ -9,6 +9,7 @@ import StandarLayout from "./layouts/StandarLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
+import DetailsManga from "./pages/DetailsManga";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "favourites",
         element: <Favourites />,
+      },
+      {
+        path: "details",
+        element: <DetailsManga />,
       },
     ],
   },
