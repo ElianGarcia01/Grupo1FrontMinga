@@ -1,12 +1,13 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './App.css'
-import NotFound from './pages/NotFound'
-import SignInForm from './pages/SignIn'
-import SignUpForm from './pages/SignUp'
-import Home from './pages/Home'
-import StandarLayout from './layouts/StandarLayout'
-import AuthLayout from './layouts/AuthLayout'
-import Panel from './pages/Panel'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import NotFound from "./pages/NotFound";
+import SignInForm from "./pages/SignIn";
+import SignUpForm from "./pages/SignUp";
+import Home from "./pages/Home";
+import Mangas from "./pages/Mangas";
+import StandarLayout from "./layouts/StandarLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import Panel from "./pages/Panel";
 
 const router = createBrowserRouter([
   {
@@ -15,13 +16,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "panel",
-        element: <Panel />
-      }
-    ]
+        element: <Panel />,
+      },
+      {
+        path: "mangas",
+        element: <Mangas />,
+      },
+    ],
   },
   {
     path: "/auth",
@@ -29,27 +34,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: "signIn",
-        element: <SignInForm />
+        element: <SignInForm />,
       },
       {
         path: "signUp",
-        element: <SignUpForm />
+        element: <SignUpForm />,
       },
-    ]
+    ],
   },
   {
     path: "*",
-    element: <NotFound />
+    element: <NotFound />,
   },
-])
+]);
 
 function App() {
-
-  return (
-    <>
-      <RouterProvider router={router}></RouterProvider>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
 export default App;

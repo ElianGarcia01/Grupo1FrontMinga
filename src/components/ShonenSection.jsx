@@ -1,7 +1,10 @@
+// Importamos framer-motion para animaciones y React para gestionar estados y efectos
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
+// Componente principal de la sección Shonen
 export default function ShonenSection() {
+  // Datos de los animes a mostrar
   const shonenData = [
     {
       id: 1,
@@ -29,10 +32,12 @@ export default function ShonenSection() {
     },
   ];
 
+  // Estado para controlar el slide actual
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [direction, setDirection] = useState(null); // Dirección de la animación (izquierda/derecha)
+  const [isAnimating, setIsAnimating] = useState(false); // Controla si se está animando para evitar clics múltiples
 
+  // Efecto que cambia de slide automáticamente cada 6 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isAnimating) nextSlide();
@@ -40,6 +45,7 @@ export default function ShonenSection() {
     return () => clearInterval(interval);
   }, [currentIndex, isAnimating]);
 
+  // Función para ir al siguiente slide
   const nextSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -48,6 +54,7 @@ export default function ShonenSection() {
     setTimeout(() => setIsAnimating(false), 800);
   };
 
+  // Función para ir al slide anterior
   const prevSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -58,6 +65,7 @@ export default function ShonenSection() {
     setTimeout(() => setIsAnimating(false), 800);
   };
 
+  // Variantes de animación del slide (entrada, centro, salida)
   const slideVariants = {
     enter: (direction) => ({
       x: direction === "right" ? 300 : -300,
@@ -86,15 +94,16 @@ export default function ShonenSection() {
     }),
   };
 
+  // Colores de fondo animados
   const backgroundVariants = {
     blue: { backgroundColor: "#2563eb" },
     indigo: { backgroundColor: "#4f46e5" },
     purple: { backgroundColor: "#7e22ce" },
   };
-
   const backgroundColors = ["blue", "indigo", "purple"];
   const currentItem = shonenData[currentIndex];
 
+  // Indicadores (bolitas) para cambiar de slide manualmente
   const Indicators = () => (
     <div className="flex justify-center space-x-3 mt-6">
       {shonenData.map((_, index) => (
@@ -117,8 +126,10 @@ export default function ShonenSection() {
     </div>
   );
 
+  // Renderizado del componente
   return (
     <section className="bg-white py-16 px-4 flex flex-col justify-center items-center overflow-hidden">
+      {/* Contenedor principal animado con colores de fondo */}
       <motion.div
         key={`container-${currentIndex}`}
         className="rounded-2xl p-4 md:p-8 max-w-6xl w-full text-white shadow-xl relative"
@@ -127,36 +138,13 @@ export default function ShonenSection() {
         transition={{ duration: 0.8 }}
         style={{ minHeight: "340px" }}
       >
-        {/* Animated background elements */}
-        <motion.div
-          className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full opacity-5"
-          animate={{ 
-            scale: [1, 1.3, 1], 
-            rotate: [0, 90, 0],
-            x: [0, 20, 0],
-            y: [0, -20, 0] 
-          }}
-          transition={{ duration: 12, repeat: Infinity, repeatType: "reverse" }}
-        />
-        <motion.div
-          className="absolute bottom-10 left-10 w-24 h-24 bg-white rounded-full opacity-5"
-          animate={{ 
-            scale: [1, 1.5, 1], 
-            x: [0, 50, 0],
-            y: [0, 30, 0]  
-          }}
-          transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }}
-        />
-        <motion.div
-          className="absolute top-24 left-24 w-16 h-16 bg-white rounded-full opacity-5"
-          animate={{ 
-            scale: [1, 1.4, 1], 
-            x: [0, -30, 0],
-            rotate: [0, -60, 0] 
-          }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-        />
 
+        {/* Círculos decorativos animados de fondo */}
+        <motion.div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full opacity-5" animate={{ scale: [1, 1.3, 1], rotate: [0, 90, 0], x: [0, 20, 0], y: [0, -20, 0] }} transition={{ duration: 12, repeat: Infinity, repeatType: "reverse" }} />
+        <motion.div className="absolute bottom-10 left-10 w-24 h-24 bg-white rounded-full opacity-5" animate={{ scale: [1, 1.5, 1], x: [0, 50, 0], y: [0, 30, 0] }} transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }} />
+        <motion.div className="absolute top-24 left-24 w-16 h-16 bg-white rounded-full opacity-5" animate={{ scale: [1, 1.4, 1], x: [0, -30, 0], rotate: [0, -60, 0] }} transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }} />
+
+        {/* Slide animado (contenido principal) */}
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentIndex}
@@ -167,49 +155,24 @@ export default function ShonenSection() {
             animate="center"
             exit="exit"
           >
-            {/* Cover Image with enhanced animation */}
+            {/* Imagen de personaje (lado izquierdo) con animación */}
             <motion.div
               className="flex justify-center items-center md:justify-end"
               initial={{ opacity: 0, rotate: -15, scale: 0.7 }}
-              animate={{ 
-                opacity: 1, 
-                rotate: 0, 
-                scale: 1,
-                y: [0, -10, 0]
-              }}
-              transition={{ 
-                duration: 1,
-                y: {
-                  repeat: Infinity,
-                  duration: 3,
-                  ease: "easeInOut"
-                }
-              }}
+              animate={{ opacity: 1, rotate: 0, scale: 1, y: [0, -10, 0] }}
+              transition={{ duration: 1, y: { repeat: Infinity, duration: 3, ease: "easeInOut" } }}
             >
-              <img
-                src={currentItem.coverImage}
-                alt={currentItem.title}
-                className="w-32 md:w-40 lg:w-48 drop-shadow-2xl"
-              />
+              <img src={currentItem.coverImage} alt={currentItem.title} className="w-32 md:w-40 lg:w-48 drop-shadow-2xl" />
             </motion.div>
 
-            {/* Content container with adjusted spacing */}
+            {/* Contenedor de texto y logo */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 px-2 md:px-0 md:pr-6">
-              {/* Logo with pulse animation */}
+
+              {/* Logo del anime con animación de pulso */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 0.8,
-                  scale: {
-                    repeat: Infinity,
-                    duration: 4,
-                    ease: "easeInOut"
-                  }
-                }}
+                animate={{ opacity: 1, scale: [1, 1.05, 1] }}
+                transition={{ duration: 0.8, scale: { repeat: Infinity, duration: 4, ease: "easeInOut" } }}
                 className="shrink-0"
               >
                 <motion.img
@@ -220,18 +183,13 @@ export default function ShonenSection() {
                 />
               </motion.div>
 
-              {/* Text content with staggered animation */}
+              {/* Título y descripción */}
               <div className="flex flex-col justify-center text-center md:text-left gap-2">
                 <motion.h2
                   className="text-xl md:text-2xl font-bold"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ 
-                    delay: 0.3, 
-                    duration: 0.6,
-                    type: "spring",
-                    stiffness: 200 
-                  }}
+                  transition={{ delay: 0.3, duration: 0.6, type: "spring", stiffness: 200 }}
                 >
                   {currentItem.title}
                 </motion.h2>
@@ -239,12 +197,7 @@ export default function ShonenSection() {
                   className="text-sm md:text-base leading-snug"
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ 
-                    delay: 0.5, 
-                    duration: 0.6,
-                    type: "spring",
-                    stiffness: 120
-                  }}
+                  transition={{ delay: 0.5, duration: 0.6, type: "spring", stiffness: 120 }}
                 >
                   {currentItem.description}
                 </motion.p>
@@ -253,7 +206,7 @@ export default function ShonenSection() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Improved Navigation Arrows */}
+        {/* Flechas de navegación izquierda/derecha */}
         <div className="absolute inset-x-0 top-1/2 flex justify-between items-center px-4 -mt-6 z-20">
           <motion.button
             onClick={prevSlide}
@@ -282,6 +235,7 @@ export default function ShonenSection() {
         </div>
       </motion.div>
 
+      {/* Indicadores de slide (bolitas) */}
       <Indicators />
     </section>
   );

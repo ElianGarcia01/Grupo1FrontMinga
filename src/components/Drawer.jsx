@@ -22,6 +22,13 @@ const Drawer = ({ open, onClose }) => (
         Home
       </NavLink>
       <NavLink
+        to="/mangas"
+        onClick={onClose}
+        className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+      >
+        Mangas
+      </NavLink>
+      <NavLink
         to="/auth/signUp"
         onClick={onClose}
         className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
