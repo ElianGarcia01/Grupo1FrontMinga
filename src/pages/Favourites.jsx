@@ -1,4 +1,4 @@
-import FavouriteCard from "../components/FavouritesCard";
+import FavouriteCard from "../components/FavouriteCard";
 import { motion } from "framer-motion";
 
 const mockMangas = [
