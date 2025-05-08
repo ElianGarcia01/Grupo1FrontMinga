@@ -94,7 +94,6 @@ export default function ShonenSection() {
     }),
   };
 
-  // Colores de fondo animados
   const backgroundVariants = {
     blue: { backgroundColor: "#2563eb" },
     indigo: { backgroundColor: "#4f46e5" },
