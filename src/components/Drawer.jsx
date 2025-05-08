@@ -42,6 +42,20 @@ const Drawer = ({ open, onClose }) => (
       >
         Log In
       </NavLink>
+      <NavLink
+        to="/panel"
+        onClick={onClose}
+        className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+      >
+        Admin Panel
+      </NavLink>
+      <NavLink
+        to="/favourites"
+        onClick={onClose}
+        className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+      >
+        Favourites
+      </NavLink>
     </nav>
   </div>
 );
