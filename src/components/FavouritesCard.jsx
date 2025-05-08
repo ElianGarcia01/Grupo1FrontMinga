@@ -1,3 +1,6 @@
+import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const categoryStyles = {
     Shōnen: {
       bg: "bg-orange-200",
@@ -43,9 +46,9 @@ const categoryStyles = {
           onClick={onRemove}
           aria-label="Remove"
           className="absolute top-2 left-2 w-6 h-6 rounded-full border-2 border-black text-black
-          hover:bg-red-200 flex items-center justify-center transition-colors cursor-pointer"
+          hover:bg-red-300 flex items-center justify-center transition-colors cursor-pointer"
         >
-          X
+          <FontAwesomeIcon icon={faXmark} />
         </button>
   
         <div className="flex items-center p-5 w-full min-h-[150px] md:min-h-[180px] lg:min-h-[200px]">
