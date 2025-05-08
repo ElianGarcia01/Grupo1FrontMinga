@@ -45,7 +45,7 @@ export default function Mangas() {
       {/* Hero header */}
       <div className="relative h-[55vh] bg-black bg-opacity-60 flex flex-col justify-center items-center text-white">
         <img
-          src="./assets/mangasImage.svg"
+          src="./assets/Mangas.jpg"
           alt="header"
           className="absolute inset-0 w-full h-full object-cover object-center brightness-70"
         />
