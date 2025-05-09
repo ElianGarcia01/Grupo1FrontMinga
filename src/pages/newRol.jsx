@@ -1,23 +1,21 @@
 import React from 'react';
-import newrol from "../src/assets/newrol.jpg"
-import RoleSelector from "../componentes/roles.jsx"
+import newrol from "../../public/assets/newrol.jpg"
+import RoleSelector from "../components/roles.jsx"
 
 const pageRol = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Roles  */}
+
       <div className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8">
         <RoleSelector />
       </div>
-
-      {/* Sección decorativa */}
       <div className="hidden md:flex md:w-1/2  bg-center relative"
         style={{ backgroundImage: `url(${newrol})` }}>
-        {/* Overlay con gradientes (equivalente a tu CSS) */}
+
         <div className="absolute inset-0  bg-gradient-to-t from-black/40 via-black/40 to-transparent  mix-blend-multiply  <!-- Opcional: para mezclar colores -->"></div>
 
-        {/* Segundo overlay (tono morado) */}
+
         <div className="absolute inset-0  bg-[rgba(67,56,202,0.15)]  <!-- Color morado con opacidad -->  "></div>
 
         <div className="w-[555px] relative z-10 p-8 text-white max-w-xl px-16 pt-[150px]">

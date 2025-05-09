@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import inga from "../src/assets/inga.png";
+import inga from "../../public/assets/inga.png";
 import { FaFacebookF, FaTwitter, FaVimeoV, FaYoutube } from 'react-icons/fa';
 
 const NavBarFooter = () => {

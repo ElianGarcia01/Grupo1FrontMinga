@@ -10,6 +10,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
+import PageRol from "./pages/newRol.jsx";
 
 const router = createBrowserRouter([
   {
@@ -50,8 +51,15 @@ const router = createBrowserRouter([
         path: "signUp",
         element: <SignUpForm />,
       },
+      
     ],
   },
+  
+    {
+      path: "newrol",
+      element: <PageRol/>,
+    },
+  
   {
     path: "*",
     element: <NotFound />,

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import dragonballZ from "../src/assets/dragonballZ.jpg"
+import React from 'react';
+import dragonballZ from "../../public/assets/dragonballZ.jpg"
 import NavBarFooter from "./navbarfooter.jsx"
 
 const Footer = () => {
