@@ -1,21 +1,65 @@
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PageSingIn from '../pages/singIn.jsx';
-import PageSingUp from '../pages/singUp.jsx';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import NotFound from "./pages/NotFound";
+import SignInForm from "./pages/SignIn";
+import SignUpForm from "./pages/SignUp";
+import Home from "./pages/Home";
+import Mangas from "./pages/Mangas";
+import StandarLayout from "./layouts/StandarLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import Panel from "./pages/Panel";
+import Favourites from "./pages/Favourites";
+import DetailsManga from "./pages/DetailsManga";
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <StandarLayout />,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "panel",
+        element: <Panel />,
+      },
+      {
+        path: "mangas",
+        element: <Mangas />,
+      },
+      {
+        path: "favourites",
+        element: <Favourites />,
+      },
+      {
+        path: "details",
+        element: <DetailsManga />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "signIn",
+        element: <SignInForm />,
+      },
+      {
+        path: "signUp",
+        element: <SignUpForm />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+]);
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-      <Route path="/singUp" element={<PageSingUp  />}/>
-      <Route path='/singIn' element={<PageSingIn/>}/>
-     
-
-
-      <Route path="/" element={<h1>Página de Inicio</h1>} />
-      </Routes>
-    </Router>
-  );
+  return <RouterProvider router={router} />;
 }
+
 export default App;
