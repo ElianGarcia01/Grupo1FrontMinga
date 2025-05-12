@@ -23,10 +23,9 @@ const Navbar = () => {
           />
         </Link>
       </nav>
-      {/* Drawer importado */}
       <Drawer open={open} onClose={() => setOpen(false)} />
     </>
   );
 };
 
-export default Navbar
+export default Navbar;

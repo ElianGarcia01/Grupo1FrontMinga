@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import MangaCard from "../components/MangaCard";
 import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
@@ -9,8 +9,7 @@ const mockMangas = [
     id: 1,
     title: "Naruto: And That's Why You're Disqualified!! #8",
     type: "Shōnen",
-    image:
-      "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
+    image: "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
   },
   {
     id: 2,
@@ -32,7 +31,6 @@ const mockMangas = [
   },
 ];
 
-
 const categories = ["All", "Shōnen", "Seinen", "Shōjo", "Kodomo"];
 
 export default function Panel() {
@@ -40,67 +38,59 @@ export default function Panel() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredMangas = mockMangas.filter((manga) => {
-    const matchesSearch = manga.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || manga.type === selectedCategory;
+    const matchesSearch = manga.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || manga.type === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-  
 
   return (
     <section
-      className="relative h-[40vh] md:h-[80vh] flex items-center justify-center text-white overflow-visible"
+      className="relative min-h-screen text-white"
       style={{
         backgroundImage: "url('/assets/Mangas.jpg')",
-        backgroundColor: "#1a1a1a",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
+        backgroundColor: "#1a1a1a",
       }}
     >
-      <div className="relative z-10 text-center px-4">
+      {/* CONTENIDO CENTRADO */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[60%] z-10 text-center w-full px-4">
         <h1 className="text-3xl md:text-5xl font-bold">Mangas</h1>
         <div className="mt-6 flex justify-center">
           <SearchBar
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="bg-white text-black w-full max-w-xl"
           />
         </div>
       </div>
 
-      {/* cuadro blanco */}
-      <div
-        className="absolute left-1/2 transform -translate-x-1/2
-        bg-white w-full sm:w-11/12 md:w-3/4 z-20 rounded-t-4xl md:rounded-xl shadow-2xl px-4
-        sm:px-10 md:px-20 pb-10 pt-4 md:pt-8 text-black"
-        style={{ top: "75%" }}
+      {/* CUADRO BLANCO FLOTANTE */}
+      <motion.div
+        initial={{ opacity: 0, y: 60 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="absolute left-1/2 transform -translate-x-1/2 w-full sm:w-11/12 md:w-3/4 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] z-20 mt-20 px-4 sm:px-10 md:px-20 pb-10 pt-8"
+        style={{ top: "65%" }}
       >
-        {/* Category Filter */}
         <CategoryFilter
           categories={categories}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
 
-        {/* Manga Grid */}
         <motion.div
-          className="className= grid grid-cols-1 md:grid-cols-2 gap-6 px-4
-          md:px-12 py-10 max-w-5xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10 max-w-5xl mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           {filteredMangas.map((manga) => (
-            <MangaCard
-              key={manga.id}
-              manga={manga}
-            />
+            <MangaCard key={manga.id} manga={manga} />
           ))}
         </motion.div>
 
-        {/* No Results Message */}
         {filteredMangas.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -113,7 +103,7 @@ export default function Panel() {
             </p>
           </motion.div>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -10,6 +10,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
+import AuthorCompany from "./pages/AuthorCompany"; // ✅ IMPORTADO
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "details",
         element: <DetailsManga />,
+      },
+      {
+        path: "authorcompany", // ✅ NUEVA RUTA
+        element: <AuthorCompany />,
       },
     ],
   },
