@@ -6,11 +6,10 @@ import SignUpForm from "./pages/SignUp";
 import Home from "./pages/Home";
 import Mangas from "./pages/Mangas";
 import StandarLayout from "./layouts/StandarLayout";
-import AuthLayout from "./layouts/AuthLayout";
 import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
-import AuthorCompany from "./pages/AuthorCompany"; // ✅ IMPORTADO
+import AuthorCompany from "./pages/AuthorCompany";
 import PageRol from "./pages/newRol.jsx";
 
 const router = createBrowserRouter([
@@ -45,26 +44,17 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "signIn",
-        element: <SignInForm />,
-      },
-      {
-        path: "signUp",
-        element: <SignUpForm />,
-      },
-      
-    ],
+    path: "signIn",
+    element: <SignInForm />,
   },
-  
-    {
-      path: "newrol",
-      element: <PageRol/>,
-    },
-  
+  {
+    path: "signUp",
+    element: <SignUpForm />,
+  },
+  {
+    path: "newrol",
+    element: <PageRol />,
+  },
   {
     path: "*",
     element: <NotFound />,
