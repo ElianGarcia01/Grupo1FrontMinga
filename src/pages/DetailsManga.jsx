@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 const Details = () => {
   const { state } = useLocation();
-  const [selectedTab, setSelectedTab] = useState("manga"); // <- Estado para la pestaña
+  const [selectedTab, setSelectedTab] = useState("manga");
 
   if (!state) return <p>No manga selected</p>;
 
@@ -28,11 +28,6 @@ const Details = () => {
     }
   };
 
-  const borderColor = getCategoryStyle(type)
-    .split(" ")
-    .find((cls) => cls.startsWith("border-"));
-
-  // 🔁 Simulación de capítulos
   const chapters = [
     { number: 1, title: "The Beginning" },
     { number: 2, title: "A New Power" },
@@ -41,86 +36,83 @@ const Details = () => {
   ];
 
   return (
-    <section className="w-full p-8 min-h-screen flex flex-col justify-center items-center">
-      {/* Card */}
-      <div className="flex flex-col justify-center items-center">
+    <section className="w-full px-4 py-8 min-h-screen flex justify-center items-center">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
         {/* Imagen */}
-        <div className="w-full md:w-1/2 h-1/2">
-          <img src={image} alt={title} className="w-full h-full rounded-2xl" />
+        <div className="w-full lg:w-1/2">
+          <img src={image} alt={title} className="w-full h-4/5 rounded-2xl object-cover" />
         </div>
 
-        {/* Título */}
-        <div className="text-center flex flex-col justify-center mb-4">
-          <h1 className="text-2xl font-normal mt-4">{title}</h1>
-          <div className="flex justify-between items-center mt-4">
-            <span className={`text-x px-4 py-1 rounded-full w-fit ${getCategoryStyle(type)}`}>
+        {/* Info */}
+        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start">
+          <h1 className="text-3xl font-semibold mt-4 text-center lg:text-left">{title}</h1>
+
+          {/* Tipo + Compañía */}
+          <div className="flex justify-between items-center w-full mt-4">
+            <span className={`text-sm px-4 py-1 rounded-full ${getCategoryStyle(type)}`}>
               {type}
             </span>
-            <p className="text-lg">Company Name</p>
+            <p className="text-lg text-gray-600">Company Name</p>
           </div>
-        </div>
 
-        {/* Reacciones */}
-        <div className="flex gap-4 mt-4">
-          <button className="p-4 rounded-full bg-white shadow-md hover:bg-yellow-100">
-            <FaThumbsUp className="text-yellow-500 text-2xl" />
-          </button>
-          <button className="p-4 rounded-full bg-white shadow-md hover:bg-yellow-100">
-            <FaThumbsDown className="text-yellow-500 text-2xl" />
-          </button>
-          <button className="p-4 rounded-full bg-white shadow-md hover:bg-yellow-100">
-            <FaSurprise className="text-yellow-500 text-2xl" />
-          </button>
-          <button className="p-4 rounded-full bg-white shadow-md hover:bg-yellow-100">
-            <FaFaceGrinHearts className="text-yellow-500 text-2xl" />
-          </button>
-        </div>
+          {/* Reacciones */}
+          <div className="flex gap-4 mt-6 flex-wrap justify-center lg:justify-start">
+            {[FaThumbsUp, FaThumbsDown, FaSurprise, FaFaceGrinHearts].map((Icon, idx) => (
+              <button
+                key={idx}
+                className="p-4 rounded-full cursor-pointer bg-white shadow-md hover:bg-yellow-100 transition"
+              >
+                <Icon className="text-yellow-500 text-2xl" />
+              </button>
+            ))}
+          </div>
 
-        {/* Botones de pestañas */}
-        <div className="flex gap-4 mt-6">
-          <button
-            onClick={() => setSelectedTab("manga")}
-            className={`px-8 py-2 text-lg rounded-2xl ${
-              selectedTab === "manga"
-                ? "bg-indigo-600 text-white"
-                : "bg-gray-200 text-black hover:bg-gray-300"
-            }`}
-          >
-            Manga
-          </button>
-          <button
-            onClick={() => setSelectedTab("chapters")}
-            className={`px-8 py-2 text-lg rounded-2xl ${
-              selectedTab === "chapters"
-                ? "bg-indigo-600 text-white"
-                : "bg-gray-200 text-black hover:bg-gray-300"
-            }`}
-          >
-            Chapters
-          </button>
-        </div>
+          {/* Tabs */}
+          <div className="flex gap-4 mt-6">
+            <button
+              onClick={() => setSelectedTab("manga")}
+              className={`px-8 py-2 text-lg rounded-2xl cursor-pointer ${
+                selectedTab === "manga"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-gray-200 text-black hover:bg-gray-300"
+              }`}
+            >
+              Manga
+            </button>
+            <button
+              onClick={() => setSelectedTab("chapters")}
+              className={`px-8 py-2 text-lg rounded-2xl cursor-pointer ${
+                selectedTab === "chapters"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-gray-200 text-black hover:bg-gray-300"
+              }`}
+            >
+              Chapters
+            </button>
+          </div>
 
-        {/* Contenido condicional */}
-        <div className="mt-8 w-full md:w-2/3">
-          {selectedTab === "manga" ? (
-            <p className="text-lg text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et metus at justo
-              vestibulum gravida. Nullam tincidunt sem vel ligula gravida, at facilisis nulla
-              efficitur.
-            </p>
-          ) : (
-            <div className="grid gap-4">
-              {chapters.map((chapter) => (
-                <div
-                  key={chapter.number}
-                  className="border border-gray-300 rounded-xl p-4 bg-white shadow"
-                >
-                  <h3 className="font-semibold text-xl">Chapter {chapter.number}</h3>
-                  <p className="text-gray-600">{chapter.title}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Contenido */}
+          <div className="mt-6 w-full">
+            {selectedTab === "manga" ? (
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur et metus at justo
+                vestibulum gravida. Nullam tincidunt sem vel ligula gravida, at facilisis nulla
+                efficitur. Duis posuere efficitur neque vel varius.
+              </p>
+            ) : (
+              <div className="grid gap-4 mt-2">
+                {chapters.map((chapter) => (
+                  <div
+                    key={chapter.number}
+                    className="border border-gray-300 rounded-xl p-4 bg-white shadow"
+                  >
+                    <h3 className="font-semibold text-xl">Chapter {chapter.number}</h3>
+                    <p className="text-gray-600">{chapter.title}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
