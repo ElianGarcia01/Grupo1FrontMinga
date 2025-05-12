@@ -55,8 +55,15 @@ const router = createBrowserRouter([
         path: "signUp",
         element: <SignUpForm />,
       },
+      
     ],
   },
+  
+    {
+      path: "newrol",
+      element: <PageRol/>,
+    },
+  
   {
     path: "*",
     element: <NotFound />,
