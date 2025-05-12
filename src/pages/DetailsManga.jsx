@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { FaFaceGrinHearts } from "react-icons/fa6";
 
-
 const Details = () => {
   const { state } = useLocation();
 
@@ -78,7 +77,6 @@ const Details = () => {
           {/* 😍 Ojos con corazones */}
           <button className="p-4 rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:bg-yellow-100 transition duration-300 cursor-pointer">
             <FaFaceGrinHearts className="text-yellow-500 text-2xl hover:scale-110 transition-transform duration-300" />
-          
           </button>
         </div>
 

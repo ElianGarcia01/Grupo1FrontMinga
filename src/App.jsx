@@ -11,6 +11,7 @@ import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
 import AuthorCompany from "./pages/AuthorCompany"; // ✅ IMPORTADO
+import PageRol from "./pages/newRol.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
         element: <DetailsManga />,
       },
       {
-        path: "authorcompany", // ✅ NUEVA RUTA
+        path: "authorcompany",
         element: <AuthorCompany />,
       },
     ],

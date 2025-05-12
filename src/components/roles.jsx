@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import inga from '../../public/assets/inga.png';
-import athor from "../../public/assets/athor.jpg"
+import inga from '/assets/inga.png';
+import athor from "/assets/athor.jpg"
 
 const RoleSelector = () => {
     const [selectedRole, setSelectedRole] = useState(null);

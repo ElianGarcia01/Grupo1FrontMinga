@@ -1,5 +1,4 @@
-import React from 'react';
-import newrol from "../../public/assets/newrol.jpg"
+import newrol from "/assets/newrol.jpg"
 import RoleSelector from "../components/roles.jsx"
 
 const pageRol = () => {
