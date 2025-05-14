@@ -1,30 +1,48 @@
-import dragonballZ from "/assets/dragonballZ.jpg"
-import NavBarFooter from "./navbarfooter.jsx"
+import NavBarFooter from "./NavBarFooter";
+import dragonballZ from "/assets/dragonballZ.jpg";
+import { motion } from "framer-motion";
 
 const Footer = () => {
-    return (
-        <div className="w-full bg-white relative mt-auto"> 
+  return (
+    <footer className="w-full bg-[#0F0F0F] relative mt-10">
+      {/* Imagen decorativa con curva */}
+      <div className="w-full relative overflow-hidden">
+        <div className="w-full h-[180px] sm:h-[220px] md:h-[260px] relative">
+          {/* Imagen animada */}
+          <motion.img
+            src={dragonballZ}
+            alt="footer background"
+            className="w-full h-full object-cover object-center"
+            initial={{ scale: 1 }}
+            whileInView={{ scale: 1.05 }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+          />
 
-        
-            <div className="w-full h-[337px] overflow-hidden relative">
-                <img
-                    src={dragonballZ}
-                    alt="footer img"
-                    className="w-full h-full object-cover"
-                    style={{
-                        clipPath: 'path("M0,60% L0,70% Q50% 100% 100% 70% L100% 0 Z")'
-                    }}
-                />
-            </div>
-
-            <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 py-8">
-                <NavBarFooter />
-            </div>
-
+          {/* Curva SVG */}
+          <div className="absolute bottom-0 left-0 right-0 h-full">
+            <svg
+              className="absolute bottom-0 w-full"
+              height="50%"
+              preserveAspectRatio="none"
+              viewBox="0 0 1440 200"
+              fill="white"
+              style={{
+                filter: "drop-shadow(0px -2px 5px rgba(0,0,0,0.05))",
+                marginBottom: "-1px",
+              }}
+            >
+              <path d="M0,200 L0,100 Q720,200 1440,100 L1440,200 Z" />
+            </svg>
+          </div>
         </div>
+      </div>
 
+      {/* Contenido */}
+      <div className="bg-white pt-4 pb-8">
+        <NavBarFooter />
+      </div>
+    </footer>
+  );
+};
 
-
-    )
-}
 export default Footer;

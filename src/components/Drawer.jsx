@@ -29,14 +29,14 @@ const Drawer = ({ open, onClose }) => (
         Mangas
       </NavLink>
       <NavLink
-        to="/auth/signUp"
+        to="/signUp"
         onClick={onClose}
         className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
       >
         Register
       </NavLink>
       <NavLink
-        to="/auth/signIn"
+        to="/signIn"
         onClick={onClose}
         className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
       >
@@ -56,6 +56,7 @@ const Drawer = ({ open, onClose }) => (
       >
         Favourites
       </NavLink>
+      
     </nav>
   </div>
 );

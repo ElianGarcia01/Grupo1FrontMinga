@@ -44,35 +44,31 @@ export default function Panel() {
   });
 
   return (
-    <section
-      className="relative min-h-screen text-white"
-      style={{
-        backgroundImage: "url('/assets/Mangas.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundColor: "#1a1a1a",
-      }}
+    <div className="min-h-screen w-full flex flex-col">
+      {/* HERO con imagen de fondo */}
+      <div
+      className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/assets/Mangas.jpg')" }}
     >
-      {/* CONTENIDO CENTRADO */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[60%] z-10 text-center w-full px-4">
+      {/* CONTENIDO CENTRAL */}
+      <section className="flex flex-col items-center justify-center text-white pt-20 pb-10 px-4">
         <h1 className="text-3xl md:text-5xl font-bold">Mangas</h1>
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 w-full max-w-xl">
           <SearchBar
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-white text-black w-full max-w-xl"
+            className="bg-white text-black w-full"
           />
         </div>
-      </div>
+      </section>
+    </div>
 
-      {/* CUADRO BLANCO FLOTANTE */}
+      {/* CONTENIDO: tarjetas y filtros */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="absolute left-1/2 transform -translate-x-1/2 w-full sm:w-11/12 md:w-3/4 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] z-20 mt-20 px-4 sm:px-10 md:px-20 pb-10 pt-8"
-        style={{ top: "65%" }}
+        className="w-full max-w-7xl mx-auto -mt-20 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
       >
         <CategoryFilter
           categories={categories}
@@ -81,7 +77,7 @@ export default function Panel() {
         />
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10 max-w-5xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -104,6 +100,6 @@ export default function Panel() {
           </motion.div>
         )}
       </motion.div>
-    </section>
+    </div>
   );
 }
