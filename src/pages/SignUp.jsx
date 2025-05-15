@@ -1,13 +1,62 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import signUpImage from "/assets/SignUp.jpg";
 import MingaM from "/assets/inga.png";
-import GoogleSignUpButton from "../components/GoogleSignUpButton";
+// import GoogleSignUpButton from "../components/GoogleSignUpButton";
 import "../css/SignUpStyles.css";
 import Navbar from "../components/Navbar";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../hook/useAuth"; 
 
 const SignUpForm = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    photo: ""
+  });
+
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { login } = useAuth(); 
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/");
+  }, [navigate]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8080/api/users/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Sign up failed");
+      }
+
+      
+      login(data.response.token, data.response.user);
+
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="w-full h-full bg-white">
       {/* Ocultar Navbar en mobile */}
@@ -17,7 +66,7 @@ const SignUpForm = () => {
 
       {/* Formulario y logo */}
       <div className="w-full md:w-1/2 min-h-screen flex flex-col justify-center items-center px-4">
-        <form className="bg-white px-8 py-8 w-full max-w-md">
+        <form onSubmit={handleSubmit} className="bg-white px-8 py-8 w-full max-w-md">
           {/* Logo */}
           <div className="flex justify-center mt-6 mb-6">
             <img
@@ -36,13 +85,23 @@ const SignUpForm = () => {
             read manga
           </p>
 
+          {/* Error */}
+          {error && (
+            <div className="text-red-500 text-sm text-center mb-4">
+              {error}
+            </div>
+          )}
+
           {/* Email */}
           <div className="mb-4 text-sm md:text-md">
             <label className="block text-gray-700 mb-1">Email</label>
             <div className="relative">
               <input
                 type="email"
-                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 placeholder="you@example.com"
                 required
               />
@@ -58,8 +117,11 @@ const SignUpForm = () => {
             <div className="relative">
               <input
                 type="url"
-                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-                placeholder="url"
+                name="photo"
+                value={formData.photo}
+                onChange={handleChange}
+                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="https://example.com/photo.jpg"
                 required
               />
               <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
@@ -74,7 +136,10 @@ const SignUpForm = () => {
             <div className="relative">
               <input
                 type="password"
-                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 placeholder="********"
                 required
               />
@@ -105,14 +170,14 @@ const SignUpForm = () => {
             Sign up
           </button>
 
-          {/* Google Button */}
-          <GoogleSignUpButton />
+          {/* Google Button - comentado hasta implementar */}
+          {/* <GoogleSignUpButton /> */}
 
           {/* Links */}
           <p className="mt-6 text-center text-sm md:text-md text-gray-600">
             Already have an account?{" "}
             <Link
-              to="/auth/signin"
+              to="/signin"
               className="text-indigo-600 font-bold hover:underline"
             >
               Log in
@@ -127,8 +192,8 @@ const SignUpForm = () => {
         </form>
       </div>
 
-        {/* Fondo ilustrado del lado derecho */}
-        <div
+      {/* Fondo ilustrado del lado derecho */}
+      <div
         className="hidden md:block md:w-1/2 min-h-screen fixed right-0 top-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${signUpImage})`, zIndex: 0 }}
       ></div>

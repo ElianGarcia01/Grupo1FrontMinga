@@ -5,7 +5,7 @@ import ListComments from "../components/comments/ListComments"
 
 const ReaderPage = () => {
   const [pages, setPages] = useState([])
-  const [readingMode, setReadingMode] = useState("vertical") // 'horizontal' or 'vertical'
+  const [readingMode, setReadingMode] = useState("vertical") 
 
   // TODO: replace with real data fetch
   useEffect(() => {

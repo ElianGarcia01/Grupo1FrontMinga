@@ -1,4 +1,4 @@
-import NavBarFooter from "./NavBarFooter";
+import NavBarFooter from "./navbarfooter";
 import dragonballZ from "/assets/dragonballZ.jpg";
 import { motion } from "framer-motion";
 

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from "./Drawer";
+import { useAuth } from "../../hook/useAuth";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -23,7 +25,7 @@ const Navbar = () => {
           />
         </Link>
       </nav>
-      <Drawer open={open} onClose={() => setOpen(false)} />
+      <Drawer open={open} onClose={() => setOpen(false)} user={user} />
     </>
   );
 };
