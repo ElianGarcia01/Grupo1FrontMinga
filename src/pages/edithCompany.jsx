@@ -1,12 +1,12 @@
-import UserProfileEdit from "../components/Perfil";
+import CompanyEdit from "../components/CompanyEdit";
 
 
-export default function Profile() {
+export default function Company() {
   return (
     <section
       className="relative min-h-screen flex items-center justify-center text-white overflow-visible"
       style={{
-        backgroundImage: "url('/assets/profile.jpg')",
+        backgroundImage: "url('/assets/demonSlayer.jpg')",
         backgroundColor: "#1a1a1a",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -15,7 +15,7 @@ export default function Profile() {
     >
       {/* Titulo Principal */}
       <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight z-10">
-        Profile
+        Company
       </h1>
 
       {/* cuadro blanco */}
@@ -26,7 +26,7 @@ export default function Profile() {
       >
         {/* Informacion dentro del div blanco */}
         <div className="flex justify-center items-center w-full h-full">
-            <UserProfileEdit/>
+            <CompanyEdit/>
         </div>
       </div>
     </section>

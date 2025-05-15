@@ -12,7 +12,10 @@ import DetailsManga from "./pages/DetailsManga";
 import AuthorCompany from "./pages/AuthorCompany";
 import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
-
+import DeleteAlert from "./components/AlertDelete.jsx";
+import UserProfileEdit from "./components/Perfil.jsx";
+import Company from "./pages/edithCompany.jsx";
+import ChapterEdit from "./pages/chapterEdit.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -46,6 +49,15 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile />,
       },
+      {
+        path: "company",
+        element: <Company/>,
+      },
+      {
+        path: "editChapter",
+        element: <ChapterEdit/>,
+      },
+    
     ],
   },
   {
