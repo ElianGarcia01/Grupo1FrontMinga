@@ -7,8 +7,8 @@ const Drawer = ({ open, onClose }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-64 bg-indigo-600 text-white transform transition-transform duration-300 z-50 ${
-        open ? "translate-x-0" : "translate-x-full"
+      className={`fixed top-0 left-0 h-full w-64 bg-indigo-600 text-white transform transition-transform duration-300 z-50 ${
+        open ? "translate-x-0" : "-translate-x-full"
       }`}
     >
       <div className="flex items-center justify-between px-4 py-4 border-b border-white/20">
@@ -37,15 +37,16 @@ const Drawer = ({ open, onClose }) => {
         >
           Home
         </NavLink>
+
         {user && (
-  <NavLink
-    to="/mangas"
-    onClick={onClose}
-    className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
-  >
-    Mangas
-  </NavLink>
-)}
+          <NavLink
+            to="/mangas"
+            onClick={onClose}
+            className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+          >
+            Mangas
+          </NavLink>
+        )}
 
         {!user && (
           <>
@@ -82,6 +83,15 @@ const Drawer = ({ open, onClose }) => {
             >
               Favourites
             </NavLink>
+
+            <NavLink
+              to="/newrol"
+              onClick={onClose}
+              className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+            >
+              Become Author or Company
+            </NavLink>
+
             <button
               onClick={() => {
                 logout();
