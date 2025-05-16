@@ -38,14 +38,14 @@ const Drawer = ({ open, onClose }) => {
           Home
         </NavLink>
         {user && (
-  <NavLink
-    to="/mangas"
-    onClick={onClose}
-    className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
-  >
-    Mangas
-  </NavLink>
-)}
+          <NavLink
+            to="/mangas"
+            onClick={onClose}
+            className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+          >
+            Mangas
+          </NavLink>
+        )}
 
         {!user && (
           <>
@@ -81,6 +81,13 @@ const Drawer = ({ open, onClose }) => {
               className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
             >
               Favourites
+            </NavLink>
+            <NavLink
+              to="/newrol"
+              onClick={onClose}
+              className="hover:bg-white hover:text-indigo-600 p-2 rounded block"
+            >
+              Rol
             </NavLink>
             <button
               onClick={() => {

@@ -23,9 +23,8 @@ const router = createBrowserRouter([
     element: <StandarLayout />,
     children: [
       { path: "", element: <Home /> },
-      
       { path: "details", element: <DetailsManga /> },
-      { path: "authorcompany", element: <AuthorCompany /> },
+      { path: "company", element: <AuthorCompany /> },
 
       // Rutas protegidas
       {
