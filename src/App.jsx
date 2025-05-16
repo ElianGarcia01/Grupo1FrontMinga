@@ -11,9 +11,10 @@ import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
 import AuthorCompany from "./pages/AuthorCompany";
-import PageRol from "./pages/newRol";
-import Profile from "./pages/Profile";
-
+import PageRol from "./pages/newRol.jsx";
+import Profile from "./pages/Profile.jsx";
+import Company from "./pages/edithCompany.jsx";
+import ChapterEdit from "./pages/chapterEdit.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 
@@ -23,9 +24,8 @@ const router = createBrowserRouter([
     element: <StandarLayout />,
     children: [
       { path: "", element: <Home /> },
-      
       { path: "details", element: <DetailsManga /> },
-      { path: "authorcompany", element: <AuthorCompany /> },
+      { path: "company", element: <AuthorCompany /> },
 
       // Rutas protegidas
       {
@@ -37,6 +37,15 @@ const router = createBrowserRouter([
           { path: "profile", element: <Profile /> },
         ],
       },
+      {
+        path: "company",
+        element: <Company/>,
+      },
+      {
+        path: "editChapter",
+        element: <ChapterEdit/>,
+      },
+    
     ],
   },
 
