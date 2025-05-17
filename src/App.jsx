@@ -10,7 +10,6 @@ import StandarLayout from "./layouts/StandarLayout";
 import Panel from "./pages/Panel";
 import Favourites from "./pages/Favourites";
 import DetailsManga from "./pages/DetailsManga";
-import AuthorCompany from "./pages/AuthorCompany";
 import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
@@ -28,7 +27,7 @@ const router = createBrowserRouter([
     element: <StandarLayout />,
     children: [
       { path: "", element: <Home /> },
-      { path: "details", element: <DetailsManga /> },
+      { path: "details/:id", element: <DetailsManga /> },
       { path: "company", element: <CompanyForm /> },
       { path: "author", element: <AuthorForm /> },
       { path: "newManga", element: <MangaForm /> },

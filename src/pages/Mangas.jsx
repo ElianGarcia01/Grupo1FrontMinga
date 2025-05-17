@@ -37,13 +37,14 @@ export default function Panel() {
         className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/assets/Mangas.jpg')" }}
       >
-        <section className="flex flex-col items-center justify-end text-white pt-20 pb-10 px-4 min-h-screen">
+        <section className="flex flex-col items-center justify-end text-white
+        pt-0 pb-110 px-4 min-h-screen">
           <h1 className="text-3xl md:text-5xl font-bold">Mangas</h1>
-          <div className="mt-6 w-full max-w-xl">
+          <div className="mt-10 w-full max-w-xl">
             <SearchBar
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-white text-black w-full"
+              className="text-black w-full"
             />
           </div>
         </section>
@@ -54,7 +55,8 @@ export default function Panel() {
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-7xl mx-auto -mt-20 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
+        className="w-full max-w-7xl mx-auto -mt-90 bg-white text-black shadow-2xl rounded-t-[80px]
+        md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
       >
         <CategoryFilter
           categories={categoryNames}
