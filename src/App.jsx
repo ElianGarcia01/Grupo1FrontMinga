@@ -24,7 +24,6 @@ import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
-
 import AuthorCompany from "./pages/AuthorCompany";
 
 const router = createBrowserRouter([
@@ -37,6 +36,7 @@ const router = createBrowserRouter([
 
       // Rutas públicas accesibles para todos
       { path: "author", element: <AuthorForm /> },
+      { path: "company", element: <CompanyForm /> },
       { path: "newrol", element: <PageRol /> },
 
       // Rutas protegidas para usuarios autenticados
