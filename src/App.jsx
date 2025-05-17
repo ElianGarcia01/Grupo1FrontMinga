@@ -17,12 +17,15 @@ import ChapterEdit from "./pages/chapterEdit.jsx";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
-import AdminRoute from "./components/AdminRoute"; // Nuevo
+import AdminRoute from "./components/AdminRoute";
 
 import CompanyForm from "./components/Forms/CompanyForm.jsx";
 import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
+
+
+import AuthorCompany from "./pages/AuthorCompany";
 
 const router = createBrowserRouter([
   {
@@ -32,26 +35,22 @@ const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "details/:id", element: <DetailsManga /> },
 
-      // Formulario común accesible públicamente
+      // Rutas públicas accesibles para todos
       { path: "author", element: <AuthorForm /> },
       { path: "newrol", element: <PageRol /> },
 
-      // Formulario común accesible públicamente
-      { path: "author", element: <AuthorForm /> },
-      { path: "newrol", element: <PageRol /> },
-
-      // Rutas protegidas para cualquier usuario autenticado
+      // Rutas protegidas para usuarios autenticados
       {
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
           { path: "favourites", element: <Favourites /> },
           { path: "profile", element: <Profile /> },
-          { path: "become-author", element: <AuthorCompany /> },
+          { path: "become-author", element: <AuthorCompany /> }, // O cambia a PageRol si AuthorCompany no existe
         ],
       },
 
-      // Rutas exclusivas para el admin
+      // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
         children: [
@@ -65,7 +64,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Rutas públicas solo si NO está autenticado
+  // Rutas públicas solo si no está autenticado
   {
     element: <PublicRoute />,
     children: [
