@@ -17,6 +17,10 @@ import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import CompanyForm from "./components/Forms/CompanyForm.jsx";
+import AuthorForm from "./components/Forms/AuthorForm.jsx";
+import MangaForm from "./components/Forms/MangaForm.jsx";
+import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,9 +28,11 @@ const router = createBrowserRouter([
     element: <StandarLayout />,
     children: [
       { path: "", element: <Home /> },
-      
       { path: "details", element: <DetailsManga /> },
-      { path: "authorcompany", element: <AuthorCompany /> },
+      { path: "company", element: <CompanyForm /> },
+      { path: "author", element: <AuthorForm /> },
+      { path: "newManga", element: <MangaForm /> },
+      { path: "newChapter", element: <ChapterForm /> },
 
       // Rutas protegidas
       {
@@ -35,19 +41,18 @@ const router = createBrowserRouter([
           { path: "mangas", element: <Mangas /> },
           { path: "panel", element: <Panel /> },
           { path: "favourites", element: <Favourites /> },
-          // { path: "profile", element: <Profile /> },
+          { path: "profile", element: <Profile /> },
         ],
       },
       {
         path: "company",
-        element: <Company/>,
+        element: <Company />,
       },
       {
         path: "editChapter",
-        element: <ChapterEdit/>,
+        element: <ChapterEdit />,
       },
-      { path: "profile", element: <Profile /> },
-    
+  
     ],
   },
 
