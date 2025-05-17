@@ -35,7 +35,7 @@ const router = createBrowserRouter([
           { path: "mangas", element: <Mangas /> },
           { path: "panel", element: <Panel /> },
           { path: "favourites", element: <Favourites /> },
-          { path: "profile", element: <Profile /> },
+          // { path: "profile", element: <Profile /> },
         ],
       },
       {
@@ -46,6 +46,7 @@ const router = createBrowserRouter([
         path: "editChapter",
         element: <ChapterEdit/>,
       },
+      { path: "profile", element: <Profile /> },
     
     ],
   },

@@ -1,69 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMangas } from "../../redux/mangaSlice";
+import { fetchCategories } from "../../redux/categorySlice";
 import MangaCard from "../components/MangaCard";
 import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
 import { motion } from "framer-motion";
 
-const mockMangas = [
-  {
-    id: 1,
-    title: "Naruto: And That's Why You're Disqualified!! #8",
-    type: "Shōnen",
-    image: "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
-  },
-  {
-    id: 2,
-    title: "Izuku Midoriya: Origin #1",
-    type: "Shōnen",
-    image: "./assets/MYHERO.png",
-  },
-  {
-    id: 3,
-    title: "Shingeki no Kyojin",
-    type: "Seinen",
-    image: "/assets/ShingekiImage.webp",
-  },
-  {
-    id: 4,
-    title: "Demon Slayer",
-    type: "Seinen",
-    image: "/assets/kimetsu.webp",
-  },
-];
-
-const categories = ["All", "Shōnen", "Seinen", "Shōjo", "Kodomo"];
-
 export default function Panel() {
+  const dispatch = useDispatch();
+  const mangas = useSelector((state) => state.mangas.all);
+  const categories = useSelector((state) => state.categories.all);
+
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredMangas = mockMangas.filter((manga) => {
-    const matchesSearch = manga.title.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || manga.type === selectedCategory;
-    return matchesSearch && matchesCategory;
+  useEffect(() => {
+    dispatch(fetchMangas());
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const filteredMangas = (Array.isArray(mangas) ? mangas : []).filter((manga) => {
+    const titleMatch = manga.title.toLowerCase().includes(search.toLowerCase());
+    const categoryMatch =
+      selectedCategory === "All" || manga.category_id?.name === selectedCategory;
+    return titleMatch && categoryMatch;
   });
+
+  const categoryNames = ["All", ...categories.map((cat) => cat.name)];
+
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      {/* HERO con imagen de fondo */}
+      {/* Hero */}
       <div
-      className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/assets/Mangas.jpg')" }}
-    >
-      {/* CONTENIDO CENTRAL */}
-      <section className="flex flex-col items-center justify-center text-white pt-20 pb-10 px-4">
-        <h1 className="text-3xl md:text-5xl font-bold">Mangas</h1>
-        <div className="mt-6 w-full max-w-xl">
-          <SearchBar
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="bg-white text-black w-full"
-          />
-        </div>
-      </section>
-    </div>
+        className="min-h-screen w-full bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/assets/Mangas.jpg')" }}
+      >
+        <section className="flex flex-col items-center justify-end text-white pt-20 pb-10 px-4 min-h-screen">
+          <h1 className="text-3xl md:text-5xl font-bold">Mangas</h1>
+          <div className="mt-6 w-full max-w-xl">
+            <SearchBar
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-white text-black w-full"
+            />
+          </div>
+        </section>
+      </div>
 
-      {/* CONTENIDO: tarjetas y filtros */}
+      {/* Cards y filtros */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,7 +57,7 @@ export default function Panel() {
         className="w-full max-w-7xl mx-auto -mt-20 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
       >
         <CategoryFilter
-          categories={categories}
+          categories={categoryNames}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
@@ -83,7 +69,7 @@ export default function Panel() {
           transition={{ duration: 0.5 }}
         >
           {filteredMangas.map((manga) => (
-            <MangaCard key={manga.id} manga={manga} />
+            <MangaCard key={manga._id} manga={manga} categories={categories} />
           ))}
         </motion.div>
 
