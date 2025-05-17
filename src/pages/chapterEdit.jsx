@@ -1,5 +1,8 @@
 import EditChapter from "../components/edithChapter.jsx";
-import Naruto from "../../public/assets/Naruto2.jpg";
+
+
+const Naruto = "./assets/Naruto2.jpg";
+
 
 export default function ChapterEdit() {
     return (
@@ -11,11 +14,11 @@ export default function ChapterEdit() {
             
            
             <div className="hidden md:flex md:w-1/2 items-center justify-center">
-                <img 
-                    src={Naruto} 
-                    alt="Naruto"
-                    className="max-w-full max-h-full object-cover"
-                />
+            <img 
+  src={Naruto} 
+  alt="Naruto"
+  className="max-w-full max-h-full object-cover"
+/>
             </div>
         </section>
     );

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Drawer from "./Drawer";
 import { useAuth } from "../../hook/useAuth";
+import { AuthContext } from "../../hook/AuthContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);

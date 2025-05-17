@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { AuthProvider } from "../hook/useAuth"; 
+import { AuthProvider } from "../hook/AuthContext";
+import { useAuth } from "../hook/useAuth";
 import { Provider } from "react-redux";
 import store from "../store.js";
 

@@ -1,4 +1,4 @@
-import UserProfileEdit from "../components/Perfil";
+import UserProfileEdit from "../components/Profile";
 
 
 export default function Profile() {

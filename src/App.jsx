@@ -15,8 +15,11 @@ import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
+
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import AdminRoute from "./components/AdminRoute"; // Nuevo
+
 import CompanyForm from "./components/Forms/CompanyForm.jsx";
 import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
@@ -29,30 +32,33 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "details", element: <DetailsManga /> },
-      { path: "company", element: <CompanyForm /> },
-      { path: "author", element: <AuthorForm /> },
-      { path: "newManga", element: <MangaForm /> },
-      { path: "newChapter", element: <ChapterForm /> },
 
-      // Rutas protegidas
+      // Formulario común accesible públicamente
+      { path: "author", element: <AuthorForm /> },
+      { path: "newrol", element: <PageRol /> },
+
+      // Rutas protegidas para cualquier usuario autenticado
       {
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
-          { path: "panel", element: <Panel /> },
           { path: "favourites", element: <Favourites /> },
           { path: "profile", element: <Profile /> },
+          { path: "become-author", element: <AuthorCompany /> },
         ],
       },
+
+      // Rutas exclusivas para el admin
       {
-        path: "company",
-        element: <Company />,
+        element: <AdminRoute />,
+        children: [
+          { path: "panel", element: <Panel /> },
+          { path: "company", element: <Company /> },
+          { path: "newManga", element: <MangaForm /> },
+          { path: "newChapter", element: <ChapterForm /> },
+          { path: "editChapter", element: <ChapterEdit /> },
+        ],
       },
-      {
-        path: "editChapter",
-        element: <ChapterEdit />,
-      },
-  
     ],
   },
 
@@ -65,7 +71,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  { path: "/newrol", element: <PageRol /> },
+  // Ruta 404
   { path: "*", element: <NotFound /> },
 ]);
 

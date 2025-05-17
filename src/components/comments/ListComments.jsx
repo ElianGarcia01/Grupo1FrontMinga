@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react"
-import Comment from "./Comment"
-import AddCommentModal from "./AddCommentModal"
+import { useEffect, useState, useContext } from "react";
+import Comment from "./Comment";
+import AddCommentModal from "./AddCommentModal";
+import { AuthContext } from "../../../hook/AuthContext"; // Ajusta la ruta si es necesario
 
 const ListComments = ({ chapterId }) => {
-  const [comments, setComments] = useState([])
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [comments, setComments] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Simulamos el usuario actual logueado
-  const currentUserId = "123" 
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    // TODO: Replace with real fetch
+    // TODO: reemplazar con fetch real desde backend
     const fakeData = [
       {
         id: "1",
@@ -23,33 +23,37 @@ const ListComments = ({ chapterId }) => {
             user: "Anna",
             userId: "456",
             content: "Totally agree!",
-            replies: []
-          }
-        ]
+            replies: [],
+          },
+        ],
       },
       {
         id: "2",
         user: "Liam",
         userId: "789",
         content: "Loved the artwork",
-        replies: []
-      }
-    ]
-    setComments(fakeData)
-  }, [chapterId])
+        replies: [],
+      },
+    ];
+    setComments(fakeData);
+  }, [chapterId]);
 
   const handleAddComment = (text) => {
+    if (!user || user.role === 0) return; 
+
     const newComment = {
       id: Date.now().toString(),
-      user: "Me",
-      userId: currentUserId,
+      user: user.name,
+      userId: user.id,
       content: text,
-      replies: []
-    }
-    setComments([...comments, newComment])
-  }
+      replies: [],
+    };
+    setComments([...comments, newComment]);
+  };
 
   const handleReply = (parentId, text) => {
+    if (!user || user.role === 0) return;
+
     const updated = comments.map((comment) => {
       if (comment.id === parentId) {
         return {
@@ -58,13 +62,13 @@ const ListComments = ({ chapterId }) => {
             ...comment.replies,
             {
               id: Date.now().toString(),
-              user: "Me",
-              userId: currentUserId,
+              user: user.name,
+              userId: user.id,
               content: text,
-              replies: []
-            }
-          ]
-        }
+              replies: [],
+            },
+          ],
+        };
       }
       return {
         ...comment,
@@ -76,55 +80,63 @@ const ListComments = ({ chapterId }) => {
                   ...reply.replies,
                   {
                     id: Date.now().toString(),
-                    user: "Me",
-                    userId: currentUserId,
+                    user: user.name,
+                    userId: user.id,
                     content: text,
-                    replies: []
-                  }
-                ]
+                    replies: [],
+                  },
+                ],
               }
             : reply
-        )
-      }
-    })
-    setComments(updated)
-  }
+        ),
+      };
+    });
+    setComments(updated);
+  };
 
   const handleEdit = (id, newText) => {
+    const canEdit = (commentUserId) => user && (user.role === 3 || user.id === commentUserId);
+
     const updateText = (list) =>
       list.map((item) => {
-        if (item.id === id) return { ...item, content: newText }
+        if (item.id === id && canEdit(item.userId)) return { ...item, content: newText };
         if (item.replies) {
-          return { ...item, replies: updateText(item.replies) }
+          return { ...item, replies: updateText(item.replies) };
         }
-        return item
-      })
+        return item;
+      });
 
-    setComments(updateText(comments))
-  }
+    setComments(updateText(comments));
+  };
 
   const handleDelete = (id) => {
+    const canDelete = (commentUserId) => user && (user.role === 3 || user.id === commentUserId);
+
     const deleteById = (list) =>
       list
-        .filter((item) => item.id !== id)
+        .filter((item) => !(item.id === id && canDelete(item.userId)))
         .map((item) => ({
           ...item,
-          replies: deleteById(item.replies || [])
-        }))
+          replies: deleteById(item.replies || []),
+        }));
 
-    setComments(deleteById(comments))
-  }
+    setComments(deleteById(comments));
+  };
 
   return (
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Comments</h2>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          + Add Comment
-        </button>
+
+        {/* Mostrar botón sólo si está logueado y rol no es 0 */}
+        {user && user.role !== 0 && (
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            + Add Comment
+          </button>
+        )}
       </div>
 
       <div className="flex flex-col gap-4">
@@ -132,7 +144,8 @@ const ListComments = ({ chapterId }) => {
           <Comment
             key={comment.id}
             comment={comment}
-            currentUserId={currentUserId}
+            currentUserId={user?.id}
+            currentUserRole={user?.role}
             onReply={handleReply}
             onEdit={handleEdit}
             onDelete={handleDelete}
@@ -146,7 +159,7 @@ const ListComments = ({ chapterId }) => {
         onSubmit={handleAddComment}
       />
     </div>
-  )
-}
+  );
+};
 
-export default ListComments
+export default ListComments;

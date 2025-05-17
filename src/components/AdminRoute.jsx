@@ -1,15 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
 
-const PrivateRoute = () => {
+const AdminRoute = () => {
   const { user } = useAuth();
 
-
-  if (!user) {
+  if (!user || user.email !== "administrador@gmail.com") {
     return <Navigate to="/signin" replace />;
   }
 
   return <Outlet />;
 };
 
-export default PrivateRoute;
+export default AdminRoute;

@@ -1,14 +1,8 @@
-import { Dialog } from "@headlessui/react"
-import { Fragment } from "react"
-import CommentForm from "./CommentForm"
+import { Dialog } from "@headlessui/react";
+import { Fragment } from "react";
+import CommentForm from "./CommentForm";
 
-const CommentOptionsModal = ({
-  isOpen,
-  onClose,
-  initialText,
-  onEdit,
-  onDelete
-}) => {
+const CommentOptionsModal = ({ isOpen, onClose, initialText, onEdit, onDelete }) => {
   return (
     <Dialog as={Fragment} open={isOpen} onClose={onClose}>
       <div className="fixed inset-0 z-40 bg-black bg-opacity-40 flex items-center justify-center px-4">
@@ -17,8 +11,8 @@ const CommentOptionsModal = ({
 
           <CommentForm
             onSubmit={(text) => {
-              onEdit(text)
-              onClose()
+              onEdit(text);
+              onClose();
             }}
             submitLabel="Save"
             initialText={initialText}
@@ -26,8 +20,8 @@ const CommentOptionsModal = ({
 
           <button
             onClick={() => {
-              onDelete()
-              onClose()
+              onDelete();
+              onClose();
             }}
             className="mt-4 text-sm text-red-500 hover:text-red-700"
           >
@@ -36,7 +30,7 @@ const CommentOptionsModal = ({
         </Dialog.Panel>
       </div>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CommentOptionsModal
+export default CommentOptionsModal;

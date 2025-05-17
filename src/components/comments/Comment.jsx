@@ -1,25 +1,34 @@
-import { useState } from "react"
-import CommentForm from "./CommentForm"
-import CommentOptionsModal from "./CommentOptionsModal"
+import { useState } from "react";
+import CommentForm from "./CommentForm";
+import CommentOptionsModal from "./CommentOptionsModal";
 
-const Comment = ({ comment, currentUserId, onReply, onEdit, onDelete }) => {
-  const [showReplyForm, setShowReplyForm] = useState(false)
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false)
+const Comment = ({
+  comment,
+  currentUserId,
+  currentUserRole,
+  onReply,
+  onEdit,
+  onDelete,
+}) => {
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
-  const isMyComment = comment.userId === currentUserId
+  const isMyComment = comment.userId === currentUserId;
+  const canEditOrDelete = isMyComment || currentUserRole === 3;
+  const canReply = currentUserRole !== 0;
 
   const handleReply = (text) => {
-    onReply(comment.id, text)
-    setShowReplyForm(false)
-  }
+    onReply(comment.id, text);
+    setShowReplyForm(false);
+  };
 
   const handleEdit = (newText) => {
-    onEdit(comment.id, newText)
-  }
+    onEdit(comment.id, newText);
+  };
 
   const handleDelete = () => {
-    onDelete(comment.id)
-  }
+    onDelete(comment.id);
+  };
 
   return (
     <div className="border p-3 rounded shadow-sm bg-white">
@@ -29,22 +38,27 @@ const Comment = ({ comment, currentUserId, onReply, onEdit, onDelete }) => {
           <p className="text-gray-800">{comment.content}</p>
         </div>
 
-        {isMyComment && (
+        {/* Mostrar opciones solo si puede editar o borrar */}
+        {canEditOrDelete && (
           <button
             onClick={() => setIsOptionsOpen(true)}
             className="text-gray-400 hover:text-black"
+            aria-label="Comment options"
           >
             ⋯
           </button>
         )}
       </div>
 
-      <button
-        className="text-blue-500 text-sm mt-2"
-        onClick={() => setShowReplyForm(!showReplyForm)}
-      >
-        Reply
-      </button>
+      {/* Mostrar botón responder sólo si puede */}
+      {canReply && (
+        <button
+          className="text-blue-500 text-sm mt-2"
+          onClick={() => setShowReplyForm(!showReplyForm)}
+        >
+          Reply
+        </button>
+      )}
 
       {showReplyForm && (
         <div className="mt-2">
@@ -63,6 +77,7 @@ const Comment = ({ comment, currentUserId, onReply, onEdit, onDelete }) => {
               key={reply.id}
               comment={reply}
               currentUserId={currentUserId}
+              currentUserRole={currentUserRole}
               onReply={onReply}
               onEdit={onEdit}
               onDelete={onDelete}
@@ -79,7 +94,7 @@ const Comment = ({ comment, currentUserId, onReply, onEdit, onDelete }) => {
         onDelete={handleDelete}
       />
     </div>
-  )
-}
+  );
+};
 
-export default Comment
+export default Comment;

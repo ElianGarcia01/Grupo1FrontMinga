@@ -7,7 +7,8 @@ import MingaM from "/assets/inga.png";
 import "../css/SignUpStyles.css";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../hook/useAuth"; 
+import { useAuth } from "../../hook/useAuth";
+import { AuthContext } from "../../hook/AuthContext";
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
