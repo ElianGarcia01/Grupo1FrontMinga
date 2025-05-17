@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; 
 import inga from '/assets/inga.png';
 import athor from '/assets/athor.jpg';
 
@@ -13,7 +12,7 @@ const RoleSelector = () => {
     
     // Redirigir después de seleccionar el rol
     if (role === "author") {
-      navigate("/"); // Ruta para formulario de autor
+      navigate("/author"); // Ruta para formulario de autor
     } else if (role === "company") {
       navigate("/company"); // Ruta para formulario de empresa
     }

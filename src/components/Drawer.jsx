@@ -124,7 +124,7 @@ const Drawer = ({ open, onClose }) => {
                 onClose();
               }}
               className={`
-                w-full text-left relative overflow-hidden group flex items-center px-4 py-3 rounded-lg
+                w-full text-left cursor-pointer relative overflow-hidden group flex items-center px-4 py-3 rounded-lg
                 transition-all duration-300 
                 hover:bg-white/10 text-white/80 hover:text-white
                 transform ${animateItems ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}

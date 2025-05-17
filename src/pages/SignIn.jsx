@@ -3,7 +3,6 @@ import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import signInImage from "/assets/SignIn.jpg";
 import MingaM from "/assets/inga.png";
-import "../css/SignUpStyles.css";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hook/useAuth";
@@ -56,9 +55,7 @@ const SignInForm = () => {
       <div
         className="hidden md:block md:w-1/2 min-h-screen bg-cover bg-center"
         style={{ backgroundImage: `url(${signInImage})` }}
-      >
-        <div className="w-full h-full bg-violet-900/50" />
-      </div>
+      ></div>
 
       {/* Contenedor izquierdo (formulario + navbar) */}
       <div className="w-full md:w-1/2 flex flex-col relative z-10 bg-white">
@@ -146,13 +143,19 @@ const SignInForm = () => {
             {/* Links */}
             <p className="mt-6 text-center text-sm md:text-md text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-indigo-600 font-bold hover:underline">
+              <Link
+                to="/signup"
+                className="text-indigo-600 font-bold hover:underline"
+              >
                 Sign up
               </Link>
             </p>
             <p className="mt-2 text-center text-sm md:text-md text-gray-600">
               Go back to{" "}
-              <Link to="/" className="text-indigo-600 font-bold hover:underline">
+              <Link
+                to="/"
+                className="text-indigo-600 font-bold hover:underline"
+              >
                 home page
               </Link>
             </p>
