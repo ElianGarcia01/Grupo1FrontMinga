@@ -1,36 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSurprise, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { FaFaceGrinHearts } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import { getChapters } from "../../redux/chapterSlice";
 
 const Details = () => {
-  // Se toma el state pasado por navigate y el parámetro :id de la URL
+  // Entradas del router
   const { state } = useLocation();
   const { id } = useParams();
 
-  // Traemos todos los mangas y categorías del store (fallback si aún no cargaron)
-  const allMangas = useSelector((s) => s.mangas.all) || [];
-  const allCategories = useSelector((s) => s.categories.all) || [];
-
-  // Control de la pestaña activa: 'manga' o 'chapters'
+  // Estado local para pestañas
   const [selectedTab, setSelectedTab] = useState("manga");
 
-  // Si viene state se usa, si no se busca en el store por el id
+  // Al montar, disparar la acción para traer los capítulos
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getChapters());
+  }, [dispatch]);
+
+  // Traer mangas, categorías y capítulos del store
+  const allMangas = useSelector((s) => s.mangas.all) || [];
+  const allCategories = useSelector((s) => s.categories.all) || [];
+  const allChapters = useSelector((s) => s.chapters.all) || [];
+
+  // 4️⃣ Fallback de manga y categorías (como antes)
   const manga = state?.manga || allMangas.find((m) => m._id === id);
+  const { _id } = manga;
+
+  // Filtramos solo capítulos del manga actual
+  const filteredChapters = allChapters.filter(
+    (chapter) => chapter.manga_id?._id === _id || chapter.manga_id?._id === id
+  );
+
   const categories = state?.categories || allCategories;
 
-  // Si no hay manga (ni por state ni por id), se muestra un mensaje
-  if (!state?.manga && !manga) return <p>No manga selected</p>;
+  if (!manga) return <p>No manga selected</p>;
 
-  // Destructuracion de los datos del manga ya encontrado
+  // 6️⃣ Extraemos datos del manga
   const { title, cover_photo, description, category_id } = manga;
   const type = category_id?.name || "Unknown";
 
-  // Preparar capítulos (o array vacío si no tiene)
-  const chapters = manga.chapters || [];
-
-  // Obtener los colores según la categoría
+  // 7️⃣ Colores según categoría
   const categoryData = categories.find(
     (cat) => cat.name.toLowerCase() === type.toLowerCase()
   );
@@ -40,7 +51,7 @@ const Details = () => {
   return (
     <section className="w-full px-4 py-8 min-h-screen flex justify-center items-center">
       <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
-        {/* Imagen principal del manga */}
+        {/* Imagen */}
         <div className="w-full lg:w-1/2">
           <img
             src={cover_photo}
@@ -49,14 +60,13 @@ const Details = () => {
           />
         </div>
 
-        {/* Información y tabs */}
+        {/* Info y Tabs */}
         <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start">
-          {/* Título */}
           <h1 className="text-3xl font-semibold mt-4 text-center lg:text-left">
             {title}
           </h1>
 
-          {/* Etiqueta de categoría con su color */}
+          {/* Etiqueta */}
           <div className="flex justify-between items-center w-full mt-4">
             <span
               className="text-xs md:text-sm px-4 py-1 rounded-full w-fit shadow-sm"
@@ -67,7 +77,7 @@ const Details = () => {
             <p className="text-lg text-gray-600">Company Name</p>
           </div>
 
-          {/* Botones de reacciones */}
+          {/* Reacciones */}
           <div className="flex gap-4 mt-6 flex-wrap justify-center lg:justify-start">
             {[FaThumbsUp, FaThumbsDown, FaSurprise, FaFaceGrinHearts].map(
               (Icon, idx) => (
@@ -81,7 +91,7 @@ const Details = () => {
             )}
           </div>
 
-          {/* Switch entre pestañas */}
+          {/* Switch de pestañas */}
           <div className="flex gap-4 mt-6">
             <button
               onClick={() => setSelectedTab("manga")}
@@ -105,27 +115,28 @@ const Details = () => {
             </button>
           </div>
 
-          {/* Contenido de la pestaña activa */}
+          {/* Contenido de la pestaña */}
           <div className="mt-6 w-full">
             {selectedTab === "manga" ? (
-              /* Descripción del manga */
               <p className="text-lg text-gray-700 leading-relaxed">
                 {description}
               </p>
             ) : (
-              /* Listado de capítulos */
               <div className="grid gap-4 mt-2">
-                {chapters.map((chapter) => (
+                {filteredChapters.map((chapter) => (
                   <div
-                    key={chapter.number}
+                    key={chapter._id || chapter.order}
                     className="border border-gray-300 rounded-xl p-4 bg-white shadow"
                   >
                     <h3 className="font-semibold text-xl">
-                      Chapter {chapter.number}
+                      Chapter {chapter.order}
                     </h3>
                     <p className="text-gray-600">{chapter.title}</p>
                   </div>
                 ))}
+                {filteredChapters.length === 0 && (
+                  <p className="text-center text-gray-500">No chapters yet</p>
+                )}
               </div>
             )}
           </div>
