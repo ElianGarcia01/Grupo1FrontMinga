@@ -55,8 +55,8 @@ const Details = () => {
     <img
       src={cover_photo}
       alt={title}
-      className="w-full h-[300px] lg:h-[700px] rounded-2xl
-      object-cover object-top shadow-lg"
+      className="w-full h-[300px] lg:h-[600px] rounded-2xl
+      object-contain object-center"
     />
   </div>
 
@@ -95,7 +95,7 @@ const Details = () => {
         <button
           key={tab}
           onClick={() => setSelectedTab(tab)}
-          className={`px-8 py-2 text-lg rounded-2xl font-medium transition ${
+          className={`px-8 py-2 text-lg cursor-pointer rounded-2xl font-medium transition ${
             selectedTab === tab
               ? "bg-indigo-600 text-white shadow"
               : "bg-gray-200 text-black hover:bg-gray-300"
@@ -117,7 +117,7 @@ const Details = () => {
           {filteredChapters.map((ch) => (
             <div
               key={ch._id}
-              className="border border-gray-200 rounded-xl p-4 bg-white shadow hover:shadow-md transition"
+              className="border cursor-pointer border-gray-200 rounded-xl p-4 bg-white shadow hover:shadow-md transition"
             >
               <h3 className="font-semibold text-lg lg:text-xl mb-1">
                 Chapter {ch.order}
