@@ -11,21 +11,21 @@ import { FaSearch } from "react-icons/fa";
 export default function Mangas() {
   const dispatch = useDispatch();
 
-  // Selectors para leer mangas, categorías y capítulos del store
+  // Selectores de Redux
   const mangas = useSelector((state) => state.mangas.all) || [];
   const categories = useSelector((state) => state.categories.all) || [];
 
-  // Estado local: búsqueda y filtro de categoría
+  // Estado local
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  // Al montar componente: disparar fetch de mangas, categorías y capítulos
+  // Cargar datos al montar el componente
   useEffect(() => {
     dispatch(fetchMangas());
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Filtrado de mangas según texto y categoría
+  // Filtrar mangas por búsqueda y categoría
   const filteredMangas = mangas.filter((manga) => {
     const matchesSearch = manga.title
       .toLowerCase()
@@ -36,12 +36,12 @@ export default function Mangas() {
     return matchesSearch && matchesCategory;
   });
 
-  // Lista de categorías para el filtro (incluye “All”)
+  // Categorías únicas
   const categoryNames = ["All", ...categories.map((cat) => cat.name)];
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      {/* Hero: fondo y SearchBar */}
+      {/* Hero con fondo e input */}
       <div
         className="min-h-screen w-full bg-cover bg-center"
         style={{ backgroundImage: "url('/assets/Mangas.jpg')" }}
@@ -58,21 +58,21 @@ export default function Mangas() {
         </section>
       </div>
 
-      {/* Contenido: filtros y tarjetas */}
+      {/* Contenedor principal */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="w-full max-w-7xl mx-auto -mt-40 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
       >
-        {/* Filtro de Categorías */}
+        {/* Filtro de categorías */}
         <CategoryFilter
           categories={categoryNames}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
 
-        {/* Grid de MangaCards */}
+        {/* Lista de mangas */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
           initial={{ opacity: 0 }}
@@ -88,7 +88,7 @@ export default function Mangas() {
           ))}
         </motion.div>
 
-        {/* Estado vacío: sin resultados */}
+        {/* Mensaje si no hay resultados */}
         {filteredMangas.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -96,14 +96,13 @@ export default function Mangas() {
             transition={{ duration: 0.5 }}
             className="text-center text-xl text-gray-600 mt-10 mb-20"
           >
-            {/* Muestra mensaje si no hay resultados */}
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <FaSearch size={48} className="text-gray-500 mb-4" />
               <p className="text-xl md:text-2xl font-semibold text-gray-700">
-                Oops! No results were found for your search.
+                No results found
               </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Try another term or select another category.{" "}
+              <p className="text-gray-500 text-sm md:text-base mt-2">
+                Try searching a different title or category
               </p>
             </div>
           </motion.div>

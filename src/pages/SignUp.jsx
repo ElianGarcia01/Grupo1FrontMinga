@@ -8,7 +8,6 @@ import "../css/SignUpStyles.css";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hook/useAuth";
-import { AuthContext } from "../../hook/AuthContext";
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -49,8 +48,8 @@ const SignUpForm = () => {
         throw new Error(data.message || "Sign up failed");
       }
 
-      
-      login(data.response.token, data.response.user);
+      // Aquí asumo que data.response contiene { token, user }
+      login(data.response.user, data.response.token);
 
       navigate("/");
     } catch (err) {

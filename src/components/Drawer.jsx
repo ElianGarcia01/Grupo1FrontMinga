@@ -21,12 +21,12 @@ const Drawer = ({ open, onClose }) => {
 
     return [
       { to: "/", label: "Home", always: true },
-      { to: "/mangas", label: "Mangas", requiresAuth: true, minRole: 0 }, // Usuarios con rol 0 o más
+      { to: "/mangas", label: "Mangas", requiresAuth: true, minRole: 0 },
       { to: "/signUp", label: "Register", requiresGuest: true },
       { to: "/signIn", label: "Log In", requiresGuest: true },
-      { to: "/favourites", label: "Favourites", requiresAuth: true, minRole: 1 }, // Solo rol 1,2,3
-      { to: "/newrol", label: "Become Author or Company", requiresAuth: true, onlyForRole0: true }, // Solo rol 0
-      { to: "/panel", label: "Admin Panel", requiresAuth: true, adminOnly: true }, // Solo admin rol 3
+      { to: "/favourites", label: "Favourites", requiresAuth: true, minRole: 1 },
+      { to: "/newrol", label: "Become Author or Company", requiresAuth: true, onlyForRole0: true },
+      { to: "/panel", label: "Admin Panel", requiresAuth: true, adminOnly: true },
     ].filter(item => {
       if (item.requiresAuth && !user) return false;
       if (item.requiresGuest && user) return false;
@@ -35,6 +35,19 @@ const Drawer = ({ open, onClose }) => {
       if (item.onlyForRole0 && role !== 0) return false;
       return true;
     });
+  };
+
+  const getAccountLabel = () => {
+    switch (user?.role) {
+      case 1:
+        return "Author account";
+      case 2:
+        return "Company account";
+      case 3:
+        return "Admin account";
+      default:
+        return "User account";
+    }
   };
 
   return (
@@ -67,15 +80,19 @@ const Drawer = ({ open, onClose }) => {
             ) : (
               <div className="w-10 h-10 rounded-full bg-indigo-400 flex items-center justify-center">
                 <span className="text-indigo-900 font-bold">
-                  {user?.email?.charAt(0).toUpperCase() || "?"}
+                  {user?.name?.charAt(0).toUpperCase() || "?"}
                 </span>
               </div>
             )}
             <div className="flex flex-col">
               <span className="text-sm font-medium break-all line-clamp-1">
-                {user?.email || "You are not logged in"}
+                {user?.name
+                  ? user.name
+                  : user?.email
+                  ? user.email
+                  : "You are not logged in"}
               </span>
-              {user && <span className="text-xs text-indigo-200">User account</span>}
+              {user && <span className="text-xs text-indigo-200">{getAccountLabel()}</span>}
             </div>
           </div>
           <button
