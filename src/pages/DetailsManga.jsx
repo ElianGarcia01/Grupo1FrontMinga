@@ -49,100 +49,93 @@ const Details = () => {
   const textColor = categoryData?.color || "#374151";
 
   return (
-    <section className="w-full px-4 py-8 min-h-screen flex justify-center items-center">
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
-        {/* Imagen */}
-        <div className="w-full lg:w-1/2">
-          <img
-            src={cover_photo}
-            alt={title}
-            className="w-full h-4/5 rounded-2xl object-cover"
-          />
+<section className="w-full max-w-[1400px] mx-auto px-6 py-12 min-h-screen flex flex-col lg:flex-row lg:gap-16">
+  {/* IMAGEN */}
+  <div className="w-full lg:w-2/5">
+    <img
+      src={cover_photo}
+      alt={title}
+      className="w-full h-[300px] lg:h-[700px] rounded-2xl
+      object-cover object-top shadow-lg"
+    />
+  </div>
+
+  {/* INFO + TABS */}
+  <div className="w-full lg:w-3/5 flex flex-col">
+    <h1 className="text-3xl lg:text-4xl font-bold mt-6 lg:mt-0">{title}</h1>
+
+    {/* Etiqueta + empresa */}
+    <div className="flex justify-between items-center mt-4">
+      <span
+        className="text-sm lg:text-base px-4 py-1 rounded-full shadow-sm"
+        style={{ backgroundColor: bgColor, color: textColor }}
+      >
+        {type}
+      </span>
+      <p className="text-lg lg:text-xl text-gray-600">Company Name</p>
+    </div>
+
+    {/* Reacciones */}
+    <div className="flex gap-4 mt-8 flex-wrap">
+      {[FaThumbsUp, FaThumbsDown, FaSurprise, FaFaceGrinHearts].map(
+        (Icon, idx) => (
+          <button
+            key={idx}
+            className="p-4 lg:p-5 rounded-full bg-white shadow-md hover:bg-yellow-100 transition"
+          >
+            <Icon className="text-yellow-500 text-2xl lg:text-3xl" />
+          </button>
+        )
+      )}
+    </div>
+
+    {/* Sticky Tabs */}
+    <div className="mt-10 sticky top-0 bg-white z-10 flex gap-4">
+      {["manga", "chapters"].map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setSelectedTab(tab)}
+          className={`px-8 py-2 text-lg rounded-2xl font-medium transition ${
+            selectedTab === tab
+              ? "bg-indigo-600 text-white shadow"
+              : "bg-gray-200 text-black hover:bg-gray-300"
+          }`}
+        >
+          {tab === "manga" ? "Manga" : "Chapters"}
+        </button>
+      ))}
+    </div>
+
+    {/* Contenido scrollable */}
+    <div className="mt-6 overflow-y-auto h-[400px] pr-2">
+      {selectedTab === "manga" ? (
+        <p className="text-lg lg:text-xl leading-relaxed text-gray-700">
+          {description}
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredChapters.map((ch) => (
+            <div
+              key={ch._id}
+              className="border border-gray-200 rounded-xl p-4 bg-white shadow hover:shadow-md transition"
+            >
+              <h3 className="font-semibold text-lg lg:text-xl mb-1">
+                Chapter {ch.order}
+              </h3>
+              <p className="text-gray-600">{ch.title}</p>
+            </div>
+          ))}
+          {filteredChapters.length === 0 && (
+            <p className="col-span-full text-center text-gray-500">
+              No chapters yet
+            </p>
+          )}
         </div>
+      )}
+    </div>
+  </div>
+</section>
 
-        {/* Info y Tabs */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start">
-          <h1 className="text-3xl font-semibold mt-4 text-center lg:text-left">
-            {title}
-          </h1>
-
-          {/* Etiqueta */}
-          <div className="flex justify-between items-center w-full mt-4">
-            <span
-              className="text-xs md:text-sm px-4 py-1 rounded-full w-fit shadow-sm"
-              style={{ backgroundColor: bgColor, color: textColor }}
-            >
-              {type}
-            </span>
-            <p className="text-lg text-gray-600">Company Name</p>
-          </div>
-
-          {/* Reacciones */}
-          <div className="flex gap-4 mt-6 flex-wrap justify-center lg:justify-start">
-            {[FaThumbsUp, FaThumbsDown, FaSurprise, FaFaceGrinHearts].map(
-              (Icon, idx) => (
-                <button
-                  key={idx}
-                  className="p-4 rounded-full cursor-pointer bg-white shadow-md hover:bg-yellow-100 transition"
-                >
-                  <Icon className="text-yellow-500 text-2xl" />
-                </button>
-              )
-            )}
-          </div>
-
-          {/* Switch de pestañas */}
-          <div className="flex gap-4 mt-6">
-            <button
-              onClick={() => setSelectedTab("manga")}
-              className={`px-8 py-2 text-lg rounded-2xl cursor-pointer ${
-                selectedTab === "manga"
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-200 text-black hover:bg-gray-300"
-              }`}
-            >
-              Manga
-            </button>
-            <button
-              onClick={() => setSelectedTab("chapters")}
-              className={`px-8 py-2 text-lg rounded-2xl cursor-pointer ${
-                selectedTab === "chapters"
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-200 text-black hover:bg-gray-300"
-              }`}
-            >
-              Chapters
-            </button>
-          </div>
-
-          {/* Contenido de la pestaña */}
-          <div className="mt-6 w-full">
-            {selectedTab === "manga" ? (
-              <p className="text-lg text-gray-700 leading-relaxed">
-                {description}
-              </p>
-            ) : (
-              <div className="grid gap-4 mt-2">
-                {filteredChapters.map((chapter) => (
-                  <div
-                    key={chapter._id || chapter.order}
-                    className="border border-gray-300 rounded-xl p-4 bg-white shadow"
-                  >
-                    <h3 className="font-semibold text-xl">
-                      Chapter {chapter.order}
-                    </h3>
-                    <p className="text-gray-600">{chapter.title}</p>
-                  </div>
-                ))}
-                {filteredChapters.length === 0 && (
-                  <p className="text-center text-gray-500">No chapters yet</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
   );
 };
 
