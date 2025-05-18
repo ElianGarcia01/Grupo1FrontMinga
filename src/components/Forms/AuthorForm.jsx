@@ -1,44 +1,50 @@
 export default function AuthorForm() {
   return (
-    <div className="min-h-screen flex justify-center items-center px-4 bg-gray-100">
-      <div className="bg-gray-100 p-6 rounded-2xl w-full max-w-sm text-center shadow-md">
-        <div className="flex justify-center mb-4">
-          <div className="w-20 h-20 bg-gray-300 rounded-full" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 px-4">
+      <div className="w-full max-w-md rounded-3xl bg-white shadow-xl ring-1 ring-black/5 overflow-hidden">
+        {/* Cabecera con avatar y título */}
+        <div className="relative h-32 bg-gradient-to-r from-indigo-500 to-purple-600">
+          <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,white,transparent_60%)]" />
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
+            <div className="w-20 h-20 rounded-full bg-gray-200 ring-4 ring-white flex items-center justify-center text-3xl text-gray-400">
+              📚
+            </div>
+          </div>
         </div>
-        <h2 className="text-xl font-semibold mb-6">New Author</h2>
-        <form className="space-y-4">
-          <input
-            type="text"
-            placeholder="Lucas Ezequiel"
-            className="w-full border-b border-gray-500 bg-transparent py-2 px-1 focus:outline-none"
-          />
-          <input
-            type="text"
-            placeholder="Silva"
-            className="w-full border-b border-gray-500 bg-transparent py-2 px-1 focus:outline-none"
-          />
-          <input
-            type="text"
-            placeholder="Caseros, Buenos Aires"
-            className="w-full border-b border-gray-500 bg-transparent py-2 px-1 focus:outline-none"
-          />
-          <input
-            type="text"
-            placeholder="28/12/2022"
-            className="w-full border-b border-gray-500 bg-transparent py-2 px-1 focus:outline-none"
-          />
-          <input
-            type="text"
-            placeholder="URL Profile Image"
-            className="w-full border-b border-gray-500 bg-transparent py-2 px-1 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-full font-semibold hover:bg-indigo-700 transition duration-200"
-          >
-            Send
-          </button>
-        </form>
+
+        <div className="pt-14 pb-10 px-8">
+          <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
+            New Author
+          </h2>
+
+          <form className="space-y-6">
+            {[
+              { placeholder: "Lucas Ezequiel" },
+              { placeholder: "Silva" },
+              { placeholder: "Caseros, Buenos Aires" },
+              { placeholder: "28/12/2022", type: "date" },
+              { placeholder: "URL Profile Image" },
+            ].map((field, i) => (
+              <div key={i} className="relative">
+                <input
+                  {...field}
+                  className="peer w-full bg-transparent border-b-2 border-gray-300 py-2 placeholder-transparent focus:outline-none focus:border-indigo-500 transition"
+                />
+                {/* label flotante */}
+                <label className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-indigo-600">
+                  {field.placeholder}
+                </label>
+              </div>
+            ))}
+
+            <button
+              type="submit"
+              className="mt-4 w-full py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold tracking-wide shadow-md hover:brightness-110 active:brightness-95 transition"
+            >
+              Send
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
