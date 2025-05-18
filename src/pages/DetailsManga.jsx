@@ -81,7 +81,7 @@ const Details = () => {
         (Icon, idx) => (
           <button
             key={idx}
-            className="p-4 lg:p-5 rounded-full bg-white shadow-md hover:bg-yellow-100 transition"
+            className="p-4 lg:p-5 cursor-pointer rounded-full bg-white shadow-md hover:bg-yellow-100 transition"
           >
             <Icon className="text-yellow-500 text-2xl lg:text-3xl" />
           </button>
