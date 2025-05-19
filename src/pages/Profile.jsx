@@ -2,6 +2,20 @@ import UserProfileEdit from "../components/Profile";
 
 
 export default function Profile() {
+  
+  const rol = localStorage.getItem("user")
+
+    const handleRoleSelection = (role) => {
+    setSelectedRole(role);
+    
+    // Redirigir después de seleccionar el rol
+    if (role === "author") {
+      navigate("/newAuthor"); // Ruta para formulario de autor
+    } else if (role === "company") {
+      navigate("/newCompany"); // Ruta para formulario de empresa
+    }
+  };
+
   return (
     <section
       className="relative min-h-screen flex items-center justify-center text-white overflow-visible"

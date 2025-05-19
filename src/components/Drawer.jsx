@@ -33,7 +33,7 @@ const Drawer = ({ open, onClose }) => {
       }, // Solo rol 0
       {
         to: "/profileAuthor",
-        label: "Profile Author",
+        label: "My Profile",
         requiresAuth: true,
         minRole: 1,
       }, // Solo rol 1,2,3
@@ -50,20 +50,8 @@ const Drawer = ({ open, onClose }) => {
         minRole: 1,
       }, // Solo rol 1,2,3
       {
-        to: "/newChapter",
-        label: "New Chapter",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
         to: "/AuthorCompany",
-        label: "Profile Company",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
-        to: "/editChapter",
-        label: "Edit Chapter",
+        label: "Manager",
         requiresAuth: true,
         minRole: 1,
       }, // Solo rol 1,2,3
