@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaSurprise, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { FaFaceGrinHearts } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 export default function Reactions({ mangaId }) {
   const reactions = [
@@ -10,12 +11,18 @@ export default function Reactions({ mangaId }) {
     { icon: FaFaceGrinHearts, value: "love" },
   ];
 
+  const user = JSON.parse(localStorage.getItem("user"))
   const token = localStorage.getItem("token")
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
   
 
   const fetchReactionFromDB = async () => {
+    if (user?.role === 0) {
+      setSelected(null)
+      return;
+    }
     try {
     const response = await fetch(
       `http://localhost:8080/api/reactions/byManga?manga_id=${mangaId}`,
@@ -44,6 +51,10 @@ export default function Reactions({ mangaId }) {
   }, [mangaId])
 
   const handleReactionClick = async (value) => {
+    if (user?.role === 0) {
+      navigate("/newRol")
+      return;
+    }
     setLoading(true)
 
     try {
