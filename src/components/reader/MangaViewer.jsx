@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, ChevronLeft, ChevronRight, MessageCircle, MoreHorizontal } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hook/useAuth"; // Adjust the path as needed
+import { useAuth } from "../../../hook/useAuth"; 
 import AddCommentModal from "../comments/AddCommentModal";
 import CommentOptionsModal from "../comments/CommentOptionsModal";
 import Comment from "../comments/Comment";
@@ -25,12 +25,12 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
       setCurrentPage(Number(savedProgress));
     }
     
-    // Fetch comments for this chapter - replace with your API call
+    
     fetchComments();
   }, [chapterId]);
 
   const fetchComments = () => {
-    // Example data - replace with API call
+    
     setComments([
       {
         id: '1',
