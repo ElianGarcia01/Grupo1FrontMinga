@@ -5,15 +5,15 @@ const MangaCard = ({ manga }) => {
 
   const getCategoryStyle = (type) => {
     switch (type) {
-      case "Shōnen":
+      case "Shonen":
         return "bg-orange-200 text-orange-800 border-orange-500";
       case "Seinen":
         return "bg-red-200 text-red-800 border-red-500";
-      case "Shōjo":
+      case "Shojo":
         return "bg-green-200 text-green-800 border-green-500";
-      case "Sci-fi":
+      case "Seinen":
         return "bg-blue-200 text-blue-800 border-blue-500";
-      case "Kodomo":
+      case "Komodo":
         return "bg-purple-200 text-purple-800 border-purple-500";
       default:
         return "bg-gray-200 text-gray-800 border-gray-500";
