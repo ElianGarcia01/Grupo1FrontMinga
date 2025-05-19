@@ -1,11 +1,19 @@
 import { useState, useEffect, useRef } from "react";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, MessageCircle, MoreHorizontal } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hook/useAuth"; // Adjust the path as needed
+import AddCommentModal from "../comments/AddCommentModal";
+import CommentOptionsModal from "../comments/CommentOptionsModal";
+import Comment from "../comments/Comment";
 
 const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [isAddCommentModalOpen, setIsAddCommentModalOpen] = useState(false);
   const touchStartX = useRef(null);
 
   // Prioriza el mangaId recibido por state, si no existe lo busca en el capítulo
@@ -16,7 +24,33 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
     if (savedProgress) {
       setCurrentPage(Number(savedProgress));
     }
+    
+    // Fetch comments for this chapter - replace with your API call
+    fetchComments();
   }, [chapterId]);
+
+  const fetchComments = () => {
+    // Example data - replace with API call
+    setComments([
+      {
+        id: '1',
+        userId: 'user1',
+        user: 'Manga Fan',
+        content: '¡Este capítulo estuvo increíble!',
+        timestamp: new Date().toISOString(),
+        replies: [
+          {
+            id: '1-1',
+            userId: 'user2',
+            user: 'Comic Lover',
+            content: '¡Estoy de acuerdo! El arte es impresionante.',
+            timestamp: new Date().toISOString(),
+            replies: []
+          }
+        ]
+      }
+    ]);
+  };
 
   useEffect(() => {
     localStorage.setItem(`progress-${chapterId}`, currentPage);
@@ -60,6 +94,84 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
     }
   };
 
+  const handleAddComment = (text) => {
+    const newComment = {
+      id: Date.now().toString(),
+      userId: user?._id,
+      user: user?.name,
+      content: text,
+      timestamp: new Date().toISOString(),
+      replies: []
+    };
+    
+    setComments([newComment, ...comments]);
+  };
+
+  const handleReplyComment = (commentId, text) => {
+    const addReply = (commentsList) => {
+      return commentsList.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            replies: [
+              ...comment.replies,
+              {
+                id: `${comment.id}-${Date.now()}`,
+                userId: user?._id,
+                user: user?.name,
+                content: text,
+                timestamp: new Date().toISOString(),
+                replies: []
+              }
+            ]
+          };
+        } else if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: addReply(comment.replies)
+          };
+        }
+        return comment;
+      });
+    };
+
+    setComments(addReply(comments));
+  };
+
+  const handleEditComment = (commentId, newText) => {
+    const editCommentInList = (commentsList) => {
+      return commentsList.map(comment => {
+        if (comment.id === commentId) {
+          return { ...comment, content: newText };
+        } else if (comment.replies && comment.replies.length > 0) {
+          return {
+            ...comment,
+            replies: editCommentInList(comment.replies)
+          };
+        }
+        return comment;
+      });
+    };
+
+    setComments(editCommentInList(comments));
+  };
+
+  const handleDeleteComment = (commentId) => {
+    const deleteFromList = (commentsList) => {
+      return commentsList.filter(comment => {
+        if (comment.id === commentId) {
+          return false;
+        } 
+        if (comment.replies && comment.replies.length > 0) {
+          comment.replies = deleteFromList(comment.replies);
+        }
+        return true;
+      });
+    };
+
+    setComments(deleteFromList(comments));
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black text-white flex flex-col">
       {/* Header */}
@@ -70,26 +182,76 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
             Page {currentPage + 1} of {pages.length}
           </p>
         </div>
-        <button
-          onClick={handleExit}
-          className="text-white hover:text-red-400 transition"
-          aria-label="Exit"
-        >
-          <X size={24} />
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-full ${
+              showComments ? "bg-indigo-600" : "bg-gray-800"
+            } transition hover:bg-indigo-500`}
+          >
+            <MessageCircle size={18} />
+            <span className="text-sm">{comments.length}</span>
+          </button>
+          <button
+            onClick={handleExit}
+            className="text-white hover:text-red-400 transition"
+            aria-label="Exit"
+          >
+            <X size={24} />
+          </button>
+        </div>
       </div>
 
-      {/* Viewer */}
-      <div
-        className="flex-1 flex items-center justify-center w-full overflow-hidden"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <img
-          src={pages[currentPage]}
-          alt={`Page ${currentPage + 1}`}
-          className="max-h-[80vh] max-w-full object-contain transition duration-300 ease-in-out"
-        />
+      <div className="flex flex-1 overflow-hidden">
+        {/* Main Content */}
+        <div
+          className={`flex-1 flex items-center justify-center overflow-hidden transition-all ${
+            showComments ? "lg:w-2/3" : "w-full"
+          }`}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <img
+            src={pages[currentPage]}
+            alt={`Page ${currentPage + 1}`}
+            className="max-h-[80vh] max-w-full object-contain transition duration-300 ease-in-out"
+          />
+        </div>
+
+        {/* Comments Section */}
+        {showComments && (
+          <div className="w-full lg:w-1/3 bg-gray-900 flex flex-col h-full border-l border-gray-700">
+            <div className="p-4 flex justify-between items-center border-b border-gray-700">
+              <h2 className="text-lg font-semibold">Comments</h2>
+              <button
+                onClick={() => setIsAddCommentModalOpen(true)}
+                className="px-4 py-1.5 bg-indigo-600 rounded-md text-sm hover:bg-indigo-500 transition"
+                disabled={!user}
+              >
+                Add Comment
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {comments.length > 0 ? (
+                comments.map((comment) => (
+                  <Comment
+                    key={comment.id}
+                    comment={comment}
+                    currentUserId={user?._id}
+                    currentUserRole={user?.role || 0}
+                    onReply={handleReplyComment}
+                    onEdit={handleEditComment}
+                    onDelete={handleDeleteComment}
+                  />
+                ))
+              ) : (
+                <div className="text-center text-gray-400 py-6">
+                  No comments yet. Be the first to comment!
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Progress Bar */}
@@ -113,12 +275,14 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
 
         <div className="flex gap-1 items-center overflow-x-auto max-w-[50%] scrollbar-thin scrollbar-thumb-gray-600">
           {pages.map((_, index) => (
-            <span
+            <button
               key={index}
+              onClick={() => setCurrentPage(index)}
               className={`w-2 h-2 rounded-full ${
                 index === currentPage ? "bg-white" : "bg-gray-500"
-              }`}
-            ></span>
+              } transition-all duration-200 hover:bg-gray-300`}
+              aria-label={`Go to page ${index + 1}`}
+            ></button>
           ))}
         </div>
 
@@ -131,6 +295,13 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
           <ChevronRight size={20} />
         </button>
       </div>
+
+      {/* Modals */}
+      <AddCommentModal
+        isOpen={isAddCommentModalOpen}
+        onClose={() => setIsAddCommentModalOpen(false)}
+        onSubmit={handleAddComment}
+      />
     </div>
   );
 };
