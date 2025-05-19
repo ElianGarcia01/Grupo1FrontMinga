@@ -12,9 +12,9 @@ const RoleSelector = () => {
     
     // Redirigir después de seleccionar el rol
     if (role === "author") {
-      navigate("/author"); // Ruta para formulario de autor
+      navigate("/newAuthor"); // Ruta para formulario de autor
     } else if (role === "company") {
-      navigate("/company"); // Ruta para formulario de empresa
+      navigate("/newCompany"); // Ruta para formulario de empresa
     }
   };
 
