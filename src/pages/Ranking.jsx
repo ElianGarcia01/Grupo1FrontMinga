@@ -109,7 +109,7 @@ function Ranking() {
                                         <span className="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold bg-opacity-70"></span>
                                     </div>
                                     </Link>
-                                    <div className="text-white w-96 ml-5">
+                                    <div className="text-white w-full md:w-80 lg:w-80 ml-5">
                                         <div className="flex items-center">
                                             <span className="text-4xl mr-4">{index + 2}</span>
                                             <h1 className="text-2xl">{manga.manga.title}</h1>
