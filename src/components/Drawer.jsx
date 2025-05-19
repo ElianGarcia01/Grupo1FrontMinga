@@ -24,6 +24,7 @@ const Drawer = ({ open, onClose }) => {
       { to: "/signUp", label: "Register", requiresGuest: true },
       { to: "/signIn", label: "Log In", requiresGuest: true },
       { to: "/mangas", label: "Mangas", requiresAuth: true, minRole: 0 }, // Usuarios con rol 0 o más
+      { to: "/ranking", label: "Top Mangas", requiresAuth: true, minRole: 0 },
       {
         to: "/newRol",
         label: "Become Author or Company",

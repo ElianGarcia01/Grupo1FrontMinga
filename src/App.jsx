@@ -15,6 +15,7 @@ import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
 import ReaderPage from "./pages/ReaderPage.jsx";
+import Ranking from "./pages/Ranking.jsx"
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
           { path: "favourites", element: <Favourites /> },
           { path: "newManga", element: <MangaForm /> },
           { path: "newChapter", element: <ChapterForm /> },
+          { path: "ranking", element: <Ranking />}
         ],
       },
 
