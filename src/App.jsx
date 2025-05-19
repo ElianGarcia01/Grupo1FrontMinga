@@ -14,6 +14,7 @@ import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
+import ReaderPage from "./pages/ReaderPage.jsx";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -32,21 +33,19 @@ const router = createBrowserRouter([
     element: <StandarLayout />,
     children: [
       { path: "", element: <Home /> },
-      { path: "details/:id", element: <DetailsManga /> },
-
-      // Rutas públicas accesibles para todos
-      { path: "author", element: <AuthorForm /> },
-      { path: "company", element: <CompanyForm /> },
-      { path: "newrol", element: <PageRol /> },
-
       // Rutas protegidas para usuarios autenticados
       {
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
-          { path: "favourites", element: <Favourites /> },
+          { path: "details/:id", element: <DetailsManga /> },
+          { path: "newRol", element: <PageRol /> },
+          { path: "author", element: <AuthorForm /> },
+          { path: "company", element: <CompanyForm /> },
           { path: "profile", element: <Profile /> },
-          { path: "become-author", element: <AuthorCompany /> }, // O cambia a PageRol si AuthorCompany no existe
+          { path: "favourites", element: <Favourites /> },
+          { path: "newManga", element: <MangaForm /> },
+          { path: "newChapter", element: <ChapterForm /> },
         ],
       },
 
@@ -60,6 +59,8 @@ const router = createBrowserRouter([
           { path: "newChapter", element: <ChapterForm /> },
           // { path: "editChapter", element: <ChapterEdit /> },
         ],
+        children: [{ path: "panel", element: <Panel /> }],
+
       },
     ],
   },

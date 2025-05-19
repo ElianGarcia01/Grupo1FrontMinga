@@ -21,17 +21,51 @@ const Drawer = ({ open, onClose }) => {
 
     return [
       { to: "/", label: "Home", always: true },
-      { to: "/mangas", label: "Mangas", requiresAuth: true, minRole: 0 }, // Usuarios con rol 0 o más
       { to: "/signUp", label: "Register", requiresGuest: true },
       { to: "/signIn", label: "Log In", requiresGuest: true },
-      { to: "/favourites", label: "Favourites", requiresAuth: true, minRole: 1 }, // Solo rol 1,2,3
-      { to: "/newrol", label: "Become Author or Company", requiresAuth: true, onlyForRole0: true }, // Solo rol 0
-      { to: "/panel", label: "Admin Panel", requiresAuth: true, adminOnly: true }, // Solo admin rol 3
-    ].filter(item => {
+      { to: "/mangas", label: "Mangas", requiresAuth: true, minRole: 0 }, // Usuarios con rol 0 o más
+      {
+        to: "/newRol",
+        label: "Become Author or Company",
+        requiresAuth: true,
+        onlyForRole0: true,
+      }, // Solo rol 0
+      {
+        to: "/profile",
+        label: "Profile",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
+        to: "/favourites",
+        label: "Favourites",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
+        to: "/newManga",
+        label: "New Manga",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
+        to: "/newChapter",
+        label: "New Chapter",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
+        to: "/panel",
+        label: "Admin Panel",
+        requiresAuth: true,
+        adminOnly: true,
+      }, // Solo admin rol 3
+    ].filter((item) => {
       if (item.requiresAuth && !user) return false;
       if (item.requiresGuest && user) return false;
       if (item.adminOnly && role !== 3) return false;
-      if (item.minRole !== undefined && (role == null || role < item.minRole)) return false;
+      if (item.minRole !== undefined && (role == null || role < item.minRole))
+        return false;
       if (item.onlyForRole0 && role !== 0) return false;
       return true;
     });
@@ -75,7 +109,9 @@ const Drawer = ({ open, onClose }) => {
               <span className="text-sm font-medium break-all line-clamp-1">
                 {user?.email || "You are not logged in"}
               </span>
-              {user && <span className="text-xs text-indigo-200">User account</span>}
+              {user && (
+                <span className="text-xs text-indigo-200">User account</span>
+              )}
             </div>
           </div>
           <button
@@ -95,8 +131,16 @@ const Drawer = ({ open, onClose }) => {
               className={({ isActive }) => `
                 relative overflow-hidden group flex items-center px-4 py-3 rounded-lg
                 transition-all duration-300 ease-in-out
-                ${isActive ? "bg-white/15 text-white" : "hover:bg-white/10 text-white/80 hover:text-white"}
-                transform ${animateItems ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}
+                ${
+                  isActive
+                    ? "bg-white/15 text-white"
+                    : "hover:bg-white/10 text-white/80 hover:text-white"
+                }
+                transform ${
+                  animateItems
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-4 opacity-0"
+                }
               `}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
@@ -115,7 +159,11 @@ const Drawer = ({ open, onClose }) => {
                 w-full text-left cursor-pointer relative overflow-hidden group flex items-center px-4 py-3 rounded-lg
                 transition-all duration-300 
                 hover:bg-white/10 text-white/80 hover:text-white
-                transform ${animateItems ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"}
+                transform ${
+                  animateItems
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-4 opacity-0"
+                }
               `}
               style={{ transitionDelay: "350ms" }}
             >

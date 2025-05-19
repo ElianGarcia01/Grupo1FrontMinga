@@ -1,29 +1,29 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// 1️⃣ thunk con token
+// Thunk con token
 export const fetchMangas = createAsyncThunk(
   'mangas/fetchMangas',
   async (_, { rejectWithValue }) => {
     try {
-      // 1. Obtener el token (ajusta el origen según tu app)
-      const token = localStorage.getItem('token');      // o desde Redux: getState().auth.token
+      // Obtener el token (ajusta el origen según tu app)
+      const token = localStorage.getItem('token');
 
-      // 2. Hacer la petición con la cabecera Authorization
+      // Hacer la petición con la cabecera Authorization
       const res = await fetch('http://localhost:8080/api/mangas/allMangas', {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,             // ⬅️ aquí va el JWT
+          Authorization: `Bearer ${token}`,        
         },
       });
 
-      // 3. Si la API responde con error, propaga la causa
+      // Si la API responde con error, propaga la causa
       if (!res.ok) {
-        const err = await res.json();                   // asume que tu API devuelve {message: "..."}
+        const err = await res.json();                   
         return rejectWithValue(err.message || 'Error al obtener mangas');
       }
 
       const data = await res.json();
-      return data.response;                             // <- payload para el fulfilled
+      return data.response;                             
     } catch (err) {
       // error de red u otra excepción
       return rejectWithValue(err.message);
@@ -51,7 +51,7 @@ const mangaSlice = createSlice({
       })
       .addCase(fetchMangas.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // llega desde rejectWithValue
+        state.error = action.payload; 
       });
   },
 });
