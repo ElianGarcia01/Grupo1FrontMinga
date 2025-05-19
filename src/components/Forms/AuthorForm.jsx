@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /* ---------------------- COMPONENTE PRINCIPAL --------------------------- */
 export default function AuthorForm() {
@@ -15,6 +16,7 @@ export default function AuthorForm() {
   const [msg,     setMsg]     = useState("");
 
   /* ------------------- Manejadores ----------------------------------- */
+  const navigate = useNavigate()
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -47,6 +49,8 @@ export default function AuthorForm() {
       /* Sustituir datos de sesión */
       localStorage.setItem("token", newToken);                 // token
       localStorage.setItem("user",  JSON.stringify(author));   // user → ahora es Author
+
+      navigate("/")
 
       /* Feedback al usuario y limpia form */
       setMsg("Autor creado con éxito 🎉");

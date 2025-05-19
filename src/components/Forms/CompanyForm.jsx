@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CompanyForm() {
   // ESTADO
@@ -11,6 +12,8 @@ export default function CompanyForm() {
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const navigate = useNavigate()
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,6 +41,7 @@ export default function CompanyForm() {
 
       setMsg("Compañía creada con éxito 🎉");
       setForm({ name: "", website: "", photo: "", description: "" });
+    navigate("/")
     } catch (err) {
       setMsg(err.message);
     } finally {
