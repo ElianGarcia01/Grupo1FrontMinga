@@ -1,20 +1,12 @@
+import { useAuth } from "../../hook/useAuth";
 import UserProfileEdit from "../components/Profile";
-
+import CompanyEdit from "../components/CompanyEdit";
 
 export default function Profile() {
+  //maneja los datos del usuario
+  const { user } = useAuth();
+  console.log(user);
   
-  const rol = localStorage.getItem("user")
-
-    const handleRoleSelection = (role) => {
-    setSelectedRole(role);
-    
-    // Redirigir después de seleccionar el rol
-    if (role === "author") {
-      navigate("/newAuthor"); // Ruta para formulario de autor
-    } else if (role === "company") {
-      navigate("/newCompany"); // Ruta para formulario de empresa
-    }
-  };
 
   return (
     <section
@@ -27,22 +19,20 @@ export default function Profile() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Titulo Principal */}
       <h1 className="text-2xl mb-60 sm:text-3xl md:text-5xl font-bold leading-tight z-10">
         Profile
       </h1>
 
-      {/* cuadro blanco */}
       <div
-        className="absolute left-1/2 transform -translate-x-1/2
-        bg-white w-[95%] sm:w-11/12 md:w-5/6 z-20 rounded-xl shadow-2xl px-4 sm:px-10 md:px-20 pb-10"
+        className="absolute left-1/2 transform -translate-x-1/2 bg-white w-[95%] sm:w-11/12 md:w-5/6 z-20 rounded-xl shadow-2xl px-4 sm:px-10 md:px-20 pb-10"
         style={{ top: "45%" }}
       >
-        {/* Informacion dentro del div blanco */}
         <div className="flex justify-center items-center w-full h-full">
-            <UserProfileEdit/>
+          {user?.role === 1 && <UserProfileEdit/>}
+          {user?.role === 2 && <CompanyEdit/>}
         </div>
       </div>
     </section>
   );
 }
+
