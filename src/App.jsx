@@ -54,7 +54,15 @@ const router = createBrowserRouter([
       // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
+        children: [
+          { path: "panel", element: <Panel /> },
+          { path: "company", element: <Company /> },
+          { path: "newManga", element: <MangaForm /> },
+          { path: "newChapter", element: <ChapterForm /> },
+          // { path: "editChapter", element: <ChapterEdit /> },
+        ],
         children: [{ path: "panel", element: <Panel /> }],
+
       },
     ],
   },
@@ -67,6 +75,7 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpForm /> },
     ],
   },
+  { path: "editChapter", element: <ChapterEdit /> },
 
   // Ruta 404
   { path: "*", element: <NotFound /> },

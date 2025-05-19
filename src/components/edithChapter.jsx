@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import SaveAlert from './AlertSave'; 
-import DeleteAlert from './AlertDelete';  
+import SaveAlert from './AlertSave';
+import DeleteAlert from './AlertDelete';
 
 const EditChapter = () => {
     const [mangaName, setMangaName] = useState('');
