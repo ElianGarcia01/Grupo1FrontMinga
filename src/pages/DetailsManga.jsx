@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { FaSurprise, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
-import { FaFaceGrinHearts } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { getChapters } from "../../redux/chapterSlice";
+import Reactions from "../components/Reactions";
 
 const Details = () => {
   // Entradas del router
@@ -27,6 +26,10 @@ const Details = () => {
   // 4️⃣ Fallback de manga y categorías (como antes)
   const manga = state?.manga || allMangas.find((m) => m._id === id);
   const { _id } = manga;
+
+  let authorOrCompany = ""
+  if(manga.author_id) authorOrCompany = manga.author_id.name +" "+ manga.author_id.lastName
+  if(manga.company_id) authorOrCompany = manga.company_id.name
 
   // Filtramos solo capítulos del manga actual
   const filteredChapters = allChapters.filter(
@@ -72,22 +75,11 @@ const Details = () => {
       >
         {type}
       </span>
-      <p className="text-lg lg:text-xl text-gray-600">Company Name</p>
+      <p className="text-lg lg:text-xl text-gray-600">By <strong>{authorOrCompany}</strong></p>
     </div>
 
     {/* Reacciones */}
-    <div className="flex gap-4 mt-8 flex-wrap">
-      {[FaThumbsUp, FaThumbsDown, FaSurprise, FaFaceGrinHearts].map(
-        (Icon, idx) => (
-          <button
-            key={idx}
-            className="p-4 lg:p-5 cursor-pointer rounded-full bg-white shadow-md hover:bg-yellow-100 transition"
-          >
-            <Icon className="text-yellow-500 text-2xl lg:text-3xl" />
-          </button>
-        )
-      )}
-    </div>
+      <Reactions mangaId={manga._id}/>
 
     {/* Sticky Tabs */}
     <div className="mt-10 sticky top-0 bg-white z-10 flex gap-4">
@@ -117,12 +109,17 @@ const Details = () => {
           {filteredChapters.map((ch) => (
             <div
               key={ch._id}
-              className="border cursor-pointer border-gray-200 rounded-xl p-4 bg-white shadow hover:shadow-md transition"
-            >
+              className="flex flex-col gap-2 border cursor-pointer border-gray-200 rounded-xl p-4 bg-white shadow hover:shadow-md transition">
               <h3 className="font-semibold text-lg lg:text-xl mb-1">
                 Chapter {ch.order}
               </h3>
               <p className="text-gray-600">{ch.title}</p>
+              <div className="border border-gray-200 rounded-xl p-2">
+                <img 
+                  src={ch.cover_photo} 
+                  alt={ch.title} />
+              </div>
+
             </div>
           ))}
           {filteredChapters.length === 0 && (
