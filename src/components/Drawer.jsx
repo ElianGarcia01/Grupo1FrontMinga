@@ -56,6 +56,12 @@ const Drawer = ({ open, onClose }) => {
         minRole: 1,
       }, // Solo rol 1,2,3
       {
+        to: "/AuthorCompany",
+        label: "Profile Author or Company",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
         to: "/panel",
         label: "Admin Panel",
         requiresAuth: true,
