@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../../redux/categorySlice";
+// ----------------------------- IMPORTS ---------------------------------
+import { useState, useEffect } from "react";            // hooks nativos de React
+import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
+import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
 
-// formulario para crear un Manga
+// ---------------------- COMPONENTE PRINCIPAL ---------------------------
 export default function MangaForm() {
-  // estado local del formulario
+  /* ------------------- ESTADOS LOCALES ------------------------------- */
   const [form, setForm] = useState({
     title: "",
     category_id: "",
@@ -14,7 +15,7 @@ export default function MangaForm() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
 
-  // categorías vía Redux
+  /* ------------------ ESTADO GLOBAL (REDUX) --------------------------- */
   const dispatch = useDispatch();
   const {
     all: categories,
@@ -22,31 +23,28 @@ export default function MangaForm() {
     error: catErr,
   } = useSelector((s) => s.categories);
 
-  /* dispara la petición una sola vez */
+  /* ----------- CARGA INICIAL DE CATEGORÍAS --------------------------- */
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // copia el valor de value dentro de form.category_id
+  /* ------------------- Manejadores ----------------------------------- */
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // submit envia el form con el category_id incluido
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMsg("");
 
     try {
+      /* 1. Token solo para la cabecera (el back ya asocia el usuario) */
       const token = localStorage.getItem("token");
-      const payloadJwt = JSON.parse(atob(token.split(".")[1])); // payload del JWT
 
-      /* agrega author_id o company_id según el rol */
-      const payload =
-        payloadJwt.role === 1
-          ? { ...form, author_id: payloadJwt.id }
-          : { ...form, company_id: payloadJwt.id };
+      /* 2. Payload = datos del formulario */
+      const payload = { ...form };
 
+      /* 3. Petición POST al endpoint */
       const res = await fetch("http://localhost:8080/api/mangas/create", {
         method: "POST",
         headers: {
@@ -55,6 +53,9 @@ export default function MangaForm() {
         },
         body: JSON.stringify(payload),
       });
+
+      console.log("valor de payload:", payload);
+      
 
       if (!res.ok) {
         const err = await res.json();
@@ -70,10 +71,11 @@ export default function MangaForm() {
     }
   };
 
+  /* --------------------------- JSX ----------------------------------- */
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-white sm:bg-gradient-to-br sm:from-indigo-50 sm:to-purple-100">
       <div className="w-full max-w-md rounded-none sm:rounded-3xl bg-white shadow-none sm:shadow-xl ring-0 sm:ring-1 sm:ring-black/5 overflow-hidden">
-        {/* cabecera decorativa (oculta en móvil) */}
+        {/* Cabecera decorativa (oculta en móvil) */}
         <div className="hidden sm:block relative h-20 bg-gradient-to-r from-indigo-500 to-purple-600">
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,white,transparent_60%)]" />
           <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
@@ -83,7 +85,7 @@ export default function MangaForm() {
           </div>
         </div>
 
-        {/* cuerpo */}
+        {/* Cuerpo */}
         <div className="pt-14 sm:pt-14 pb-10 px-8">
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">
             New Manga
@@ -97,7 +99,7 @@ export default function MangaForm() {
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* título */}
+            {/* Título */}
             <Input
               name="title"
               placeholder="Title"
@@ -105,7 +107,7 @@ export default function MangaForm() {
               onChange={handleChange}
             />
 
-            {/* categoría (select flotante) */}
+            {/* Categoría */}
             <Select
               name="category_id"
               value={form.category_id}
@@ -115,7 +117,7 @@ export default function MangaForm() {
               disabled={catLoad}
             />
 
-            {/* cover */}
+            {/* Portada */}
             <Input
               name="cover_photo"
               placeholder="URL Cover Image (.jpg/.png/.webp)"
@@ -123,7 +125,7 @@ export default function MangaForm() {
               onChange={handleChange}
             />
 
-            {/* descripción */}
+            {/* Descripción */}
             <Input
               as="textarea"
               name="description"
@@ -133,6 +135,7 @@ export default function MangaForm() {
               rows={3}
             />
 
+            {/* Botón enviar */}
             <button
               type="submit"
               disabled={loading}
@@ -147,7 +150,9 @@ export default function MangaForm() {
   );
 }
 
-/* ---------- input/textarea flotante reutilizable ---------- */
+/* ---------------- COMPONENTES AUXILIARES ----------------------------- */
+
+/* Input texto / textarea con etiqueta flotante */
 function Input({ as = "input", ...props }) {
   const Component = as;
   return (
@@ -163,7 +168,7 @@ function Input({ as = "input", ...props }) {
   );
 }
 
-/* ---------- select flotante reutilizable ---------- */
+/* Select de categorías con etiqueta flotante */
 function Select({ options, label, ...props }) {
   return (
     <div className="relative">
