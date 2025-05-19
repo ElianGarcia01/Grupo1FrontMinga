@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";            // hooks nativos de Reac
 import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
 
-// ---------------------- COMPONENTE PRINCIPAL ---------------------------
 export default function MangaForm() {
   /* ------------------- ESTADOS LOCALES ------------------------------- */
   const [form, setForm] = useState({
@@ -38,13 +37,13 @@ export default function MangaForm() {
     setMsg("");
 
     try {
-      /* 1. Token solo para la cabecera (el back ya asocia el usuario) */
+      /* Token solo para la cabecera (el back ya asocia el usuario) */
       const token = localStorage.getItem("token");
 
-      /* 2. Payload = datos del formulario */
+      /* Payload = datos del formulario */
       const payload = { ...form };
 
-      /* 3. Petición POST al endpoint */
+      /* Petición POST al endpoint */
       const res = await fetch("http://localhost:8080/api/mangas/create", {
         method: "POST",
         headers: {
@@ -52,10 +51,7 @@ export default function MangaForm() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
-      });
-
-      console.log("valor de payload:", payload);
-      
+      })     
 
       if (!res.ok) {
         const err = await res.json();
@@ -71,7 +67,6 @@ export default function MangaForm() {
     }
   };
 
-  /* --------------------------- JSX ----------------------------------- */
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-white sm:bg-gradient-to-br sm:from-indigo-50 sm:to-purple-100">
       <div className="w-full max-w-md rounded-none sm:rounded-3xl bg-white shadow-none sm:shadow-xl ring-0 sm:ring-1 sm:ring-black/5 overflow-hidden">
