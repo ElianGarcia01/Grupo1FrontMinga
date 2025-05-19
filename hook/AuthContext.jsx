@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from "react";
+// src/hook/AuthContext.jsx
+import { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 

@@ -78,6 +78,19 @@ const Drawer = ({ open, onClose }) => {
     });
   };
 
+  const getAccountLabel = () => {
+    switch (user?.role) {
+      case 1:
+        return "Author account";
+      case 2:
+        return "Company account";
+      case 3:
+        return "Admin account";
+      default:
+        return "User account";
+    }
+  };
+
   return (
     <>
       <div
@@ -108,13 +121,17 @@ const Drawer = ({ open, onClose }) => {
             ) : (
               <div className="w-10 h-10 rounded-full bg-indigo-400 flex items-center justify-center">
                 <span className="text-indigo-900 font-bold">
-                  {user?.email?.charAt(0).toUpperCase() || "?"}
+                  {user?.name?.charAt(0).toUpperCase() || "?"}
                 </span>
               </div>
             )}
             <div className="flex flex-col">
               <span className="text-sm font-medium break-all line-clamp-1">
-                {user?.email || "You are not logged in"}
+                {user?.name
+                  ? user.name
+                  : user?.email
+                  ? user.email
+                  : "You are not logged in"}
               </span>
               {user && (
                 <span className="text-xs text-indigo-200">User account</span>

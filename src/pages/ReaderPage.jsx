@@ -1,31 +1,53 @@
-import { useState, useEffect } from "react"
-import MangaViewer from "../components/reader/MangaViewer"
-import ReadingModeToggle from "../components/reader/ReadingModeToggle"
-import ListComments from "../components/comments/ListComments"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getChapterById } from "../../redux/chapterSlice";
+import MangaViewer from "../components/reader/MangaViewer";
 
 const ReaderPage = () => {
-  const [pages, setPages] = useState([])
-  const [readingMode, setReadingMode] = useState("vertical") 
+  const { chapterId } = useParams();
+  const dispatch = useDispatch();
 
-  // TODO: replace with real data fetch
+  const { current: chapter, loading, error } = useSelector((state) => state.chapters);
+
   useEffect(() => {
-    // Simulating page URLs for the chapter
-    setPages([
-      "/manga/ch1/page1.jpg",
-      "/manga/ch1/page2.jpg",
-      "/manga/ch1/page3.jpg"
-    ])
-  }, [])
+    if (chapterId) dispatch(getChapterById(chapterId));
+  }, [chapterId, dispatch]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error || !chapter) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-xl mb-4 text-red-600">
+          {error ? `Error: ${error}` : "Chapter not found"}
+        </p>
+        <button
+          onClick={() => window.history.back()}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  const mangaId = chapter.manga_id?._id || chapter.manga_id;
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="w-full max-w-3xl p-4">
-        <ReadingModeToggle mode={readingMode} setMode={setReadingMode} />
-        <MangaViewer pages={pages} mode={readingMode} />
-        <ListComments chapterId="123" />
-      </div>
-    </div>
-  )
-}
+    <MangaViewer
+      pages={chapter.pages || []}
+      title={`${chapter.manga_id?.title || "Unknown Manga"} - Chapter ${chapter.order}`}
+      chapterId={chapterId}
+      mangaId={mangaId}
+    />
+  );
+};
 
-export default ReaderPage
+export default ReaderPage;

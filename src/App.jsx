@@ -15,6 +15,7 @@ import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
 import Ranking from "./pages/Ranking.jsx";
+import ReaderPage from "./pages/ReaderPage.jsx";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -24,6 +25,9 @@ import CompanyForm from "./components/Forms/CompanyForm.jsx";
 import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
+
+// Importar el nuevo componente MangaList
+import MangaList from "./components/MangaList.jsx";
 
 import AuthorCompany from "./pages/AuthorCompany";
 import MangaEditForm from "./components/Forms/EdithManga.jsx";
@@ -39,7 +43,10 @@ const router = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
+          { path: "manga-list", element: <MangaList /> }, // Nueva ruta para la lista de mangas con capítulos
           { path: "details/:id", element: <DetailsManga /> },
+          { path: "reader", element: <ReaderPage /> }, // Ruta para leer sin parámetros
+          { path: "reader/:chapterId", element: <ReaderPage /> }, // Ruta para leer con ID de capítulo
           { path: "newRol", element: <PageRol /> },
           { path: "newAuthor", element: <AuthorForm /> },
           { path: "newcompany", element: <CompanyForm /> },
@@ -53,15 +60,18 @@ const router = createBrowserRouter([
           { path: "authorCompany", element: <AuthorCompany /> },
         ],
       },
-
+      
       // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
-        children: [{ path: "panel", element: <Panel /> }],
+        children: [
+          { path: "panel", element: <Panel /> },
+          { path: "chapter-edit/:id", element: <ChapterEdit /> }, // Movido aquí si es solo para admin
+        ],
       },
     ],
   },
-
+  
   // Rutas públicas solo si no está autenticado
   {
     element: <PublicRoute />,
@@ -72,6 +82,7 @@ const router = createBrowserRouter([
   },
   { path: "editChapter", element: <ChapterEdit /> },
 
+  
   // Ruta 404
   { path: "*", element: <NotFound /> },
 ]);

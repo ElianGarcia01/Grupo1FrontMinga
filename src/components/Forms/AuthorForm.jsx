@@ -50,6 +50,8 @@ export default function AuthorForm() {
 
       /* Feedback al usuario y limpia form */
       setMsg("Autor creado con éxito 🎉");
+      setMsg("Author successfully created 🎉");
+      // resetea campos
       setForm({
         name: "",
         lastName: "",

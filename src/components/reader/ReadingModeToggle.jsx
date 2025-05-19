@@ -1,20 +1,24 @@
+import { Button, ButtonGroup } from '@mui/material';
+
 const ReadingModeToggle = ({ mode, setMode }) => {
-    return (
-      <div className="flex justify-center mb-4 gap-4">
-        <button
-          className={`px-4 py-2 rounded ${mode === "vertical" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-          onClick={() => setMode("vertical")}
-        >
-          Vertical
-        </button>
-        <button
-          className={`px-4 py-2 rounded ${mode === "horizontal" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-          onClick={() => setMode("horizontal")}
+  return (
+    <div className="flex justify-center mb-6">
+      <ButtonGroup variant="contained" aria-label="Reading mode">
+        <Button
+          onClick={() => setMode('horizontal')}
+          color={mode === 'horizontal' ? 'primary' : 'inherit'}
         >
           Horizontal
-        </button>
-      </div>
-    )
-  }
-  
-  export default ReadingModeToggle
+        </Button>
+        <Button
+          onClick={() => setMode('vertical')}
+          color={mode === 'vertical' ? 'primary' : 'inherit'}
+        >
+          Vertical
+        </Button>
+      </ButtonGroup>
+    </div>
+  );
+};
+
+export default ReadingModeToggle;
