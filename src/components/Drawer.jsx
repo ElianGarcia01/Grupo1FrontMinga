@@ -62,6 +62,18 @@ const Drawer = ({ open, onClose }) => {
         minRole: 1,
       }, // Solo rol 1,2,3
       {
+        to: "/editChapter",
+        label: "Edit Chapter",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
+        to: "/editManga",
+        label: "Edit Manga",
+        requiresAuth: true,
+        minRole: 1,
+      }, // Solo rol 1,2,3
+      {
         to: "/panel",
         label: "Admin Panel",
         requiresAuth: true,

@@ -16,7 +16,6 @@ import Company from "./pages/edithCompany.jsx";
 import ChapterEdit from "./pages/chapterEdit.jsx";
 import Ranking from "./pages/Ranking.jsx";
 
-
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -27,6 +26,7 @@ import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
 import AuthorCompany from "./pages/AuthorCompany";
+import MangaEditForm from "./components/Forms/EdithManga.jsx";
 
 const router = createBrowserRouter([
   {
@@ -48,7 +48,13 @@ const router = createBrowserRouter([
           { path: "newManga", element: <MangaForm /> },
           { path: "newChapter/:id", element: <ChapterForm /> },
           { path: "ranking", element: <Ranking /> },
+<<<<<<< HEAD
           { path: "editChapter/:id", element: <ChapterEdit /> },
+=======
+          { path: "editChapter", element: <ChapterEdit /> },
+          { path: "editManga", element: <MangaEditForm /> },
+
+>>>>>>> 32f03d76d1f04ea549368bc11f846d69696b2c74
           { path: "authorCompany", element: <AuthorCompany /> },
         ],
       },
