@@ -1,41 +1,64 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, Users, Pen } from "lucide-react";
 
 export default function Panel() {
   const [activeTab, setActiveTab] = useState("companies");
+  const [companies, setCompanies] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const entities = {
-    companies: [
-      { name: "Blue Team", url: "www.blueteam.com", color: "bg-blue-600" },
-      { name: "Red Team", url: "www.redteam.com", color: "bg-red-500" },
-      { name: "Orange Team", url: "www.orangeteam.com", color: "bg-orange-400" },
-      { name: "Purple Team", url: "www.purpleteam.com", color: "bg-purple-500" },
-    ],
-    authors: [
-      { name: "Alex Writer", url: "alex@writingteam.com", color: "bg-green-600" },
-      { name: "Sam Novelist", url: "sam@authorgroup.com", color: "bg-yellow-500" },
-      { name: "Jordan Pen", url: "jordan@creatives.com", color: "bg-pink-400" },
-      { name: "Taylor Script", url: "taylor@writershub.com", color: "bg-teal-500" },
-    ],
-  };
+  const fetchData = async () => {
+    try {
+      const [companyRes, authorRes] = await Promise.all([
+        fetch("http://localhost:8080/api/companies/active", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch("http://localhost:8080/api/authors/active", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
 
-  const [companyToggles, setCompanyToggles] = useState(Array(entities.companies.length).fill(false));
-  const [authorToggles, setAuthorToggles] = useState(Array(entities.authors.length).fill(false));
+      const companyData = await companyRes.json();
+      const authorData = await authorRes.json();
 
-  const handleToggle = (index) => {
-    if (activeTab === "companies") {
-      const updated = [...companyToggles];
-      updated[index] = !updated[index];
-      setCompanyToggles(updated);
-    } else {
-      const updated = [...authorToggles];
-      updated[index] = !updated[index];
-      setAuthorToggles(updated);
+      setCompanies(companyData.response || []);
+      setAuthors(authorData.response || []);
+    } catch (err) {
+      console.error("Error fetching data:", err);
     }
   };
 
-  const currentData = activeTab === "companies" ? entities.companies : entities.authors;
-  const currentToggles = activeTab === "companies" ? companyToggles : authorToggles;
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleToggle = async (index) => {
+    const isCompany = activeTab === "companies";
+    const entityList = isCompany ? companies : authors;
+    const entity = entityList[index];
+    const updatedActive = !entity.active;
+
+    const url = isCompany
+      ? "http://localhost:8080/api/companies/updateActive"
+      : "http://localhost:8080/api/authors/updateActive";
+
+    try {
+      await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ _id: entity.id, active: updatedActive }),
+      });
+
+      fetchData();
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
+  const currentData = activeTab === "companies" ? companies : authors;
   const TabIcon = activeTab === "companies" ? Users : Pen;
 
   return (
@@ -75,24 +98,18 @@ export default function Panel() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`capitalize px-6 py-2 rounded-md font-medium transition-all duration-300 relative
-                  ${activeTab === tab
-                    ? "bg-indigo-700 text-white shadow-md"
-                    : "text-gray-700 hover:bg-gray-200"
-                  }
+                  ${activeTab === tab ? "bg-indigo-700 text-white" : "text-gray-700 hover:bg-gray-200"}
                 `}
               >
                 {tab}
-                {activeTab === tab && (
-                  <span className="absolute inset-0 rounded-md animate-pulse-subtle bg-white opacity-10"></span>
-                )}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Tabla de datos */}
+        {/* Tabla */}
         <div className="overflow-x-auto mt-6">
-          <table className="min-w-full border-collapse rounded-xl overflow-hidden text-sm sm:text-base">
+          <table className="min-w-full border-collapse rounded-xl text-sm sm:text-base">
             <thead>
               <tr className="text-white">
                 <th className="w-1/2 px-4 py-4 text-xl text-center font-semibold bg-indigo-700">
@@ -101,18 +118,14 @@ export default function Panel() {
                     <span className="capitalize">{activeTab}</span>
                   </div>
                 </th>
-                <th className="w-1/2 px-4 py-4 text-xl text-center font-semibold text-indigo-700">
-                  Status
-                </th>
+                <th className="w-1/2 px-4 py-4 text-xl text-center font-semibold text-indigo-700">Status</th>
               </tr>
             </thead>
             <tbody className="text-gray-700">
               {currentData.map((item, idx) => (
-                <tr key={idx} className="border-b hover:bg-gray-50 transition-colors duration-150">
+                <tr key={item.id} className="border-b hover:bg-gray-50 transition">
                   <td className="px-4 py-4 flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full ${item.color} flex items-center justify-center text-white`}>
-                      <TabIcon size={16} />
-                    </div>
+                    <img src={item.photo} alt={item.name} className="w-8 h-8 rounded-full" />
                     <div>
                       <p className="font-medium">{item.name}</p>
                       <p className="text-gray-500 text-sm">{item.url}</p>
@@ -121,26 +134,25 @@ export default function Panel() {
                   <td className="px-4 py-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <span className={`w-3 h-3 rounded-full ${currentToggles[idx] ? "bg-green-500" : "bg-gray-300"}`}></span>
-                        <span className={`text-sm ${currentToggles[idx] ? "text-green-600" : "text-gray-500"}`}>
-                          {currentToggles[idx] ? "Active" : "Inactive"}
+                        <span className={`w-3 h-3 rounded-full ${item.active ? "bg-green-500" : "bg-gray-300"}`}></span>
+                        <span className={`text-sm ${item.active ? "text-green-600" : "text-gray-500"}`}>
+                          {item.active ? "Active" : "Inactive"}
                         </span>
                       </div>
 
-                      {/* Toggle switch */}
+                      {/* Toggle */}
                       <button
                         onClick={() => handleToggle(idx)}
                         className={`w-12 h-6 rounded-full cursor-pointer relative transition-colors duration-300 ${
-                          currentToggles[idx] ? "bg-indigo-600" : "bg-gray-200"
+                          item.active ? "bg-indigo-600" : "bg-gray-200"
                         }`}
-                        aria-label={currentToggles[idx] ? "Disable" : "Enable"}
                       >
                         <div
                           className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                            currentToggles[idx] ? "translate-x-6" : ""
+                            item.active ? "translate-x-6" : ""
                           } flex items-center justify-center`}
                         >
-                          {currentToggles[idx] && <Check size={12} className="text-indigo-600 opacity-80" />}
+                          {item.active && <Check size={12} className="text-indigo-600 opacity-80" />}
                         </div>
                       </button>
                     </div>
@@ -160,7 +172,7 @@ export default function Panel() {
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <p className="text-gray-500 text-sm">Active {activeTab}</p>
             <p className="text-2xl font-semibold text-indigo-700">
-              {currentToggles.filter(Boolean).length}
+              {currentData.filter((item) => item.active).length}
             </p>
           </div>
         </div>

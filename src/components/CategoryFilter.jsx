@@ -11,14 +11,14 @@ const CategoryFilter = ({ categories, selected, onSelect }) => {
         
         if (category === "All") {
           colorStyle = "bg-gray-200 text-gray-800 hover:bg-gray-300";
-        } else if (category === "Shōnen") {
-          colorStyle = "bg-orange-200 text-orange-800 hover:bg-orange-300";
-        } else if (category === "Seinen") {
+        } else if (category === "Shoen") {
           colorStyle = "bg-red-200 text-red-800 hover:bg-red-300";
-        } else if (category === "Shōjo") {
+        } else if (category === "Seinen") {
+          colorStyle = "bg-orange-200 text-orange-800 hover:bg-orange-300";
+        } else if (category === "Shojo") {
           colorStyle = "bg-green-200 text-green-800 hover:bg-green-300";
-        } else if (category === "Sci-fi") {
-          colorStyle = "bg-blue-200 text-blue-800 hover:bg-blue-300";
+        } else if (category === "Komodo") {
+          colorStyle = "bg-purple-200 text-purple-800 hover:bg-blue-300";
         }
 
         const ringStyle = selected === category ? "ring-2 ring-offset-1 ring-black" : "";
