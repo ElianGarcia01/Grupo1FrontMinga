@@ -51,7 +51,7 @@ export default function AuthorForm() {
         throw new Error(err?.message || "Error al registrar autor");
       }
 
-      setMsg("Autor creado con éxito 🎉");
+      setMsg("Author successfully created 🎉");
       // resetea campos
       setForm({
         name: "",

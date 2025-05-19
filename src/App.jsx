@@ -25,6 +25,9 @@ import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
+// Importar el nuevo componente MangaList
+import MangaList from "./components/MangaList.jsx";
+
 import AuthorCompany from "./pages/AuthorCompany";
 
 const router = createBrowserRouter([
@@ -38,7 +41,10 @@ const router = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
+          { path: "manga-list", element: <MangaList /> }, // Nueva ruta para la lista de mangas con capítulos
           { path: "details/:id", element: <DetailsManga /> },
+          { path: "reader", element: <ReaderPage /> }, // Ruta para leer sin parámetros
+          { path: "reader/:chapterId", element: <ReaderPage /> }, // Ruta para leer con ID de capítulo
           { path: "newRol", element: <PageRol /> },
           { path: "author", element: <AuthorForm /> },
           { path: "company", element: <CompanyForm /> },
@@ -48,15 +54,18 @@ const router = createBrowserRouter([
           { path: "newChapter", element: <ChapterForm /> },
         ],
       },
-
+      
       // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
-        children: [{ path: "panel", element: <Panel /> }],
+        children: [
+          { path: "panel", element: <Panel /> },
+          { path: "chapter-edit/:id", element: <ChapterEdit /> }, // Movido aquí si es solo para admin
+        ],
       },
     ],
   },
-
+  
   // Rutas públicas solo si no está autenticado
   {
     element: <PublicRoute />,
@@ -65,7 +74,7 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpForm /> },
     ],
   },
-
+  
   // Ruta 404
   { path: "*", element: <NotFound /> },
 ]);

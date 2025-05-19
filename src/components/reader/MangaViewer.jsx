@@ -1,40 +1,61 @@
-import { motion } from "framer-motion"
+import { useState, useEffect } from "react";
 
-const MangaViewer = ({ pages, mode }) => {
-  if (mode === "vertical") {
-    return (
-      <div className="flex flex-col gap-4">
-        {pages.map((src, index) => (
-          <motion.img
-            key={index}
-            src={src}
-            alt={`Page ${index + 1}`}
-            className="w-full rounded shadow"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          />
-        ))}
-      </div>
-    )
-  }
+const MangaViewer = ({ pages, title }) => {
+  const [currentPage, setCurrentPage] = useState(0);
 
-  // Horizontal mode
+  const nextPage = () => {
+    if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") nextPage();
+      if (e.key === "ArrowLeft") prevPage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentPage]);
+
   return (
-    <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory pb-4">
-      {pages.map((src, index) => (
-        <motion.img
-          key={index}
-          src={src}
-          alt={`Page ${index + 1}`}
-          className="h-[80vh] snap-center rounded shadow"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        />
-      ))}
-    </div>
-  )
-}
+    <div className="fixed inset-0 bg-black flex flex-col items-center justify-center">
+      {/* Header */}
+      <div className="w-full p-4 bg-black text-white text-center">
+        <h1 className="text-xl font-bold">{title}</h1>
+        <p className="text-sm">Page {currentPage + 1} of {pages.length}</p>
+      </div>
 
-export default MangaViewer
+      {/* Image Viewer */}
+      <div className="flex-1 flex items-center justify-center w-full overflow-hidden">
+        <img
+          src={pages[currentPage]}
+          alt={`Page ${currentPage + 1}`}
+          className="max-h-[80vh] max-w-full object-contain"
+        />
+      </div>
+
+      {/* Controls */}
+      <div className="w-full p-4 bg-black flex justify-between">
+        <button
+          onClick={prevPage}
+          disabled={currentPage === 0}
+          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <button
+          onClick={nextPage}
+          disabled={currentPage === pages.length - 1}
+          className="px-4 py-2 bg-gray-800 text-white rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default MangaViewer;

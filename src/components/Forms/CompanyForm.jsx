@@ -36,7 +36,7 @@ export default function CompanyForm() {
         throw new Error(err?.message || "Error al registrar company");
       }
 
-      setMsg("Compañía creada con éxito 🎉");
+      setMsg("Successfully created company 🎉");
       setForm({ name: "", website: "", photo: "", description: "" });
     } catch (err) {
       setMsg(err.message);
