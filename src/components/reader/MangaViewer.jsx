@@ -36,14 +36,14 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
         id: '1',
         userId: 'user1',
         user: 'Manga Fan',
-        content: '¡Este capítulo estuvo increíble!',
+        content: '¡This chapter was amazing.!',
         timestamp: new Date().toISOString(),
         replies: [
           {
             id: '1-1',
             userId: 'user2',
             user: 'Comic Lover',
-            content: '¡Estoy de acuerdo! El arte es impresionante.',
+            content: '¡I agree! The art is stunning.',
             timestamp: new Date().toISOString(),
             replies: []
           }
