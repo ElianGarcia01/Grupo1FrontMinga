@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           { path: "newRol", element: <PageRol /> },
           { path: "newAuthor", element: <AuthorForm /> },
           { path: "newcompany", element: <CompanyForm /> },
-          { path: "profileUser", element: <Profile /> },
+          { path: "profile", element: <Profile /> },
           { path: "favourites", element: <Favourites /> },
           { path: "newManga", element: <MangaForm /> },
           { path: "newChapter/:id", element: <ChapterForm /> },
