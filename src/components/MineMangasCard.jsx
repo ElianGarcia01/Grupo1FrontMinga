@@ -21,12 +21,12 @@ const MineMangasCard = ({ manga, categories }) => {
 
   const handleAddChapter = (e) => {
     e.stopPropagation();
-    navigate(`/chapters/new/${_id}`);
+    navigate(`/newChapter/${_id}`);
   };
 
   const handleEditChapters = (e) => {
     e.stopPropagation();
-    navigate(`/chapters/manage/${_id}`);
+    navigate(`/editChapter/${_id}`);
   };
 
   const handleEditManga = (e) => {
@@ -35,7 +35,7 @@ const MineMangasCard = ({ manga, categories }) => {
   };
 
 const handleDeleteManga = async (e) => {
-  e.stopPropagation(); // evita que se dispare el click de la tarjeta
+  e.stopPropagation();
 
   try {
     const token = localStorage.getItem("token");
@@ -52,11 +52,6 @@ const handleDeleteManga = async (e) => {
     if (!response.ok) {
       throw new Error("Error al eliminar el manga");
     }
-
-    const data = await response.json();
-    console.log("Manga eliminado:", data);
-
-    // Aquí puedes recargar los datos o actualizar el estado si es necesario
   } catch (error) {
     console.error("Error eliminando el manga:", error);
   }
