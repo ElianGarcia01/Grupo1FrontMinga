@@ -32,7 +32,7 @@ const Drawer = ({ open, onClose }) => {
         onlyForRole0: true,
       }, // Solo rol 0
       {
-        to: "/profileAuthor",
+        to: "/profileUser",
         label: "My Profile",
         requiresAuth: true,
         minRole: 1,

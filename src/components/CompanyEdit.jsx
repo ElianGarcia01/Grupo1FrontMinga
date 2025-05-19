@@ -1,23 +1,74 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from "react";
+import { useAuth } from "../../hook/useAuth"; //maneja datos del usuario
+import axios from "axios";
+import AlertSave from "./AlertSave"
+import AlertDelete from "./AlertDelete";
+import { useNavigate } from "react-router-dom";
 
 const CompanyEdit = () => {
+  const { user } = useAuth(); //aqui estan los datos almacneados
   const [companyName, setCompanyName] = useState('');
   const [location, setLocation] = useState('');
   const [website, setWebsite] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
+  const [companyId, setCompanyId] = useState(null);
+  const [showSaveAlert, setShowSaveAlert] = useState(false);   // para usar el componente de alerta
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false); //igual que arriba 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && user.company) {
+      const { name, location, website, photo, _id } = user.company;
+      setCompanyName(name || '');
+      setLocation(location || '');
+      setWebsite(website || '');
+      setPhotoUrl(photo || '');
+      setCompanyId(_id);
+    }
+  }, [user]);
 
   const handleSave = () => {
-    console.log('Saved:', { companyName, location, website, photoUrl });
+    axios.put("http://localhost:8080/api/companies/update", {
+      _id: companyId,
+      name: companyName,
+      location,
+      website,
+      photo: photoUrl
+    })
+      .then(() => alert("Profile updated success"))
+      .catch((err) => {
+        console.error(err);
+        alert("Error al actualizar");
+      });
+      setShowSaveAlert(true);
   };
 
   const handleDelete = () => {
-    console.log('Company deleted');
+    setShowDeleteAlert(true);
   };
+
+  const confirmDelete = () => {
+    axios.delete(`http://localhost:8080/api/companies/delete/${companyId}`)
+      .then(() => {
+        alert("Company Account Deleted");
+        navigate("/");
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Delete Error");
+      });
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteAlert(false);
+  };
+
+
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="flex flex-col md:flex-row gap-12 max-w-4xl w-full">
-      
+
         <div className="order-1 md:order-2 w-full md:w-[396px] h-auto md:h-[276px] flex flex-col items-center text-center">
           <img
             src={
@@ -86,7 +137,13 @@ const CompanyEdit = () => {
           </div>
         </div>
       </div>
+      {showSaveAlert && <AlertSave onClose={() => setShowSaveAlert(false)} />}
+
+      {showDeleteAlert && (
+        <AlertDelete onConfirm={confirmDelete} onCancel={cancelDelete} />
+      )}
     </div>
+    
   );
 };
 
