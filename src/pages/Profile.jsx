@@ -4,9 +4,7 @@ import CompanyEdit from "../components/CompanyEdit";
 
 export default function Profile() {
   //maneja los datos del usuario
-  const { user } = useAuth();
-  console.log(user);
-  
+  const { user } = useAuth(); 
 
   return (
     <section
