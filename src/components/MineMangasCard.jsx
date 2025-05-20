@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
-const MineMangasCard = ({ manga, categories }) => {
+const MineMangasCard = ({ manga, categories, onDelete }) => {
   const { _id, title, cover_photo, category_id } = manga;
   const type = category_id?.name || "Unknown";
 
@@ -34,28 +34,33 @@ const MineMangasCard = ({ manga, categories }) => {
     navigate(`/editManga/${_id}`);
   };
 
-const handleDeleteManga = async (e) => {
-  e.stopPropagation();
+  const handleDeleteManga = async (e) => {
+    e.stopPropagation();
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:8080/api/mangas/delete", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ _id: _id }),
-    });
+      const response = await fetch("http://localhost:8080/api/mangas/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ _id: _id }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Error al eliminar el manga");
+      if (!response.ok) {
+        throw new Error("Error al eliminar el manga");
+      }
+
+      // Notificar al componente padre
+      if (onDelete) {
+        onDelete(_id);
+      }
+    } catch (error) {
+      console.error("Error eliminando el manga:", error);
     }
-  } catch (error) {
-    console.error("Error eliminando el manga:", error);
-  }
-};
+  };
 
   return (
     <div

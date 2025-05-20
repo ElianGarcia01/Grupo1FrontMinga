@@ -115,11 +115,11 @@ const Drawer = ({ open, onClose }) => {
             )}
             <div className="flex flex-col">
               <span className="text-sm font-medium break-all line-clamp-1">
-                {user?.name
-                  ? user.name
-                  : user?.email
-                  ? user.email
-                  : "You are not logged in"}
+                {user?.role === 0
+                  ? user?.email
+                  : user?.role === 1
+                  ? user?.author?.name || user?.name
+                  : user?.company?.name || user?.name}
               </span>
               {user && (
                 <span className="text-xs text-indigo-200">

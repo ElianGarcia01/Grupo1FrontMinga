@@ -113,16 +113,19 @@ export default function Favourites() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            {favorites.map((favorite) => (
-              <FavouriteCard
-                key={favorite._id}
-                title={favorite.manga_id.title}
-                type={favorite.manga_id.category_id}
-                image={favorite.manga_id.cover_photo}
-                manga_id={favorite.manga_id._id}
-                onRemove={handleRemove}
-              />
-            ))}
+{favorites
+  .filter(fav => fav.manga_id !== null)
+  .map((favorite) => (
+    <FavouriteCard
+      key={favorite._id}
+      title={favorite.manga_id.title}
+      type={favorite.manga_id.category_id}
+      image={favorite.manga_id.cover_photo}
+      manga_id={favorite.manga_id._id}
+      onRemove={handleRemove}
+    />
+))}
+
           </motion.div>
         )}
 

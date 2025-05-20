@@ -2,7 +2,10 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
 
 const PrivateRoute = () => {
-  const { user } = useAuth();
+  const { user,loading } = useAuth();
+  if (loading) {
+    return <div>Cargando...</div>; 
+  }
 
 
   if (!user) {

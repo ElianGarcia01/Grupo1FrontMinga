@@ -53,7 +53,6 @@ export default function AuthorForm() {
       localStorage.setItem("token", newToken);
       localStorage.setItem("user", JSON.stringify(user));
 
-      /* Redirigir al home */
       window.location.href = "/"
 
       /* Feedback al usuario y limpia form */

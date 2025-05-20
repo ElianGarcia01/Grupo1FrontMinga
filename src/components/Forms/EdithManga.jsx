@@ -1,67 +1,55 @@
-// ----------------------------------------------------------------------
-//  MangaEditForm.jsx   –   formulario para EDITAR un manga existente
-//  ▸ Recupera el id del manga desde la URL   (/mangas/:id/edit)
-//  ▸ Precarga los datos actuales (GET /api/mangas/:id) para mostrarlos
-//  ▸ Permite modificar title, description, cover_photo y category_id
-//  ▸ Envía los cambios con un  PUT  a  /api/mangas/update
-// ----------------------------------------------------------------------
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import { fetchCategories } from "../../../redux/categorySlice"; // thunk
+import { fetchMangas } from "../../../redux/mangaSlice";
 
-import { fetchCategories } from "../../../redux/categorySlice";   // thunk
-
-/* ----------------------------- COMPONENTE --------------------------- */
 export default function MangaEditForm() {
-  const { id: mangaId } = useParams();       // id del manga a editar
-  const navigate        = useNavigate();
-
-  /* --- Redux: categorías --- */
+  const { id: mangaId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { all: categories, loading: catLoad } = useSelector(
-    (s) => s.categories
-  );
 
-  /* --- estados del formulario --------------------------------------- */
-  const [form, setForm]   = useState({
+    // Al montar componente: disparar fetch de mangas, categorías y capítulos
+    useEffect(() => {
+      dispatch(fetchMangas());
+    }, [dispatch]);
+
+  // Traer categorías desde Redux
+  const { all: categories, loading: catLoad } = useSelector((s) => s.categories);
+
+  // Traer mangas desde Redux (ajusta 'all' si usas otro nombre en el slice)
+  const allMangas = useSelector((s) => s.mangas?.all || []);
+
+  // Buscar el manga por su ID (puede venir como string o como _id)
+  const manga = allMangas.find((m) => m._id === mangaId || m.id === mangaId);
+
+  const [form, setForm] = useState({
     title: "",
     category_id: "",
     cover_photo: "",
     description: "",
   });
-  const [loading, setLoading] = useState(false);   // <— botón / spinner
-  const [msg, setMsg]       = useState("");        // mensajes éxito / error
-  const [initLoad, setInitLoad] = useState(true);  // primera carga GET
 
-  /* --------- carga inicial: categorías + datos del manga ------------ */
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  // Precargar categorías y el manga si está disponible
   useEffect(() => {
     dispatch(fetchCategories());
 
-    const getMangaData = async () => {
-      try {
-        const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`);
-        if (!res.ok) throw new Error("Cannot fetch manga data");
-        const data = await res.json();          // { response: manga }
-        const m = data.response;
-        setForm({
-          title:        m.title        ?? "",
-          category_id:  m.category_id  ?? "",
-          cover_photo:  m.cover_photo  ?? "",
-          description:  m.description  ?? "",
-        });
-      } catch (e) {
-        setMsg(e.message);
-      } finally {
-        setInitLoad(false);
-      }
-    };
+    if (manga) {
+      setForm({
+        title: manga.title || "",
+        category_id: manga.category_id || "",
+        cover_photo: manga.cover_photo || "",
+        description: manga.description || "",
+      });
+    }
+  }, [dispatch, manga]);
 
-    getMangaData();
-  }, [dispatch, mangaId]);
-
-  /* ------------------- manejadores ---------------------------------- */
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,8 +58,6 @@ export default function MangaEditForm() {
 
     try {
       const token = localStorage.getItem("token");
-
-      /* payload = campos + id del manga para que el back lo ubique */
       const payload = { ...form, _id: mangaId };
 
       const res = await fetch("http://localhost:8080/api/mangas/update", {
@@ -89,8 +75,7 @@ export default function MangaEditForm() {
       }
 
       setMsg("Manga actualizado ✔️");
-      // opcional: redirigir al listado o detalles
-      setTimeout(() => navigate(`/details/${mangaId}`), 1200);
+      setTimeout(() => navigate("/manager/"))
     } catch (err) {
       setMsg(err.message);
     } finally {
@@ -98,11 +83,10 @@ export default function MangaEditForm() {
     }
   };
 
-  /* --------------------------- UI ----------------------------------- */
-  if (initLoad) {
+  if (!manga) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Cargando…</p>
+        <p className="text-red-500">Manga not found or not loaded yet.</p>
       </div>
     );
   }
