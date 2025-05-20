@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { X, ChevronLeft, ChevronRight, MessageCircle, MoreHorizontal } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, MessageCircle } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hook/useAuth"; 
 import AddCommentModal from "../comments/AddCommentModal";
-import CommentOptionsModal from "../comments/CommentOptionsModal";
 import Comment from "../comments/Comment";
+import { getCommentsByChapter, createComment } from "../../services/commentsService";
 
 const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const navigate = useNavigate();
@@ -14,45 +14,37 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [isAddCommentModalOpen, setIsAddCommentModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(null);
 
   // Prioriza el mangaId recibido por state, si no existe lo busca en el capítulo
   const mangaId = state?.mangaId || chapter?.manga_id?._id || chapter?.manga_id;
 
   useEffect(() => {
+    // Load saved reading progress
     const savedProgress = localStorage.getItem(`progress-${chapterId}`);
     if (savedProgress) {
       setCurrentPage(Number(savedProgress));
     }
     
-    
+    // Fetch comments from the backend
     fetchComments();
   }, [chapterId]);
 
-  const fetchComments = () => {
-    
-    setComments([
-      {
-        id: '1',
-        userId: 'user1',
-        user: 'Manga Fan',
-        content: '¡This chapter was amazing.!',
-        timestamp: new Date().toISOString(),
-        replies: [
-          {
-            id: '1-1',
-            userId: 'user2',
-            user: 'Comic Lover',
-            content: '¡I agree! The art is stunning.',
-            timestamp: new Date().toISOString(),
-            replies: []
-          }
-        ]
-      }
-    ]);
+  const fetchComments = async () => {
+    try {
+      setIsLoading(true);
+      const commentsData = await getCommentsByChapter(chapterId);
+      setComments(commentsData || []);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
+    // Save reading progress
     localStorage.setItem(`progress-${chapterId}`, currentPage);
   }, [currentPage, chapterId]);
 
@@ -94,82 +86,56 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
     }
   };
 
-  const handleAddComment = (text) => {
-    const newComment = {
-      id: Date.now().toString(),
-      userId: user?._id,
-      user: user?.name,
-      content: text,
-      timestamp: new Date().toISOString(),
-      replies: []
-    };
-    
-    setComments([newComment, ...comments]);
+  const handleAddComment = async (text) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    // Check if user has permission to comment (must be author or company)
+    if (!user.author && !user.company) {
+      navigate('/become-author');
+      return;
+    }
+
+    try {
+      // Determine if the user is commenting as author or company
+      const commentData = {
+        chapter_id: chapterId,
+        message: text
+      };
+      
+      // Add the appropriate ID field based on user type
+      if (user.author) {
+        commentData.author_id = user.author._id;
+      } else if (user.company) {
+        commentData.company_id = user.company._id;
+      }
+
+      await createComment(commentData);
+      await fetchComments(); // Refresh comments after adding
+      setIsAddCommentModalOpen(false);
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+      alert("Failed to add comment. Please try again.");
+    }
   };
 
-  const handleReplyComment = (commentId, text) => {
-    const addReply = (commentsList) => {
-      return commentsList.map(comment => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            replies: [
-              ...comment.replies,
-              {
-                id: `${comment.id}-${Date.now()}`,
-                userId: user?._id,
-                user: user?.name,
-                content: text,
-                timestamp: new Date().toISOString(),
-                replies: []
-              }
-            ]
-          };
-        } else if (comment.replies && comment.replies.length > 0) {
-          return {
-            ...comment,
-            replies: addReply(comment.replies)
-          };
-        }
-        return comment;
-      });
-    };
-
-    setComments(addReply(comments));
+  // Get user role for permission checks
+  const getUserRole = () => {
+    if (!user) return 0; // Not logged in
+    if (user.role === 'admin') return 3; // Admin
+    if (user.role === 'moderator') return 2; // Moderator
+    if (user.author || user.company) return 1; // Author/Company
+    return 0; // Regular user
   };
 
-  const handleEditComment = (commentId, newText) => {
-    const editCommentInList = (commentsList) => {
-      return commentsList.map(comment => {
-        if (comment.id === commentId) {
-          return { ...comment, content: newText };
-        } else if (comment.replies && comment.replies.length > 0) {
-          return {
-            ...comment,
-            replies: editCommentInList(comment.replies)
-          };
-        }
-        return comment;
-      });
-    };
-
-    setComments(editCommentInList(comments));
-  };
-
-  const handleDeleteComment = (commentId) => {
-    const deleteFromList = (commentsList) => {
-      return commentsList.filter(comment => {
-        if (comment.id === commentId) {
-          return false;
-        } 
-        if (comment.replies && comment.replies.length > 0) {
-          comment.replies = deleteFromList(comment.replies);
-        }
-        return true;
-      });
-    };
-
-    setComments(deleteFromList(comments));
+  // Get user ID based on type (author or company)
+  const getUserId = () => {
+    if (!user) return null;
+    if (user.author) return user.author._id;
+    if (user.company) return user.company._id;
+    return null;
   };
 
   return (
@@ -224,29 +190,39 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
             <div className="p-4 flex justify-between items-center border-b border-gray-700">
               <h2 className="text-lg font-semibold">Comments</h2>
               <button
-                onClick={() => setIsAddCommentModalOpen(true)}
+                onClick={() => {
+                  if (!user) {
+                    navigate("/login");
+                  } else if (!user.author && !user.company) {
+                    navigate("/newrol");
+                  } else {
+                    setIsAddCommentModalOpen(true);
+                  }
+                }}
                 className="px-4 py-1.5 bg-indigo-600 rounded-md text-sm hover:bg-indigo-500 transition"
-                disabled={!user}
               >
                 Add Comment
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {comments.length > 0 ? (
+              {isLoading ? (
+                <div className="text-center text-gray-400 py-6">
+                  Loading comments...
+                </div>
+              ) : comments.length > 0 ? (
                 comments.map((comment) => (
                   <Comment
-                    key={comment.id}
+                    key={comment._id}
                     comment={comment}
-                    currentUserId={user?._id}
-                    currentUserRole={user?.role || 0}
-                    onReply={handleReplyComment}
-                    onEdit={handleEditComment}
-                    onDelete={handleDeleteComment}
+                    currentUserId={getUserId()}
+                    currentUserRole={getUserRole()}
+                    chapterId={chapterId}
+                    refreshComments={fetchComments}
                   />
                 ))
               ) : (
                 <div className="text-center text-gray-400 py-6">
-                  No comments yet. Be the first to comment!
+                  No comments yet. {user?.author || user?.company ? 'Be the first to comment!' : 'You need to register as an author or company to comment.'}
                 </div>
               )}
             </div>

@@ -1,75 +1,106 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp, MessageSquare, Edit, Trash2, MoreHorizontal } from "lucide-react";
-import CommentForm from "./CommentForm";
+import { MoreHorizontal } from "lucide-react";
 import CommentOptionsModal from "./CommentOptionsModal";
+import { useNavigate } from "react-router-dom";
+import { updateComment, deleteComment } from "../../services/commentsService";
+import { useAuth } from "../../../hook/useAuth";
 
-const Comment = ({
-  comment,
-  currentUserId,
-  currentUserRole,
-  onReply,
-  onEdit,
-  onDelete,
-}) => {
-  const [showReplyForm, setShowReplyForm] = useState(false);
+const Comment = ({ comment, chapterId, refreshComments }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  const [showReplies, setShowReplies] = useState(true);
+  const { token, user } = useAuth();
+  const navigate = useNavigate();
 
-  const isMyComment = comment.userId === currentUserId;
-  const canEditOrDelete = isMyComment || currentUserRole >= 2; // Assuming 2+ is moderator/admin
-  const canReply = !!currentUserId; // Can reply if logged in
-  const hasReplies = comment.replies && comment.replies.length > 0;
+  // Verifica si el comentario pertenece al usuario actual
+  const isMyComment = user && (
+    (user.author?._id === comment.author_id?._id) || 
+    (user.company?._id === comment.company_id?._id)
+  );
 
-  const handleReply = (text) => {
-    onReply(comment.id, text);
-    setShowReplyForm(false);
+  // Permisos: usuario dueño o admin
+  const canEditOrDelete = isMyComment || (user?.role === "admin");
+
+  const authorName = comment.author_id?.name || comment.company_id?.name || 'Usuario Anónimo';
+  const userInitial = authorName.charAt(0).toUpperCase();
+
+  const handleEdit = async (newText) => {
+    if (!user || !token) {
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
+
+    try {
+      await updateComment(comment._id, newText, token);
+      await refreshComments();
+    } catch (error) {
+      console.error("Error al editar comentario:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      alert("No se pudo editar el comentario. Por favor intente nuevamente.");
+    }
   };
 
-  const handleEdit = (newText) => {
-    onEdit(comment.id, newText);
-  };
+  const handleDelete = async () => {
+    if (!user || !token) {
+      navigate('/login', { state: { from: window.location.pathname } });
+      return;
+    }
 
-  const handleDelete = () => {
-    onDelete(comment.id);
+    try {
+      await deleteComment(comment._id, token);
+      await refreshComments();
+    } catch (error) {
+      console.error("Error al eliminar comentario:", {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      alert("No se pudo eliminar el comentario. Por favor intente nuevamente.");
+    }
   };
 
   const formattedDate = (dateString) => {
     try {
       const date = new Date(dateString);
-      return date.toLocaleString();
+      return new Intl.DateTimeFormat('es-ES', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
     } catch (e) {
-      return "Unknown date";
+      return "Fecha desconocida";
     }
   };
 
-  // Get first letter for avatar placeholder
-  const userInitial = comment.user && typeof comment.user === 'string' 
-    ? comment.user.charAt(0).toUpperCase()
-    : '?';
-
   return (
-    <div className="bg-gray-800 rounded-lg p-4 mb-3 shadow-md border border-gray-700">
+    <div className="bg-gray-800 rounded-lg p-4 mb-3 shadow-md border border-gray-700 relative">
       <div className="flex justify-between items-start">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+        <div className="flex items-start gap-3 flex-1">
+          <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
             {userInitial}
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="font-semibold text-white">{comment.user}</p>
-              <p className="text-xs text-gray-400">{formattedDate(comment.timestamp)}</p>
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-semibold text-white truncate">{authorName}</p>
+              <p className="text-xs text-gray-400 whitespace-nowrap">
+                {formattedDate(comment.createdAt || new Date())}
+              </p>
             </div>
-            <p className="text-gray-300 mt-1">{comment.content}</p>
+            <p className="text-gray-300 mt-1 break-words whitespace-pre-wrap">
+              {comment.message}
+            </p>
           </div>
         </div>
 
-        {/* Actions menu */}
         {canEditOrDelete && (
-          <div className="flex">
+          <div className="flex ml-2">
             <button
               onClick={() => setIsOptionsOpen(true)}
-              className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700"
-              aria-label="Comment options"
+              className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700 transition-colors"
+              aria-label="Opciones del comentario"
             >
               <MoreHorizontal size={16} />
             </button>
@@ -77,69 +108,13 @@ const Comment = ({
         )}
       </div>
 
-      <div className="mt-3 ml-10 flex items-center gap-4 text-xs">
-        {canReply && (
-          <button
-            className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
-            onClick={() => setShowReplyForm(!showReplyForm)}
-          >
-            <MessageSquare size={14} />
-            {showReplyForm ? "Cancel" : "Reply"}
-          </button>
-        )}
-
-        {hasReplies && (
-          <button
-            className="text-gray-400 hover:text-white flex items-center gap-1"
-            onClick={() => setShowReplies(!showReplies)}
-          >
-            {showReplies ? (
-              <>
-                <ChevronUp size={14} />
-                Hide Replies
-              </>
-            ) : (
-              <>
-                <ChevronDown size={14} />
-                Show {comment.replies.length} {comment.replies.length === 1 ? "Reply" : "Replies"}
-              </>
-            )}
-          </button>
-        )}
-      </div>
-
-      {showReplyForm && (
-        <div className="mt-3 ml-10">
-          <CommentForm
-            placeholder="Write a reply..."
-            onSubmit={handleReply}
-            submitLabel="Reply"
-          />
-        </div>
-      )}
-
-      {hasReplies && showReplies && (
-        <div className="ml-10 mt-4 space-y-3 border-l-2 border-gray-700 pl-4">
-          {comment.replies.map((reply) => (
-            <Comment
-              key={reply.id}
-              comment={reply}
-              currentUserId={currentUserId}
-              currentUserRole={currentUserRole}
-              onReply={onReply}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
-          ))}
-        </div>
-      )}
-
       <CommentOptionsModal
         isOpen={isOptionsOpen}
         onClose={() => setIsOptionsOpen(false)}
-        initialText={comment.content}
+        initialText={comment.message}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        isOwnComment={isMyComment}
       />
     </div>
   );

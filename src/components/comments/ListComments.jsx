@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { 
-  Avatar, 
-  List, 
-  ListItem, 
-  ListItemAvatar, 
-  ListItemText, 
+import { useAuth } from '../../../hook/useAuth';
+import { getCommentsByChapter } from '../../services/commentsService';
+import {
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   TextField,
   Button,
   IconButton,
@@ -14,7 +15,6 @@ import {
   Divider
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
-import { useAuth } from '../../../hook/useAuth';
 
 const ListComments = ({ chapterId }) => {
   const { user } = useAuth();
@@ -24,20 +24,16 @@ const ListComments = ({ chapterId }) => {
   const [editingComment, setEditingComment] = useState(null);
 
   useEffect(() => {
-    // Ejemplo de datos - reemplazar con llamada real a la API
-    setComments([
-      {
-        _id: '1',
-        user: {
-          _id: 'user1',
-          name: 'Usuario Ejemplo',
-          photo: 'https://i.pravatar.cc/150?img=1'
-        },
-        text: 'Este capítulo estuvo increíble!',
-        createdAt: new Date(),
-        replies: []
+    const fetchComments = async () => {
+      try {
+        const fetchedComments = await getCommentsByChapter(chapterId);
+        setComments(fetchedComments);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
       }
-    ]);
+    };
+
+    fetchComments();
   }, [chapterId]);
 
   const handleSubmit = (e) => {
@@ -93,9 +89,9 @@ const ListComments = ({ chapterId }) => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             />
-            <Button 
-              type="submit" 
-              variant="contained" 
+            <Button
+              type="submit"
+              variant="contained"
               color="primary"
               disabled={!newComment.trim()}
             >
@@ -104,7 +100,7 @@ const ListComments = ({ chapterId }) => {
           </div>
         </form>
       )}
-      
+
       <List>
         {comments.map(comment => (
           <div key={comment._id}>

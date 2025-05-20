@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const AddCommentModal = ({ isOpen, onClose, onSubmit }) => {
-  // We'll create our own modal since @headlessui might not be installed
+ 
   if (!isOpen) return null;
   
   return (
@@ -43,7 +43,7 @@ const AddCommentModal = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-// Import directly within this file to avoid import errors
+
 const CommentForm = ({ onSubmit, submitLabel, initialText = "", placeholder }) => {
   const [text, setText] = useState(initialText);
   
@@ -51,7 +51,7 @@ const CommentForm = ({ onSubmit, submitLabel, initialText = "", placeholder }) =
     e.preventDefault();
     if (text.trim() === "") return;
     onSubmit(text);
-    if (!initialText) setText(""); // Clear only if not editing
+    if (!initialText) setText(""); 
   };
   
   return (
