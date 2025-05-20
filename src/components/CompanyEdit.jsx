@@ -50,6 +50,17 @@ const handleSave = () => {
       alert("Error al actualizar");
     });
 
+      const updatedUser = { ...user };
+      updatedUser.company = {
+        ...updatedUser.company,
+          _id: companyId,
+          name: companyName,
+          description: description,
+          website: website,
+          photo: photoUrl
+      };
+    localStorage.setItem("user", JSON.stringify(updatedUser))
+    window.location.href = "/"
   setShowSaveAlert(true);
 };
 

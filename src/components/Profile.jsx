@@ -96,7 +96,7 @@ export default function UserProfileEdit() {
         }
       });
 
-      const newToken = res.data?.token; // Aquí se obtiene el nuevo token correctamente
+      const newToken = res.data?.token;
 
       let updatedUser = JSON.parse(localStorage.getItem("user"));
       updatedUser.role = 0;
