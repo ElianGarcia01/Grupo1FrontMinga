@@ -1,9 +1,8 @@
-
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ChapterForm() {
-// El id del manga llega por la URL
+  // El id del manga llega por la URL
   const { id: mangaId } = useParams();
 
   /* --- estados locales --- */
@@ -15,6 +14,7 @@ export default function ChapterForm() {
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate()
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -52,6 +52,10 @@ export default function ChapterForm() {
 
       setMsg("Capítulo creado con éxito 🎉");
       setForm({ title: "", order: "", cover_photo: "", pages: "" });
+      // Redirigir
+      setTimeout(() => {
+        navigate("/manager");
+      });
     } catch (err) {
       setMsg(err.message);
     } finally {

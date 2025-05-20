@@ -1,7 +1,8 @@
 // ----------------------------- IMPORTS ---------------------------------
-import { useState, useEffect } from "react";            // hooks nativos de React
+import { useState, useEffect } from "react"; // hooks nativos de React
 import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
+import { useNavigate } from "react-router-dom";
 
 export default function MangaForm() {
   /* ------------------- ESTADOS LOCALES ------------------------------- */
@@ -13,6 +14,7 @@ export default function MangaForm() {
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
   /* ------------------ ESTADO GLOBAL (REDUX) --------------------------- */
   const dispatch = useDispatch();
@@ -51,7 +53,7 @@ export default function MangaForm() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
-      })     
+      });
 
       if (!res.ok) {
         const err = await res.json();
@@ -60,6 +62,11 @@ export default function MangaForm() {
 
       setMsg("Manga creado con éxito 🎉");
       setForm({ title: "", category_id: "", cover_photo: "", description: "" });
+      // Redirigir
+      setTimeout(() => {
+        navigate("/manager");
+      });
+
     } catch (err) {
       setMsg(err.message);
     } finally {
