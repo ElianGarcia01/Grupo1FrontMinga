@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-
 import NotFound from "./pages/NotFound";
 import SignInForm from "./pages/SignIn";
 import SignUpForm from "./pages/SignUp";
@@ -15,19 +14,17 @@ import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
 import Ranking from "./pages/Ranking.jsx";
 import ReaderPage from "./pages/ReaderPage.jsx";
-
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import AdminRoute from "./components/AdminRoute";
-
 import CompanyForm from "./components/Forms/CompanyForm.jsx";
 import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
+
 // Importar el nuevo componente MangaList
 import MangaList from "./components/MangaList.jsx";
-
 import AuthorCompany from "./pages/AuthorCompany";
 import MangaEditForm from "./components/Forms/EdithManga.jsx";
 import EditChapter from "./components/edithChapter.jsx";
@@ -60,7 +57,7 @@ const router = createBrowserRouter([
           { path: "manager", element: <AuthorCompany /> },
         ],
       },
-      
+
       // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
@@ -71,7 +68,7 @@ const router = createBrowserRouter([
       },
     ],
   },
-  
+
   // Rutas públicas solo si no está autenticado
   {
     element: <PublicRoute />,
@@ -80,13 +77,13 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpForm /> },
     ],
   },
-  
+
   // Ruta 404
   { path: "*", element: <NotFound /> },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }
 
 export default App;

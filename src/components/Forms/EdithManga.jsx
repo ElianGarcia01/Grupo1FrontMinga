@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk
 import { fetchMangas } from "../../../redux/mangaSlice";
+import { toast } from "react-toastify";
+
 
 export default function MangaEditForm() {
   const { id: mangaId } = useParams();
@@ -74,7 +76,7 @@ export default function MangaEditForm() {
         throw new Error(err?.message || "Error updating manga");
       }
 
-      setMsg("Manga actualizado ✔️");
+      toast.success("Manga edited successfully!");
       setTimeout(() => navigate("/manager/"))
     } catch (err) {
       setMsg(err.message);
