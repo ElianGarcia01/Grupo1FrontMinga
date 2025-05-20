@@ -44,20 +44,8 @@ const Drawer = ({ open, onClose }) => {
         minRole: 1,
       }, // Solo rol 1,2,3
       {
-        to: "/newManga",
-        label: "New Manga",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
-        to: "/AuthorCompany",
+        to: "/manager",
         label: "Manager",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
-        to: "/editManga",
-        label: "Edit Manga",
         requiresAuth: true,
         minRole: 1,
       }, // Solo rol 1,2,3
@@ -134,7 +122,9 @@ const Drawer = ({ open, onClose }) => {
                   : user?.company?.name || user?.name}
               </span>
               {user && (
-                <span className="text-xs text-indigo-200">{getAccountLabel()}</span>
+                <span className="text-xs text-indigo-200">
+                  {getAccountLabel()}
+                </span>
               )}
             </div>
           </div>

@@ -56,8 +56,8 @@ const router = createBrowserRouter([
           { path: "newChapter/:id", element: <ChapterForm /> },
           { path: "ranking", element: <Ranking /> },
           { path: "editChapter/:id", element: <ChapterEdit /> },
-          { path: "editManga", element: <MangaEditForm /> },
-          { path: "authorCompany", element: <AuthorCompany /> },
+          { path: "editManga/:id", element: <MangaEditForm /> },
+          { path: "manager", element: <AuthorCompany /> },
         ],
       },
       
