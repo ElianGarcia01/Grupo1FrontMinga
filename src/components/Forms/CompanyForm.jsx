@@ -45,9 +45,17 @@ export default function CompanyForm() {
       /* 3. Nuevo token + objeto Company que devuelve el back */
       const { token: newToken, response: company } = await res.json();
 
-      /* 4. Sustituir datos de sesión */
-      localStorage.setItem("token", newToken);              // token actualizado
-      localStorage.setItem("user", JSON.stringify(company)); // user → ahora es Company
+      /* acceder a usuario para cambiar el rol a 1 */
+      let user = JSON.parse(localStorage.getItem("user"));
+      user.role = 2;
+      user.company = company
+
+      /* Sustituir datos de sesión */
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      /* Redirigir al home */
+      window.location.href = "/"
 
       /* 5. Feedback + reset */
       setMsg("Compañía creada con éxito 🎉");

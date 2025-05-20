@@ -8,40 +8,50 @@ import { useNavigate } from "react-router-dom";
 const CompanyEdit = () => {
   const { user } = useAuth(); //aqui estan los datos almacneados
   const [companyName, setCompanyName] = useState('');
-  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [companyId, setCompanyId] = useState(null);
   const [showSaveAlert, setShowSaveAlert] = useState(false);   // para usar el componente de alerta
   const [showDeleteAlert, setShowDeleteAlert] = useState(false); //igual que arriba 
   const navigate = useNavigate();
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (user && user.company) {
-      const { name, location, website, photo, _id } = user.company;
+      const { name, description, website, photo, _id } = user.company;
       setCompanyName(name || '');
-      setLocation(location || '');
+      setDescription(description || '');
       setWebsite(website || '');
       setPhotoUrl(photo || '');
       setCompanyId(_id);
     }
   }, [user]);
 
-  const handleSave = () => {
-    axios.put("http://localhost:8080/api/companies/update", {
+const handleSave = () => {
+  axios.put(
+    "http://localhost:8080/api/companies/update",
+    {
       _id: companyId,
       name: companyName,
-      location,
-      website,
+      description: description,
+      website: website,
       photo: photoUrl
-    })
-      .then(() => alert("Profile updated success"))
-      .catch((err) => {
-        console.error(err);
-        alert("Error al actualizar");
-      });
-      setShowSaveAlert(true);
-  };
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+    .then(() => alert("Profile updated successfully"))
+    .catch((err) => {
+      console.error(err);
+      alert("Error al actualizar");
+    });
+
+  setShowSaveAlert(true);
+};
 
   const handleDelete = () => {
     setShowDeleteAlert(true);
@@ -83,7 +93,7 @@ const CompanyEdit = () => {
             {companyName || 'Company Name'}
           </h3>
           <p className="text-gray-400 text-sm mt-1">
-            <i className="fa-solid fa-location-dot mr-1" /> {location || 'Location'}
+            <i className="fa-solid fa-location-dot mr-1" /> {description || 'Location'}
           </p>
           <p className="text-gray-400 text-sm mt-1">
             <i className="fa-solid fa-globe mr-1" /> {website || 'Website'}
@@ -100,10 +110,10 @@ const CompanyEdit = () => {
           />
           <input
             type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className="w-full border-b border-gray-400 p-2 mb-4 text-sm text-black focus:outline-none placeholder-gray-500"
-            placeholder="Location"
+            placeholder="Description"
           />
           <input
             type="text"

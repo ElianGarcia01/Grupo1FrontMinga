@@ -134,7 +134,7 @@ const Drawer = ({ open, onClose }) => {
                   : "You are not logged in"}
               </span>
               {user && (
-                <span className="text-xs text-indigo-200">User account</span>
+                <span className="text-xs text-indigo-200">{getAccountLabel()}</span>
               )}
             </div>
           </div>
