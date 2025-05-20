@@ -135,7 +135,7 @@ export default function AuthorCompany() {
         )}
 
         {/* Botón nuevo manga */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end my-6">
           <button
             onClick={() => navigate("/newManga")}
             className="bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer py-3 px-6 rounded-full shadow-lg transition duration-300"

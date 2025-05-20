@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 export default function ChapterForm() {
   // El id del manga llega por la URL
@@ -50,7 +52,7 @@ export default function ChapterForm() {
         throw new Error(err?.message || "Error al crear capítulo");
       }
 
-      setMsg("Capítulo creado con éxito 🎉");
+      toast.success("Chapter created successfully!");
       setForm({ title: "", order: "", cover_photo: "", pages: "" });
       // Redirigir
       setTimeout(() => {

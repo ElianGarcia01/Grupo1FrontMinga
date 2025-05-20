@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"; // hooks nativos de React
 import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 export default function MangaForm() {
   /* ------------------- ESTADOS LOCALES ------------------------------- */
@@ -60,13 +62,13 @@ export default function MangaForm() {
         throw new Error(err?.message || "Error al crear manga");
       }
 
-      setMsg("Manga creado con éxito 🎉");
+      toast.success("Manga created successfully!");
+      
       setForm({ title: "", category_id: "", cover_photo: "", description: "" });
       // Redirigir
       setTimeout(() => {
         navigate("/manager");
       });
-
     } catch (err) {
       setMsg(err.message);
     } finally {
