@@ -22,7 +22,7 @@ export const fetchFavorites = createAsyncThunk(
       }
 
       const data = await response.json();
-      return data.response; 
+      return data.response;
     } catch (error) {
       return rejectWithValue(error.message || 'Network error occurred');
     }
@@ -53,7 +53,7 @@ export const removeFavorite = createAsyncThunk(
         return rejectWithValue(errorData.message || 'Failed to remove favorite');
       }
 
-      return manga_id; 
+      return manga_id;
     } catch (error) {
       return rejectWithValue(error.message || 'Network error occurred');
     }
@@ -100,8 +100,9 @@ const favoritesSlice = createSlice({
         state.lastRemoved = null;
       })
       .addCase(removeFavorite.fulfilled, (state, action) => {
-        state.items = state.items.filter(item => item.manga_id._id !== action.payload);
-        state.lastRemoved = action.payload;
+        state.items = state.items.filter(
+          item => String(item.manga_id?._id) !== String(action.payload)
+        );
       })
       .addCase(removeFavorite.rejected, (state, action) => {
         state.error = action.payload;
