@@ -1,6 +1,5 @@
 // ----------------------------- IMPORTS ---------------------------------
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 /* ---------------------- COMPONENTE PRINCIPAL --------------------------- */
 export default function CompanyForm() {
@@ -61,7 +60,6 @@ export default function CompanyForm() {
       /* 5. Feedback + reset */
       setMsg("Compañía creada con éxito 🎉");
       setForm({ name: "", website: "", photo: "", description: "" });
-    navigate("/")
     } catch (err) {
       setMsg(err.message);
     } finally {
