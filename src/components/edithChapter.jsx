@@ -1,87 +1,225 @@
-import React, { useState } from 'react';
-import SaveAlert from './AlertSave';
-import DeleteAlert from './AlertDelete';
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import DeleteAlert from "./AlertDelete";
+import { getChaptersByManga } from "../../redux/chapterSlice";
 
 const EditChapter = () => {
-    const [mangaName, setMangaName] = useState('');
-    const [chapter, setChapter] = useState('');
-    const [dataField, setDataField] = useState('');
-    const [dataToEdit, setDataToEdit] = useState('');
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [showDelete, setShowDelete] = useState(false);
+  const { id: mangaId } = useParams();
+  const dispatch = useDispatch();
 
-    const handleEdit = () => {
-        console.log('Edit clicked', { mangaName, chapter, dataField, dataToEdit });
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-    };
+  const { list: allChapters = [], loading } = useSelector(
+    (state) => state.chapters
+  );
 
-    const handleDelete = () => {
-        console.log('Delete clicked');
-        setShowDelete(true);
-        setTimeout(() => setShowDelete(false), 3000);
-    };
+  const filteredChapters = allChapters.filter(
+    (ch) => ch.manga_id?._id === mangaId || ch.manga_id === mangaId
+  );
 
-    return (
-        <div className="min-h-screen flex items-center justify-center px-4">
-            <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
-                <h2 className="text-2xl font-semibold text-center mb-6">Edit Chapter</h2>
+  const [selectedChapterId, setSelectedChapterId] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    order: "",
+    pages: [],
+  });
 
-                {showSuccess && <SaveAlert message="Chapter edited successfully!" />}
-                {showDelete && <DeleteAlert message="Chapter deleted!" />}
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-                <input
+  useEffect(() => {
+    if (mangaId) {
+      dispatch(getChaptersByManga(mangaId));
+    }
+  }, [mangaId]);
+
+  useEffect(() => {
+    const chapter = filteredChapters.find((ch) => ch._id === selectedChapterId);
+    if (chapter) {
+      setFormData({
+        title: chapter.title || "",
+        description: chapter.description || "",
+        order: chapter.order || "",
+        pages: chapter.pages || [],
+      });
+    }
+  }, [selectedChapterId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Limpiar mensajes de error al cambiar los campos
+    if (errorMessage) setErrorMessage("");
+  };
+
+  const handleEdit = async () => {
+  if (!formData.title || !formData.order) {
+    setErrorMessage("Title and Order are required.");
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("http://localhost:8080/api/chapters/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        _id: selectedChapterId, // enviar el ID aquí
+        title: formData.title,
+        order: parseInt(formData.order),
+        pages: formData.pages,
+        cover_photo: formData.pages[0] || "",
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const errorMsg =
+        data.message ||
+        (data.errors && data.errors.map((e) => e.msg).join(", ")) ||
+        "Error updating chapter";
+      throw new Error(errorMsg);
+    }
+
+    setShowSuccess(true);
+    setErrorMessage("");
+    setTimeout(() => setShowSuccess(false), 3000);
+
+    dispatch(getChaptersByManga(mangaId));
+  } catch (error) {
+    console.error("Error al editar capítulo:", error);
+    setErrorMessage(error.message);
+  }
+};
+
+
+  const handleDelete = () => {
+    console.log("Eliminando capítulo:", selectedChapterId);
+    setShowDelete(true);
+    setTimeout(() => setShowDelete(false), 3000);
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Edit Chapter</h2>
+
+        {/* Mensaje de éxito */}
+        {showSuccess && (
+          <div className="mb-4 p-3 bg-green-100 border-l-4 border-green-500 text-green-700">
+            <p>Chapter edited successfully!</p>
+          </div>
+        )}
+
+        {/* Mensaje de error */}
+        {errorMessage && (
+          <div className="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <p>{errorMessage}</p>
+          </div>
+        )}
+
+        {showDelete && <DeleteAlert message="Chapter deleted!" />}
+
+        {loading ? (
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-lg font-medium text-blue-600">
+              Loading chapters...
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Selector de capítulos */}
+            <select
+              className="w-full mb-4 border-b border-gray-400 focus:outline-none p-2 text-sm text-gray-600"
+              value={selectedChapterId}
+              onChange={(e) => setSelectedChapterId(e.target.value)}
+            >
+              <option value="" disabled>
+                Select a chapter
+              </option>
+              {filteredChapters.map((ch) => (
+                <option key={ch._id} value={ch._id}>
+                  Chapter {ch.order} – {ch.title}
+                </option>
+              ))}
+            </select>
+
+            {selectedChapterId && (
+              <>
+                <div className="mb-3">
+                  <input
+                    name="title"
                     type="text"
-                    placeholder="name of the manga"
-                    className="w-full mb-4 border-b border-gray-400 focus:outline-none p-1 text-sm placeholder-gray-500"
-                    value={mangaName}
-                    onChange={(e) => setMangaName(e.target.value)}
-                />
+                    placeholder="Title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    className="w-full border-b border-gray-400 focus:outline-none p-2 text-sm"
+                  />
+                  {errorMessage.includes("Title") && (
+                    <p className="text-red-500 text-xs mt-1">{errorMessage}</p>
+                  )}
+                </div>
 
-                <select
-                    className="w-full mb-4 border-b border-gray-400 focus:outline-none p-1 text-sm text-gray-500"
-                    value={chapter}
-                    onChange={(e) => setChapter(e.target.value)}
-                >
-                    <option value="">select chapter</option>
-                    <option value="1">Chapter 1</option>
-                    <option value="2">Chapter 2</option>
-                </select>
-
-                <select
-                    className="w-full mb-4 border-b border-gray-400 focus:outline-none p-1 text-sm text-gray-500"
-                    value={dataField}
-                    onChange={(e) => setDataField(e.target.value)}
-                >
-                    <option value="">select data</option>
-                    <option value="title">Title</option>
-                    <option value="description">Description</option>
-                </select>
-
-                <input
+                <div className="mb-3">
+                  <input
+                    name="description"
                     type="text"
-                    placeholder="data to edit"
-                    className="w-full mb-6 border-b border-gray-400 focus:outline-none p-1 text-sm placeholder-gray-500"
-                    value={dataToEdit}
-                    onChange={(e) => setDataToEdit(e.target.value)}
-                />
+                    placeholder="Description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full border-b border-gray-400 focus:outline-none p-2 text-sm"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <input
+                    name="order"
+                    type="number"
+                    placeholder="Order"
+                    value={formData.order}
+                    onChange={handleChange}
+                    min="1"
+                    className="w-full border-b border-gray-400 focus:outline-none p-2 text-sm"
+                  />
+                  {errorMessage.includes("Order") && (
+                    <p className="text-red-500 text-xs mt-1">{errorMessage}</p>
+                  )}
+                </div>
+
+                {formData.pages.length > 0 && (
+                  <img
+                    src={formData.pages[0]}
+                    alt="Chapter cover"
+                    className="w-full h-[200px] object-cover rounded-lg shadow mb-4"
+                  />
+                )}
 
                 <button
-                    onClick={handleEdit}
-                    className="w-full bg-emerald-400 hover:bg-emerald-500 text-white font-semibold py-2 rounded-full mb-4"
+                  onClick={handleEdit}
+                  className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 rounded-full mb-3"
                 >
-                    Edit
+                  Save Changes
                 </button>
-
                 <button
-                    onClick={handleDelete}
-                    className="w-full bg-red-100 hover:bg-red-200 text-red-500 font-semibold py-2 rounded-full"
+                  onClick={handleDelete}
+                  className="w-full bg-red-100 hover:bg-red-200 text-red-600 font-semibold py-2 rounded-full"
                 >
-                    Delete
+                  Delete Chapter
                 </button>
-            </div>
-        </div>
-    );
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default EditChapter;

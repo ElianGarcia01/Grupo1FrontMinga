@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import CategoryFilter from "../components/CategoryFilter";
 import { motion } from "framer-motion";
-import { FaSearch } from "react-icons/fa";
+import { FaPlusCircle, FaPlusSquare, FaSearch } from "react-icons/fa";
 import MineMangasCard from "../components/mineMangasCard";
 import { useNavigate } from "react-router-dom";
+import { FaFolderPlus, FaPlugCirclePlus } from "react-icons/fa6";
 
 // Spinner y Skeletons básicos
 function Spinner() {
@@ -16,7 +17,7 @@ function Spinner() {
 
 function CategorySkeleton() {
   return (
-    <div className="flex gap-2 flex-wrap mb-6">
+    <div className="flex justify-center gap-2 flex-wrap mb-6">
       {Array(5)
         .fill(null)
         .map((_, idx) => (
@@ -49,9 +50,12 @@ export default function AuthorCompany() {
     const fetchMangasByUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8080/api/mangas/byUser", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/mangas/byUser",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch mangas");
         const data = await response.json();
         setMangas(data.response);
@@ -68,7 +72,9 @@ export default function AuthorCompany() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/categories/allCategories");
+        const response = await fetch(
+          "http://localhost:8080/api/categories/allCategories"
+        );
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         setCategories(data.response);
@@ -87,6 +93,12 @@ export default function AuthorCompany() {
       selectedCategory === "All" || manga.category_id?.name === selectedCategory
     );
   });
+
+  const handleDeleteManga = (deletedMangaId) => {
+    setMangas((prevMangas) =>
+      prevMangas.filter((m) => m._id !== deletedMangaId)
+    );
+  };
 
   const categoryNames = ["All", ...categories.map((cat) => cat.name)];
 
@@ -126,9 +138,9 @@ export default function AuthorCompany() {
         <div className="flex justify-end mb-6">
           <button
             onClick={() => navigate("/newManga")}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer py-3 px-6 rounded-full shadow-lg transition duration-300"
           >
-            ➕ New Manga
+            <FaFolderPlus className="inline-block" /> New Manga
           </button>
         </div>
 
@@ -147,6 +159,7 @@ export default function AuthorCompany() {
                 key={manga._id}
                 manga={manga}
                 categories={categories}
+                onDelete={handleDeleteManga}
               />
             ))}
           </motion.div>

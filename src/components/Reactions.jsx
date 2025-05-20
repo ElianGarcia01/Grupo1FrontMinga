@@ -91,13 +91,13 @@ export default function Reactions({ mangaId }) {
           onClick={() => handleReactionClick(value)}
           disabled={loading}
           className={`p-4 lg:p-5 cursor-pointer rounded-full shadow-md transition 
-            ${selected === value ? "bg-yellow-200" : "bg-white hover:bg-yellow-100"}
+            ${selected === value ? "bg-indigo-600" : "bg-white hover:bg-yellow-100"}
             ${loading ? "opacity-50 pointer-events-none" : ""}
           `}
         >
           <Icon
             className={`text-2xl lg:text-3xl ${
-              selected === value ? "text-yellow-600" : "text-yellow-500"
+              selected === value ? "text-yellow-400" : "text-yellow-500"
             }`}
           />
         </button>

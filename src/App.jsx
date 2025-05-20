@@ -13,7 +13,6 @@ import DetailsManga from "./pages/DetailsManga";
 import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
-import ChapterEdit from "./pages/chapterEdit.jsx";
 import Ranking from "./pages/Ranking.jsx";
 import ReaderPage from "./pages/ReaderPage.jsx";
 
@@ -31,6 +30,7 @@ import MangaList from "./components/MangaList.jsx";
 
 import AuthorCompany from "./pages/AuthorCompany";
 import MangaEditForm from "./components/Forms/EdithManga.jsx";
+import EditChapter from "./components/edithChapter.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
           { path: "newManga", element: <MangaForm /> },
           { path: "newChapter/:id", element: <ChapterForm /> },
           { path: "ranking", element: <Ranking /> },
-          { path: "editChapter/:id", element: <ChapterEdit /> },
+          { path: "editChapter/:id", element: <EditChapter /> },
           { path: "editManga/:id", element: <MangaEditForm /> },
           { path: "manager", element: <AuthorCompany /> },
         ],
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element: <AdminRoute />,
         children: [
           { path: "panel", element: <Panel /> },
-          { path: "chapter-edit/:id", element: <ChapterEdit /> }, // Movido aquí si es solo para admin
+          { path: "chapter-edit/:id", element: <EditChapter /> }, // Movido aquí si es solo para admin
         ],
       },
     ],
@@ -80,8 +80,6 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpForm /> },
     ],
   },
-  { path: "editChapter", element: <ChapterEdit /> },
-
   
   // Ruta 404
   { path: "*", element: <NotFound /> },
