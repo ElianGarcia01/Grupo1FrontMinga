@@ -15,8 +15,8 @@ const CompanyEdit = () => {
   const [showSaveAlert, setShowSaveAlert] = useState(false);   // para usar el componente de alerta
   const [showDeleteAlert, setShowDeleteAlert] = useState(false); //igual que arriba 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token")
-
+  const [token, setToken] = useState(localStorage.getItem("token"))
+  
   useEffect(() => {
     if (user && user.company) {
       const { name, description, website, photo, _id } = user.company;
@@ -57,17 +57,46 @@ const handleSave = () => {
     setShowDeleteAlert(true);
   };
 
-  const confirmDelete = () => {
-    axios.delete(`http://localhost:8080/api/companies/delete/${companyId}`)
-      .then(() => {
-        alert("Company Account Deleted");
-        navigate("/");
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Delete Error");
-      });
-  };
+const confirmDelete = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    
+    const res = await axios.delete(
+      `http://localhost:8080/api/companies/delete/${companyId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const newToken = res.data?.token;
+    console.log(token);
+    
+    console.log(newToken);
+    
+
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    user.role = 0;
+    delete user.company;
+
+    if (newToken) {
+      localStorage.setItem("token", newToken);
+      setToken(newToken)
+    }
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    alert("Company Account Deleted");
+
+    window.location.href = "/"
+
+  } catch (err) {
+    console.error(err);
+    alert("Delete Error");
+  }
+};
 
   const cancelDelete = () => {
     setShowDeleteAlert(false);
