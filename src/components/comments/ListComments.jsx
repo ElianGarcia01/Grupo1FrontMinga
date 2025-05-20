@@ -1,163 +1,148 @@
-import { useEffect, useState, useContext } from "react";
-import Comment from "./Comment";
-import AddCommentModal from "./AddCommentModal";
-import { AuthContext } from "../../../hook/AuthContext"; // Ajusta la ruta si es necesario
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { 
+  Avatar, 
+  List, 
+  ListItem, 
+  ListItemAvatar, 
+  ListItemText, 
+  TextField,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider
+} from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
+import { useAuth } from '../../../hook/useAuth';
 
 const ListComments = ({ chapterId }) => {
+  const { user } = useAuth();
   const [comments, setComments] = useState([]);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const { user } = useContext(AuthContext);
+  const [newComment, setNewComment] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [editingComment, setEditingComment] = useState(null);
 
   useEffect(() => {
-    // TODO: reemplazar con fetch real desde backend
-    const fakeData = [
+    // Ejemplo de datos - reemplazar con llamada real a la API
+    setComments([
       {
-        id: "1",
-        user: "John",
-        userId: "123",
-        content: "Amazing chapter!",
-        replies: [
-          {
-            id: "1-1",
-            user: "Anna",
-            userId: "456",
-            content: "Totally agree!",
-            replies: [],
-          },
-        ],
-      },
-      {
-        id: "2",
-        user: "Liam",
-        userId: "789",
-        content: "Loved the artwork",
-        replies: [],
-      },
-    ];
-    setComments(fakeData);
+        _id: '1',
+        user: {
+          _id: 'user1',
+          name: 'Usuario Ejemplo',
+          photo: 'https://i.pravatar.cc/150?img=1'
+        },
+        text: 'Este capítulo estuvo increíble!',
+        createdAt: new Date(),
+        replies: []
+      }
+    ]);
   }, [chapterId]);
 
-  const handleAddComment = (text) => {
-    if (!user || user.role === 0) return; 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
 
-    const newComment = {
-      id: Date.now().toString(),
-      user: user.name,
-      userId: user.id,
-      content: text,
-      replies: [],
+    const newCommentObj = {
+      _id: Date.now().toString(),
+      user: {
+        _id: user._id,
+        name: user.name,
+        photo: user.photo
+      },
+      text: newComment,
+      createdAt: new Date(),
+      replies: []
     };
-    setComments([...comments, newComment]);
+
+    setComments([newCommentObj, ...comments]);
+    setNewComment('');
   };
 
-  const handleReply = (parentId, text) => {
-    if (!user || user.role === 0) return;
-
-    const updated = comments.map((comment) => {
-      if (comment.id === parentId) {
-        return {
-          ...comment,
-          replies: [
-            ...comment.replies,
-            {
-              id: Date.now().toString(),
-              user: user.name,
-              userId: user.id,
-              content: text,
-              replies: [],
-            },
-          ],
-        };
-      }
-      return {
-        ...comment,
-        replies: comment.replies.map((reply) =>
-          reply.id === parentId
-            ? {
-                ...reply,
-                replies: [
-                  ...reply.replies,
-                  {
-                    id: Date.now().toString(),
-                    user: user.name,
-                    userId: user.id,
-                    content: text,
-                    replies: [],
-                  },
-                ],
-              }
-            : reply
-        ),
-      };
-    });
-    setComments(updated);
+  const handleMenuOpen = (event, comment) => {
+    setAnchorEl(event.currentTarget);
+    setEditingComment(comment);
   };
 
-  const handleEdit = (id, newText) => {
-    const canEdit = (commentUserId) => user && (user.role === 3 || user.id === commentUserId);
-
-    const updateText = (list) =>
-      list.map((item) => {
-        if (item.id === id && canEdit(item.userId)) return { ...item, content: newText };
-        if (item.replies) {
-          return { ...item, replies: updateText(item.replies) };
-        }
-        return item;
-      });
-
-    setComments(updateText(comments));
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setEditingComment(null);
   };
 
-  const handleDelete = (id) => {
-    const canDelete = (commentUserId) => user && (user.role === 3 || user.id === commentUserId);
+  const handleDelete = () => {
+    setComments(comments.filter(c => c._id !== editingComment._id));
+    handleMenuClose();
+  };
 
-    const deleteById = (list) =>
-      list
-        .filter((item) => !(item.id === id && canDelete(item.userId)))
-        .map((item) => ({
-          ...item,
-          replies: deleteById(item.replies || []),
-        }));
-
-    setComments(deleteById(comments));
+  const handleEdit = () => {
+    // Lógica de edición aquí
+    handleMenuClose();
   };
 
   return (
-    <div className="mt-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Comments</h2>
-
-        {/* Mostrar botón sólo si está logueado y rol no es 0 */}
-        {user && user.role !== 0 && (
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            + Add Comment
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-4">
-        {comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            currentUserId={user?.id}
-            currentUserRole={user?.role}
-            onReply={handleReply}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+    <div>
+      {user && (
+        <form onSubmit={handleSubmit} className="mb-6">
+          <div className="flex gap-3">
+            <Avatar src={user.photo} alt={user.name} />
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={!newComment.trim()}
+            >
+              Post
+            </Button>
+          </div>
+        </form>
+      )}
+      
+      <List>
+        {comments.map(comment => (
+          <div key={comment._id}>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar src={comment.user.photo} alt={comment.user.name} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={comment.user.name}
+                secondary={
+                  <>
+                    <span className="text-gray-800">{comment.text}</span>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </div>
+                  </>
+                }
+              />
+              {user?._id === comment.user._id && (
+                <>
+                  <IconButton onClick={(e) => handleMenuOpen(e, comment)}>
+                    <MoreVert />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl && editingComment?._id === comment._id)}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem onClick={handleEdit}>Edit</MenuItem>
+                    <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                  </Menu>
+                </>
+              )}
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </div>
         ))}
-      </div>
-
-      <AddCommentModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddComment}
-      />
+      </List>
     </div>
   );
 };

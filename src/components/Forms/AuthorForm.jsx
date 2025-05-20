@@ -46,14 +46,23 @@ export default function AuthorForm() {
       /* Nuevo token y objeto Author que se trae del back */
       const { token: newToken, response: author } = await res.json();
 
+      /* acceder a usuario para cambiar el rol a 1 */
+      let user = JSON.parse(localStorage.getItem("user"));
+      user.role = 1;
+      user.author = author
+
       /* Sustituir datos de sesión */
-      localStorage.setItem("token", newToken);                 // token
-      localStorage.setItem("user",  JSON.stringify(author));   // user → ahora es Author
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      window.location.href = "/"
 
       navigate("/")
 
       /* Feedback al usuario y limpia form */
       setMsg("Autor creado con éxito 🎉");
+      setMsg("Author successfully created 🎉");
+      // resetea campos
       setForm({
         name: "",
         lastName: "",

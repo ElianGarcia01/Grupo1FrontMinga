@@ -1,9 +1,9 @@
 // ----------------------------- IMPORTS ---------------------------------
-import { useState, useEffect } from "react";            // hooks nativos de React
+import { useState, useEffect } from "react"; // hooks nativos de React
 import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
+import { useNavigate } from "react-router-dom";
 
-// ---------------------- COMPONENTE PRINCIPAL ---------------------------
 export default function MangaForm() {
   /* ------------------- ESTADOS LOCALES ------------------------------- */
   const [form, setForm] = useState({
@@ -14,6 +14,7 @@ export default function MangaForm() {
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
   /* ------------------ ESTADO GLOBAL (REDUX) --------------------------- */
   const dispatch = useDispatch();
@@ -38,13 +39,13 @@ export default function MangaForm() {
     setMsg("");
 
     try {
-      /* 1. Token solo para la cabecera (el back ya asocia el usuario) */
+      /* Token solo para la cabecera (el back ya asocia el usuario) */
       const token = localStorage.getItem("token");
 
-      /* 2. Payload = datos del formulario */
+      /* Payload = datos del formulario */
       const payload = { ...form };
 
-      /* 3. Petición POST al endpoint */
+      /* Petición POST al endpoint */
       const res = await fetch("http://localhost:8080/api/mangas/create", {
         method: "POST",
         headers: {
@@ -54,9 +55,6 @@ export default function MangaForm() {
         body: JSON.stringify(payload),
       });
 
-      console.log("valor de payload:", payload);
-      
-
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err?.message || "Error al crear manga");
@@ -64,6 +62,11 @@ export default function MangaForm() {
 
       setMsg("Manga creado con éxito 🎉");
       setForm({ title: "", category_id: "", cover_photo: "", description: "" });
+      // Redirigir
+      setTimeout(() => {
+        navigate("/manager");
+      });
+
     } catch (err) {
       setMsg(err.message);
     } finally {
@@ -71,7 +74,6 @@ export default function MangaForm() {
     }
   };
 
-  /* --------------------------- JSX ----------------------------------- */
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-white sm:bg-gradient-to-br sm:from-indigo-50 sm:to-purple-100">
       <div className="w-full max-w-md rounded-none sm:rounded-3xl bg-white shadow-none sm:shadow-xl ring-0 sm:ring-1 sm:ring-black/5 overflow-hidden">

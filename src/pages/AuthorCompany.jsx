@@ -1,74 +1,122 @@
 import { useEffect, useState } from "react";
 import CategoryFilter from "../components/CategoryFilter";
 import { motion } from "framer-motion";
-import { FaSearch } from "react-icons/fa";
+import { FaPlusCircle, FaPlusSquare, FaSearch } from "react-icons/fa";
 import MineMangasCard from "../components/mineMangasCard";
+import { useNavigate } from "react-router-dom";
+import { FaFolderPlus, FaPlugCirclePlus } from "react-icons/fa6";
+
+// Spinner y Skeletons básicos
+function Spinner() {
+  return (
+    <div className="flex justify-center items-center py-10">
+      <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
+}
+
+function CategorySkeleton() {
+  return (
+    <div className="flex justify-center gap-2 flex-wrap mb-6">
+      {Array(5)
+        .fill(null)
+        .map((_, idx) => (
+          <div
+            key={idx}
+            className="h-10 w-24 bg-gray-200 rounded-full animate-pulse"
+          />
+        ))}
+    </div>
+  );
+}
 
 export default function AuthorCompany() {
   const [mangas, setMangas] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [companyName, setCompanyName] = useState("");
+  const [loadingMangas, setLoadingMangas] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const navigate = useNavigate();
 
-  // Obtener mangas por usuario
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.company?.name) {
+      setCompanyName(user.company.name);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchMangasByUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8080/api/mangas/byUser", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/mangas/byUser",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch mangas");
         const data = await response.json();
         setMangas(data.response);
       } catch (error) {
         console.error("Error fetching mangas:", error.message);
+      } finally {
+        setLoadingMangas(false);
       }
     };
 
     fetchMangasByUser();
   }, []);
 
-  // Obtener categorías
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/categories/allCategories");
+        const response = await fetch(
+          "http://localhost:8080/api/categories/allCategories"
+        );
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         setCategories(data.response);
       } catch (error) {
         console.error("Error fetching categories:", error.message);
+      } finally {
+        setLoadingCategories(false);
       }
     };
 
     fetchCategories();
   }, []);
 
-  // Filtro por categoría
   const filteredMangas = mangas.filter((manga) => {
     return (
-      selectedCategory === "All" ||
-      manga.category_id?.name === selectedCategory
+      selectedCategory === "All" || manga.category_id?.name === selectedCategory
     );
   });
+
+  const handleDeleteManga = (deletedMangaId) => {
+    setMangas((prevMangas) =>
+      prevMangas.filter((m) => m._id !== deletedMangaId)
+    );
+  };
 
   const categoryNames = ["All", ...categories.map((cat) => cat.name)];
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      {/* Hero con título */}
+      {/* Hero */}
       <div
         className="min-h-screen w-full bg-cover bg-center"
         style={{ backgroundImage: "url('/assets/manager.jpg')" }}
       >
         <section className="flex flex-col items-center justify-end text-white pt-0 pb-48 px-4 min-h-screen">
-          <h1 className="text-3xl md:text-5xl font-bold">My Mangas</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">
+            {companyName ? `${companyName}` : "My Mangas"}
+          </h1>
         </section>
       </div>
 
-      {/* Contenido con filtro y tarjetas */}
+      {/* Contenido */}
       <motion.div
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
@@ -76,26 +124,46 @@ export default function AuthorCompany() {
         className="w-full max-w-7xl mx-auto -mt-40 bg-white text-black shadow-2xl rounded-t-[80px] md:rounded-t-[100px] px-4 sm:px-10 md:px-20 pb-10 pt-8 z-10 relative"
       >
         {/* Filtro de categorías */}
-        <CategoryFilter
-          categories={categoryNames}
-          selected={selectedCategory}
-          onSelect={setSelectedCategory}
-        />
+        {loadingCategories ? (
+          <CategorySkeleton />
+        ) : (
+          <CategoryFilter
+            categories={categoryNames}
+            selected={selectedCategory}
+            onSelect={setSelectedCategory}
+          />
+        )}
 
-        {/* Tarjetas de manga */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {filteredMangas.map((manga) => (
-            <MineMangasCard key={manga._id} manga={manga} categories={categories} />
-          ))}
-        </motion.div>
+        {/* Botón nuevo manga */}
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => navigate("/newManga")}
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold cursor-pointer py-3 px-6 rounded-full shadow-lg transition duration-300"
+          >
+            <FaFolderPlus className="inline-block" /> New Manga
+          </button>
+        </div>
 
-        {/* Mensaje sin resultados */}
-        {filteredMangas.length === 0 && (
+        {/* Tarjetas o loading */}
+        {loadingMangas ? (
+          <Spinner />
+        ) : filteredMangas.length > 0 ? (
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {filteredMangas.map((manga) => (
+              <MineMangasCard
+                key={manga._id}
+                manga={manga}
+                categories={categories}
+                onDelete={handleDeleteManga}
+              />
+            ))}
+          </motion.div>
+        ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,4 +185,3 @@ export default function AuthorCompany() {
     </div>
   );
 }
-

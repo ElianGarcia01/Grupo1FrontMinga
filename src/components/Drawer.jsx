@@ -33,7 +33,7 @@ const Drawer = ({ open, onClose }) => {
         onlyForRole0: true,
       }, // Solo rol 0
       {
-        to: "/profileUser",
+        to: "/profile",
         label: "My Profile",
         requiresAuth: true,
         minRole: 1,
@@ -45,20 +45,8 @@ const Drawer = ({ open, onClose }) => {
         minRole: 1,
       }, // Solo rol 1,2,3
       {
-        to: "/newManga",
-        label: "New Manga",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
-        to: "/AuthorCompany",
+        to: "/manager",
         label: "Manager",
-        requiresAuth: true,
-        minRole: 1,
-      }, // Solo rol 1,2,3
-      {
-        to: "/editManga",
-        label: "Edit Manga",
         requiresAuth: true,
         minRole: 1,
       }, // Solo rol 1,2,3
@@ -77,6 +65,19 @@ const Drawer = ({ open, onClose }) => {
       if (item.onlyForRole0 && role !== 0) return false;
       return true;
     });
+  };
+
+  const getAccountLabel = () => {
+    switch (user?.role) {
+      case 1:
+        return "Author account";
+      case 2:
+        return "Company account";
+      case 3:
+        return "Admin account";
+      default:
+        return "User account";
+    }
   };
 
   return (
@@ -109,16 +110,22 @@ const Drawer = ({ open, onClose }) => {
             ) : (
               <div className="w-10 h-10 rounded-full bg-indigo-400 flex items-center justify-center">
                 <span className="text-indigo-900 font-bold">
-                  {user?.email?.charAt(0).toUpperCase() || "?"}
+                  {user?.name?.charAt(0).toUpperCase() || "?"}
                 </span>
               </div>
             )}
             <div className="flex flex-col">
               <span className="text-sm font-medium break-all line-clamp-1">
-                {user?.email || "You are not logged in"}
+                {user?.role === 0
+                  ? user?.email
+                  : user?.role === 1
+                  ? user?.author?.name || user?.name
+                  : user?.company?.name || user?.name}
               </span>
               {user && (
-                <span className="text-xs text-indigo-200">User account</span>
+                <span className="text-xs text-indigo-200">
+                  {getAccountLabel()}
+                </span>
               )}
             </div>
           </div>

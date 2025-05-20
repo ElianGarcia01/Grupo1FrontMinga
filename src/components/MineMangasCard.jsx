@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
-const MineMangasCard = ({ manga, categories }) => {
+const MineMangasCard = ({ manga, categories, onDelete }) => {
   const { _id, title, cover_photo, category_id } = manga;
   const type = category_id?.name || "Unknown";
 
@@ -31,31 +31,36 @@ const MineMangasCard = ({ manga, categories }) => {
 
   const handleEditManga = (e) => {
     e.stopPropagation();
-    navigate(`/mangas/edit/${_id}`);
+    navigate(`/editManga/${_id}`);
   };
 
-const handleDeleteManga = async (e) => {
-  e.stopPropagation();
+  const handleDeleteManga = async (e) => {
+    e.stopPropagation();
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:8080/api/mangas/delete", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ _id: _id }),
-    });
+      const response = await fetch("http://localhost:8080/api/mangas/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ _id: _id }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Error al eliminar el manga");
+      if (!response.ok) {
+        throw new Error("Error al eliminar el manga");
+      }
+
+      // Notificar al componente padre
+      if (onDelete) {
+        onDelete(_id);
+      }
+    } catch (error) {
+      console.error("Error eliminando el manga:", error);
     }
-  } catch (error) {
-    console.error("Error eliminando el manga:", error);
-  }
-};
+  };
 
   return (
     <div
@@ -67,13 +72,13 @@ const handleDeleteManga = async (e) => {
       <div className="absolute top-2 left-2 flex gap-2 z-10">
         <button
           onClick={handleAddChapter}
-          className="bg-white text-black border border-gray-300 rounded-full p-1 hover:bg-gray-100"
+          className="bg-white cursor-pointer text-black border border-gray-300 rounded-full p-1 hover:bg-gray-100"
         >
           <FaPlus size={12} />
         </button>
         <button
           onClick={handleEditChapters}
-          className="bg-white text-black border border-gray-300 rounded-full p-1 hover:bg-gray-100"
+          className="bg-white cursor-pointer text-black border border-gray-300 rounded-full p-1 hover:bg-gray-100"
         >
           <FaEdit size={12} />
         </button>
@@ -89,13 +94,13 @@ const handleDeleteManga = async (e) => {
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleEditManga}
-              className="bg-purple-100 text-purple-700 px-4 py-1 text-sm rounded-full hover:bg-purple-200 transition"
+              className="bg-purple-100 cursor-pointer text-purple-700 px-4 py-1 text-sm rounded-full hover:bg-purple-200 transition"
             >
               Editar
             </button>
             <button
               onClick={handleDeleteManga}
-              className="bg-red-100 text-red-700 px-4 py-1 text-sm rounded-full hover:bg-red-200 transition"
+              className="bg-red-100 cursor-pointer text-red-700 px-4 py-1 text-sm rounded-full hover:bg-red-200 transition"
             >
               Eliminar
             </button>

@@ -13,8 +13,8 @@ import DetailsManga from "./pages/DetailsManga";
 import PageRol from "./pages/newRol.jsx";
 import Profile from "./pages/Profile.jsx";
 import Company from "./pages/edithCompany.jsx";
-import ChapterEdit from "./pages/chapterEdit.jsx";
 import Ranking from "./pages/Ranking.jsx";
+import ReaderPage from "./pages/ReaderPage.jsx";
 
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -25,8 +25,12 @@ import AuthorForm from "./components/Forms/AuthorForm.jsx";
 import MangaForm from "./components/Forms/MangaForm.jsx";
 import ChapterForm from "./components/Forms/ChapterForm.jsx";
 
+// Importar el nuevo componente MangaList
+import MangaList from "./components/MangaList.jsx";
+
 import AuthorCompany from "./pages/AuthorCompany";
 import MangaEditForm from "./components/Forms/EdithManga.jsx";
+import EditChapter from "./components/edithChapter.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,29 +43,35 @@ const router = createBrowserRouter([
         element: <PrivateRoute />,
         children: [
           { path: "mangas", element: <Mangas /> },
+          { path: "manga-list", element: <MangaList /> }, // Nueva ruta para la lista de mangas con capítulos
           { path: "details/:id", element: <DetailsManga /> },
+          { path: "reader", element: <ReaderPage /> }, // Ruta para leer sin parámetros
+          { path: "reader/:chapterId", element: <ReaderPage /> }, // Ruta para leer con ID de capítulo
           { path: "newRol", element: <PageRol /> },
           { path: "newAuthor", element: <AuthorForm /> },
           { path: "newcompany", element: <CompanyForm /> },
-          { path: "profileUser", element: <Profile /> },
+          { path: "profile", element: <Profile /> },
           { path: "favourites", element: <Favourites /> },
           { path: "newManga", element: <MangaForm /> },
           { path: "newChapter/:id", element: <ChapterForm /> },
           { path: "ranking", element: <Ranking /> },
-          { path: "editChapter/:id", element: <ChapterEdit /> },
-          { path: "editManga", element: <MangaEditForm /> },
-          { path: "authorCompany", element: <AuthorCompany /> },
+          { path: "editChapter/:id", element: <EditChapter /> },
+          { path: "editManga/:id", element: <MangaEditForm /> },
+          { path: "manager", element: <AuthorCompany /> },
         ],
       },
-
+      
       // Rutas exclusivas para admin
       {
         element: <AdminRoute />,
-        children: [{ path: "panel", element: <Panel /> }],
+        children: [
+          { path: "panel", element: <Panel /> },
+          { path: "chapter-edit/:id", element: <EditChapter /> }, // Movido aquí si es solo para admin
+        ],
       },
     ],
   },
-
+  
   // Rutas públicas solo si no está autenticado
   {
     element: <PublicRoute />,
@@ -70,8 +80,7 @@ const router = createBrowserRouter([
       { path: "/signup", element: <SignUpForm /> },
     ],
   },
-  { path: "editChapter", element: <ChapterEdit /> },
-
+  
   // Ruta 404
   { path: "*", element: <NotFound /> },
 ]);
