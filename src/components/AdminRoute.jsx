@@ -4,7 +4,7 @@ import { useAuth } from "../../hook/useAuth";
 const AdminRoute = () => {
   const { user } = useAuth();
 
-  if (!user || user.email !== "administrador@gmail.com") {
+  if (!user || user.role !== 3) {
     return <Navigate to="/signin" replace />;
   }
 

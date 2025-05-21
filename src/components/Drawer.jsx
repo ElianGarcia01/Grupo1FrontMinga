@@ -6,6 +6,7 @@ import { useAuth } from "../../hook/useAuth";
 const Drawer = ({ open, onClose }) => {
   const { user, logout } = useAuth();
   const [animateItems, setAnimateItems] = useState(false);
+  
 
   useEffect(() => {
     if (open) {
