@@ -84,7 +84,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
     }
 
     if (!user.author && !user.company) {
-      navigate('/become-author');
+      navigate('/newrol');
       return;
     }
 
