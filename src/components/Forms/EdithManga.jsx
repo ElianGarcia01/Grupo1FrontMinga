@@ -4,8 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk
 import { fetchMangas } from "../../../redux/mangaSlice";
 import { toast } from "react-toastify";
-
-import { fetchCategories } from "../../../redux/categorySlice";   // thunk
 import { API_URL } from "../../../data/url"; 
 
 export default function MangaEditForm() {
