@@ -79,7 +79,6 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   };
 
   const handleAddComment = async (text) => {
-    const token = localStorage.getItem("token");
 
     if (!user) {
       navigate('/signin');

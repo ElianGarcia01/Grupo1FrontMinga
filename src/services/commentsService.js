@@ -40,7 +40,26 @@ export const createComment = async (data, token) => {
 };
 
 // Actualizar un comentario (requiere token)
-export const updateComment = async ( chapterId, isMyComment, newText, effectiveToken) => {
+// export const updateComment = async ( chapterId, isMyComment, newText, effectiveToken) => {
+//   if (!token) {
+//     console.error("No token provided to updateComment");
+//     throw new Error("Authentication token is required");
+//   }
+
+//   try {
+//     const response = await axios.put(
+//       `${API_URL}/update/${commentId}`,
+//       { message },
+//       getHeaders(token)
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error updating comment:', error.response?.data || error.message);
+//     throw error;
+//   }
+// };
+
+export const updateComment = async (commentId, newText, token) => {
   if (!token) {
     console.error("No token provided to updateComment");
     throw new Error("Authentication token is required");
@@ -48,8 +67,8 @@ export const updateComment = async ( chapterId, isMyComment, newText, effectiveT
 
   try {
     const response = await axios.put(
-      `${API_URL}/update/${commentId}`,
-      { message },
+      `${API_URL}/update/`,
+      { _id: commentId, message: newText },
       getHeaders(token)
     );
     return response.data;
@@ -58,6 +77,7 @@ export const updateComment = async ( chapterId, isMyComment, newText, effectiveT
     throw error;
   }
 };
+
 
 // Eliminar un comentario (requiere token)
 export const deleteComment = async (commentId, token) => {

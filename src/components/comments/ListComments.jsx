@@ -25,6 +25,7 @@ const ListComments = ({ chapterId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
 
   // Cargar comentarios al montar el componente y cuando cambie el chapterId
   useEffect(() => {
@@ -179,6 +180,7 @@ const ListComments = ({ chapterId }) => {
     if (comment.company_id && comment.company_id.photo) {
       return comment.company_id.photo;
     }
+
     
     return null; // Avatar por defecto si no hay foto
   };

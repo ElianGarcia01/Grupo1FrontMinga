@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import CommentOptionsModal from "./CommentOptionsModal";
-import { useNavigate } from "react-router-dom";
 import { updateComment, deleteComment } from "../../services/commentsService";
 import { useAuth } from "../../../hook/useAuth";
 
@@ -15,7 +14,6 @@ const Comment = ({
 }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const { token: authToken } = useAuth(); // También obtenerlo del contexto como respaldo
-  const navigate = useNavigate();
   
   // Usar el token pasado como prop o el del contexto de autenticación
   const effectiveToken = token || authToken;
@@ -34,7 +32,7 @@ const Comment = ({
   
   const handleEdit = async (newText) => {
     try {
-      await updateComment(chapterId, isMyComment, newText, effectiveToken);
+      await updateComment(comment._id, newText, effectiveToken);
       await refreshComments();
     } catch (error) {
       console.error("Failed to update comment:", error);
