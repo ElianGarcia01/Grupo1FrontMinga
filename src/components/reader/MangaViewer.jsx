@@ -9,7 +9,7 @@ import { getCommentsByChapter, createComment } from "../../services/commentsServ
 const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [currentPage, setCurrentPage] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
@@ -17,34 +17,29 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(null);
 
-  // Prioriza el mangaId recibido por state, si no existe lo busca en el capítulo
   const mangaId = state?.mangaId || chapter?.manga_id?._id || chapter?.manga_id;
 
   useEffect(() => {
-    // Load saved reading progress
     const savedProgress = localStorage.getItem(`progress-${chapterId}`);
     if (savedProgress) {
       setCurrentPage(Number(savedProgress));
     }
-    
-    // Fetch comments from the backend
     fetchComments();
   }, [chapterId]);
 
   const fetchComments = async () => {
     try {
       setIsLoading(true);
-      const commentsData = await getCommentsByChapter(chapterId);
-      setComments(commentsData || []);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
+      const data = await getCommentsByChapter(chapterId); // Usando query param
+      setComments(data || []);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    // Save reading progress
     localStorage.setItem(`progress-${chapterId}`, currentPage);
   }, [currentPage, chapterId]);
 
@@ -79,11 +74,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   }, [currentPage]);
 
   const handleExit = () => {
-    if (mangaId) {
-      navigate(`/details/${mangaId}`);
-    } else {
-      navigate("/");
-    }
+    navigate(mangaId ? `/details/${mangaId}` : "/");
   };
 
   const handleAddComment = async (text) => {
@@ -92,28 +83,27 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
       return;
     }
 
-    // Check if user has permission to comment (must be author or company)
     if (!user.author && !user.company) {
       navigate('/become-author');
       return;
     }
 
     try {
-      // Determine if the user is commenting as author or company
       const commentData = {
         chapter_id: chapterId,
         message: text
       };
-      
-      // Add the appropriate ID field based on user type
+
       if (user.author) {
         commentData.author_id = user.author._id;
       } else if (user.company) {
         commentData.company_id = user.company._id;
       }
 
-      await createComment(commentData);
-      await fetchComments(); // Refresh comments after adding
+      let comment = await createComment(commentData, token);
+      console.log(comment);
+
+      await fetchComments();
       setIsAddCommentModalOpen(false);
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -121,16 +111,14 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
     }
   };
 
-  // Get user role for permission checks
   const getUserRole = () => {
-    if (!user) return 0; // Not logged in
-    if (user.role === 'admin') return 3; // Admin
-    if (user.role === 'moderator') return 2; // Moderator
-    if (user.author || user.company) return 1; // Author/Company
-    return 0; // Regular user
+    if (!user) return 0;
+    if (user.role === 'admin') return 3;
+    if (user.role === 'moderator') return 2;
+    if (user.author || user.company) return 1;
+    return 0;
   };
 
-  // Get user ID based on type (author or company)
   const getUserId = () => {
     if (!user) return null;
     if (user.author) return user.author._id;
@@ -169,7 +157,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Main Content */}
+        {/* Image */}
         <div
           className={`flex-1 flex items-center justify-center overflow-hidden transition-all ${
             showComments ? "lg:w-2/3" : "w-full"
@@ -184,7 +172,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
           />
         </div>
 
-        {/* Comments Section */}
+        {/* Comments */}
         {showComments && (
           <div className="w-full lg:w-1/3 bg-gray-900 flex flex-col h-full border-l border-gray-700">
             <div className="p-4 flex justify-between items-center border-b border-gray-700">
@@ -218,6 +206,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
                     currentUserRole={getUserRole()}
                     chapterId={chapterId}
                     refreshComments={fetchComments}
+                    token={token}
                   />
                 ))
               ) : (
@@ -238,7 +227,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
         ></div>
       </div>
 
-      {/* Controls */}
+      {/* Footer controls */}
       <div className="p-4 flex items-center justify-between gap-4 bg-black border-t border-gray-700">
         <button
           onClick={prevPage}
@@ -272,7 +261,6 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
         </button>
       </div>
 
-      {/* Modals */}
       <AddCommentModal
         isOpen={isAddCommentModalOpen}
         onClose={() => setIsAddCommentModalOpen(false)}
