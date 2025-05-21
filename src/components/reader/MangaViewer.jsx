@@ -9,13 +9,14 @@ import { getCommentsByChapter, createComment } from "../../services/commentsServ
 const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { user, token } = useAuth();
+  const { user, } = useAuth();
   const [currentPage, setCurrentPage] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [isAddCommentModalOpen, setIsAddCommentModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const touchStartX = useRef(null);
+  const token = localStorage.getItem("token");
 
   const mangaId = state?.mangaId || chapter?.manga_id?._id || chapter?.manga_id;
 
@@ -78,8 +79,10 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   };
 
   const handleAddComment = async (text) => {
+    const token = localStorage.getItem("token");
+
     if (!user) {
-      navigate('/login');
+      navigate('/signin');
       return;
     }
 
