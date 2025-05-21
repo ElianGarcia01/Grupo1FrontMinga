@@ -2,15 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import RankingNavbar from "../components/ranking/RankingNavbar"
-import AuthorNav from "../components/ranking/AuthorNav"
 import CategoryNav from "../components/ranking/CategoryNav"
 
 function Ranking() {
 
     const [topMangas, setTopMangas] = useState([])
-    const [selectedAuthor, setSelectedAuthor] = useState("682026d3dfb90091adc4b2d6")
     const [selectedCategory, setSelectedCategory] = useState("682026e077220ba09b4eb784")
-    const [authorMangas, setAuthorMangas] = useState([])
     const [categoryMangas, setCategoryMangas] = useState([])
 
 
@@ -28,20 +25,6 @@ function Ranking() {
         }
         fetchTopMangas()
     }, [])
-
-    useEffect(() => {
-        const fetchAuthorMangas = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/api/ranking/topMangasByAuthor/${selectedAuthor}`)
-                const data = response.data.rankings
-                const sorted = data.sort((a, b) => b.score - a.score);
-                setAuthorMangas(sorted)
-            } catch (error) {
-                console.error("Error fetching mangas by author", error);
-            }
-        }
-        fetchAuthorMangas()
-    }, [selectedAuthor])
 
     useEffect(() => {
         const fetchCategoryMangas = async () => {
@@ -122,40 +105,6 @@ function Ranking() {
                     </div>
                 )}
             </div>
-
-            <div id="popular-mangas-by-author" className="w-5-6 mt-15 mb-10">
-                <h1 className="text-3xl text-white pl-5 mb-4">Top 3 By Author</h1>
-
-                <AuthorNav onSelect={setSelectedAuthor}></AuthorNav>
-                {authorMangas.length > 0 && (
-                    <div className=" grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
-                        {authorMangas.map((authorManga, index) => (
-                            <div key={index} className="flex flex-col items-center mb-5">
-                                <div className="flex items-center mt-5 text-white mb-5 ">
-                                    <span className="text-4xl mr-4">{index + 1}</span>
-                                    <h1 className="text-2xl">{authorManga.manga.title}</h1>
-                                </div>
-                                <div className="w-xs group overflow-hidden rounded shadow-xl transition-transform duration-400 hover:scale-105">
-
-                                    <Link to={`/details/${authorManga.manga._id}`} state={{ manga: authorManga.manga }}>
-                                        <img
-                                            src={authorManga.manga.cover_photo}
-                                            alt={authorManga.manga.title}
-                                            className="w-full object-cover brightness-50 group-hover:brightness-100 transition-all duration-500"
-                                        />
-                                    </Link>
-
-                                    <span
-                                        className="pointer-events-none absolute inset-0 flex items-center justify-center text-white text-2xl font-bold bg-opacity-70">
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-
-                    </div>
-                )}
-            </div>
-
 
             <div id="popular-mangas-by-category" className="w-5-6 mt-10 mb-10">
                 <h1 className="text-3xl text-white pl-5 mb-4">Top 3 By Category</h1>

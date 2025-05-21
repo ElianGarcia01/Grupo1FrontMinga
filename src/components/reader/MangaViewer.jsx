@@ -15,6 +15,7 @@ const MangaViewer = ({ pages, title, chapterId, chapter }) => {
   const [comments, setComments] = useState([]);
   const [isAddCommentModalOpen, setIsAddCommentModalOpen] = useState(false);
   const touchStartX = useRef(null);
+  
 
   // Prioriza el mangaId recibido por state, si no existe lo busca en el capítulo
   const mangaId = state?.mangaId || chapter?.manga_id?._id || chapter?.manga_id;

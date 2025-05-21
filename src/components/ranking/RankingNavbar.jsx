@@ -1,6 +1,5 @@
 const routes = [
     {path: "#popular-mangas", name: "Popular Mangas"},
-    {path: "#popular-mangas-by-author", name: "Popular Mangas By Author"},
     {path: "#popular-mangas-by-category", name: "Popular Mangas By Category"}
 ]
 
