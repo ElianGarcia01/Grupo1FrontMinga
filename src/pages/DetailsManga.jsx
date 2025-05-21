@@ -54,7 +54,7 @@ const Details = () => {
   const textColor = categoryData?.color || "#374151";
 
   return (
-    <section className="w-full max-w-[1400px] mx-auto px-6 py-12 min-h-screen flex flex-col lg:flex-row lg:gap-16">
+    <section className="w-full max-w-[1400px] mx-auto px-6 py-12 min-h-screen flex flex-col lg:flex-row lg:gap-16 items-center">
       {/* Imagen Manga */}
       <div className="w-full lg:w-2/5">
         <img
