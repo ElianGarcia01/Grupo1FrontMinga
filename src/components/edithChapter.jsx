@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DeleteAlert from "./AlertDelete";
 import { getChaptersByManga } from "../../redux/chapterSlice";
+import { toast } from "react-toastify";
 
 const EditChapter = () => {
   const { id: mangaId } = useParams();
@@ -27,6 +28,7 @@ const EditChapter = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (mangaId) {
@@ -54,50 +56,58 @@ const EditChapter = () => {
   };
 
   const handleEdit = async () => {
-  if (!formData.title || !formData.order) {
-    setErrorMessage("Title and Order are required.");
-    return;
-  }
-
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch("http://localhost:8080/api/chapters/update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        _id: selectedChapterId, // enviar el ID aquí
-        title: formData.title,
-        order: parseInt(formData.order),
-        pages: formData.pages,
-        cover_photo: formData.pages[0] || "",
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const errorMsg =
-        data.message ||
-        (data.errors && data.errors.map((e) => e.msg).join(", ")) ||
-        "Error updating chapter";
-      throw new Error(errorMsg);
+    if (!formData.title || !formData.order) {
+      setErrorMessage("Title and Order are required.");
+      return;
     }
 
-    setShowSuccess(true);
-    setErrorMessage("");
-    setTimeout(() => setShowSuccess(false), 3000);
+    try {
+      const token = localStorage.getItem("token");
 
-    dispatch(getChaptersByManga(mangaId));
-  } catch (error) {
-    console.error("Error al editar capítulo:", error);
-    setErrorMessage(error.message);
-  }
-};
+      const response = await fetch(
+        "http://localhost:8080/api/chapters/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            _id: selectedChapterId, // enviar el ID aquí
+            title: formData.title,
+            order: parseInt(formData.order),
+            pages: formData.pages,
+            cover_photo: formData.pages[0] || "",
+          }),
+        }
+      );
 
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMsg =
+          data.message ||
+          (data.errors && data.errors.map((e) => e.msg).join(", ")) ||
+          "Error updating chapter";
+        throw new Error(errorMsg);
+      }
+
+      toast.success("Chapter edited successfully!");
+
+      setErrorMessage("");
+      setTimeout(() => setShowSuccess(false), 3000);
+
+      dispatch(getChaptersByManga(mangaId));
+
+      // Redirigir
+      setTimeout(() => {
+        navigate("/manager");
+      });
+    } catch (error) {
+      console.error("Error al editar capítulo:", error);
+      setErrorMessage(error.message);
+    }
+  };
 
   const handleDelete = () => {
     console.log("Eliminando capítulo:", selectedChapterId);

@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 
 const MineMangasCard = ({ manga, categories, onDelete }) => {
   const { _id, title, cover_photo, category_id } = manga;
@@ -34,9 +36,22 @@ const MineMangasCard = ({ manga, categories, onDelete }) => {
     navigate(`/editManga/${_id}`);
   };
 
-  const handleDeleteManga = async (e) => {
-    e.stopPropagation();
 
+const handleDeleteManga = async (e) => {
+  e.stopPropagation();
+
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "This action will permanently delete the manga.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#4f46e5", // Indigo-600
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed) {
     try {
       const token = localStorage.getItem("token");
 
@@ -50,17 +65,23 @@ const MineMangasCard = ({ manga, categories, onDelete }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Error al eliminar el manga");
+        throw new Error("Error deleting the manga");
       }
 
-      // Notificar al componente padre
+      // Notifica al componente padre
       if (onDelete) {
         onDelete(_id);
       }
+
+      // Muestra confirmación
+      Swal.fire("Deleted!", "The manga has been deleted.", "success");
     } catch (error) {
-      console.error("Error eliminando el manga:", error);
+      console.error("Error deleting the manga:", error);
+      Swal.fire("Error", "There was a problem deleting the manga.", "error");
     }
-  };
+  }
+};
+
 
   return (
     <div
