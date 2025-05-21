@@ -27,19 +27,6 @@ function Ranking() {
         fetchTopMangas()
     }, [])
 
-    useEffect(() => {
-        const fetchAuthorMangas = async () => {
-            try {
-                const response = await axios.get(API_URL + `/ranking/topMangasByAuthor/${selectedAuthor}`)
-                const data = response.data.rankings
-                const sorted = data.sort((a, b) => b.score - a.score);
-                setAuthorMangas(sorted)
-            } catch (error) {
-                console.error("Error fetching mangas by author", error);
-            }
-        }
-        fetchAuthorMangas()
-    }, [selectedAuthor])
 
     useEffect(() => {
         const fetchCategoryMangas = async () => {
