@@ -2,12 +2,21 @@ import { useState } from "react";
 
 const CommentForm = ({ onSubmit, submitLabel, initialText = "", placeholder }) => {
   const [text, setText] = useState(initialText);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (text.trim() === "") return;
-    onSubmit(text);
-    if (!initialText) setText(""); // Clear only if not editing
+    if (text.trim() === "" || isSubmitting) return;
+    
+    try {
+      setIsSubmitting(true);
+      await onSubmit(text);
+      if (!initialText) setText("");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -18,14 +27,15 @@ const CommentForm = ({ onSubmit, submitLabel, initialText = "", placeholder }) =
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder={placeholder}
+        disabled={isSubmitting}
       />
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={text.trim() === ""}
+          disabled={text.trim() === "" || isSubmitting}
           className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {submitLabel}
+          {isSubmitting ? "Posting..." : submitLabel}
         </button>
       </div>
     </form>
