@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../hook/useAuth"; //maneja datos del usuario
+import { useAuth } from "../../hook/useAuth";
 import axios from "axios";
-import AlertSave from "./AlertSave"
-import AlertDelete from "./AlertDelete";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
 const CompanyEdit = () => {
-  const { user } = useAuth(); //aqui estan los datos almacneados
+  const { user } = useAuth();
   const [companyName, setCompanyName] = useState('');
   const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [companyId, setCompanyId] = useState(null);
-  const [showSaveAlert, setShowSaveAlert] = useState(false);   // para usar el componente de alerta
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false); //igual que arriba 
-  const navigate = useNavigate();
-  const [token, setToken] = useState(localStorage.getItem("token"))
-  
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
   useEffect(() => {
     if (user && user.company) {
       const { name, description, website, photo, _id } = user.company;
@@ -28,97 +24,119 @@ const CompanyEdit = () => {
     }
   }, [user]);
 
-const handleSave = () => {
-  axios.put(
-    "http://localhost:8080/api/companies/update",
-    {
-      _id: companyId,
-      name: companyName,
-      description: description,
-      website: website,
-      photo: photoUrl
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  )
-    .then(() => alert("Profile updated successfully"))
-    .catch((err) => {
-      console.error(err);
-      alert("Error al actualizar");
-    });
-
-      const updatedUser = { ...user };
-      updatedUser.company = {
-        ...updatedUser.company,
-          _id: companyId,
-          name: companyName,
-          description: description,
-          website: website,
-          photo: photoUrl
-      };
-    localStorage.setItem("user", JSON.stringify(updatedUser))
-    window.location.href = "/"
-  setShowSaveAlert(true);
-};
-
-  const handleDelete = () => {
-    setShowDeleteAlert(true);
-  };
-
-const confirmDelete = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    
-    const res = await axios.delete(
-      `http://localhost:8080/api/companies/delete/${companyId}`,
+  const handleSave = () => {
+    axios.put(
+      "http://localhost:8080/api/companies/update",
+      {
+        _id: companyId,
+        name: companyName,
+        description,
+        website,
+        photo: photoUrl
+      },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}`
+        }
       }
-    );
+    )
+      .then(() => {
+        const updatedUser = { ...user };
+        updatedUser.company = {
+          ...updatedUser.company,
+          _id: companyId,
+          name: companyName,
+          description,
+          website,
+          photo: photoUrl
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
 
-    const newToken = res.data?.token;
-    console.log(token);
-    
-    console.log(newToken);
-    
-
-    let user = JSON.parse(localStorage.getItem("user"));
-
-    user.role = 0;
-    delete user.company;
-
-    if (newToken) {
-      localStorage.setItem("token", newToken);
-      setToken(newToken)
-    }
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    alert("Company Account Deleted");
-
-    window.location.href = "/"
-
-  } catch (err) {
-    console.error(err);
-    alert("Delete Error");
-  }
-};
-
-  const cancelDelete = () => {
-    setShowDeleteAlert(false);
+        Swal.fire({
+          icon: 'success',
+          title: 'Updated',
+          text: 'Profile updated successfully',
+          confirmButtonColor: '#10b981',
+        }).then(() => {
+          window.location.href = "/";
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error updating profile',
+          confirmButtonColor: '#ef4444',
+        });
+      });
   };
 
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will permanently delete your company account.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await confirmDelete();
+      }
+    });
+  };
 
+  const confirmDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.delete(
+        `http://localhost:8080/api/companies/delete/${companyId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const newToken = res.data?.token;
+      let user = JSON.parse(localStorage.getItem("user"));
+
+      user.role = 0;
+      delete user.company;
+
+      if (newToken) {
+        localStorage.setItem("token", newToken);
+        setToken(newToken);
+      }
+
+      localStorage.setItem("user", JSON.stringify(user));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted',
+        text: 'Company Account Deleted',
+        confirmButtonColor: '#10b981',
+      }).then(() => {
+        window.location.href = "/";
+      });
+
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error deleting company',
+        confirmButtonColor: '#ef4444',
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="flex flex-col md:flex-row gap-12 max-w-4xl w-full">
-
         <div className="order-1 md:order-2 w-full md:w-[396px] h-auto md:h-[276px] flex flex-col items-center text-center">
           <img
             src={
@@ -187,13 +205,7 @@ const confirmDelete = async () => {
           </div>
         </div>
       </div>
-      {showSaveAlert && <AlertSave onClose={() => setShowSaveAlert(false)} />}
-
-      {showDeleteAlert && (
-        <AlertDelete onConfirm={confirmDelete} onCancel={cancelDelete} />
-      )}
     </div>
-    
   );
 };
 

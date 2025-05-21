@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-/* ---------------------- COMPONENTE PRINCIPAL --------------------------- */
 export default function AuthorForm() {
-  /* ------------------- ESTADOS LOCALES ------------------------------- */
   const [form, setForm] = useState({
     name: "",
     lastName: "",
@@ -59,9 +58,8 @@ export default function AuthorForm() {
 
       navigate("/")
 
-      /* Feedback al usuario y limpia form */
-      setMsg("Autor creado con éxito 🎉");
-      setMsg("Author successfully created 🎉");
+      toast.success("Author created successfully!");
+
       // resetea campos
       setForm({
         name: "",

@@ -1,9 +1,6 @@
-// ----------------------------- IMPORTS ---------------------------------
 import { useState } from "react";
 
-/* ---------------------- COMPONENTE PRINCIPAL --------------------------- */
 export default function CompanyForm() {
-  /* ------------------- ESTADOS LOCALES ------------------------------- */
   const [form, setForm] = useState({
     name: "",
     website: "",

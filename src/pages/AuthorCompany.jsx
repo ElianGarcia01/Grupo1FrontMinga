@@ -43,6 +43,8 @@ export default function AuthorCompany() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user?.company?.name) {
       setCompanyName(user.company.name);
+    } else if (user?.author?.name) {
+      setCompanyName(user?.author?.name);
     }
   }, []);
 
