@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hook/useAuth";
 import { AuthContext } from "../../hook/AuthContext";
+import { API_URL } from "../../data/url";
 
 const SignInForm = () => {
   const { login } = useAuth();
@@ -26,7 +27,7 @@ const SignInForm = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signIn", {
+      const response = await fetch(API_URL + "/auth/signIn", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

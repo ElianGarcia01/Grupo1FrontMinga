@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { API_URL } from "../../data/url";
 
 const MineMangasCard = ({ manga, categories }) => {
   const { _id, title, cover_photo, category_id } = manga;
@@ -40,7 +41,7 @@ const handleDeleteManga = async (e) => {
   try {
     const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:8080/api/mangas/delete", {
+    const response = await fetch(API_URL +"/mangas/delete", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

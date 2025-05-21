@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { fetchCategories } from "../../../redux/categorySlice";   // thunk
+import { API_URL } from "../../../data/url";
 
 /* ----------------------------- COMPONENTE --------------------------- */
 export default function MangaEditForm() {
@@ -39,7 +40,7 @@ export default function MangaEditForm() {
 
     const getMangaData = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`);
+        const res = await fetch( API_URL + `/mangas/${mangaId}`);
         if (!res.ok) throw new Error("Cannot fetch manga data");
         const data = await res.json();          // { response: manga }
         const m = data.response;
@@ -74,7 +75,7 @@ export default function MangaEditForm() {
       /* payload = campos + id del manga para que el back lo ubique */
       const payload = { ...form, _id: mangaId };
 
-      const res = await fetch("http://localhost:8080/api/mangas/update", {
+      const res = await fetch(API_URL + "/mangas/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

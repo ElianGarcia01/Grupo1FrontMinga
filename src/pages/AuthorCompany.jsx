@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import CategoryFilter from "../components/CategoryFilter";
 import { motion } from "framer-motion";
 import { FaSearch } from "react-icons/fa";
-import MineMangasCard from "../components/mineMangasCard";
+import MineMangasCard from "../components/MineMangasCard.jsx";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../data/url.jsx";
 
 // Spinner y Skeletons básicos
 function Spinner() {
@@ -49,7 +50,7 @@ export default function AuthorCompany() {
     const fetchMangasByUser = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:8080/api/mangas/byUser", {
+        const response = await fetch(API_URL + "/mangas/byUser", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error("Failed to fetch mangas");
@@ -68,7 +69,7 @@ export default function AuthorCompany() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/categories/allCategories");
+        const response = await fetch(API_URL + "/categories/allCategories");
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         setCategories(data.response);

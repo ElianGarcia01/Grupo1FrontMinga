@@ -5,6 +5,7 @@ import { useAuth } from "../../hook/useAuth";
 
 import AlertSave from "./AlertSave";
 import AlertDelete from "./AlertDelete";
+import { API_URL } from "../../data/url";
 
 /* utilidades de estilo (Tailwind) */
 const inputClasses = "w-full border-b border-gray-400 p-2 mb-4 text-sm text-black focus:outline-none placeholder-gray-500";
@@ -85,7 +86,7 @@ export default function UserProfileEdit() {
         _id: user._id // Asegurarnos de enviar el ID del usuario
       };
 
-      const res = await fetch("http://localhost:8080/api/authors/update", {
+      const res = await fetch(API_URL + "/authors/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +119,7 @@ export default function UserProfileEdit() {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      const res = await fetch(`http://localhost:8080/api/authors/delete/${user._id}`, {
+      const res = await fetch(API_URL + `/authors/delete/${user._id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

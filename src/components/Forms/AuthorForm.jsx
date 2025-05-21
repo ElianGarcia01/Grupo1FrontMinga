@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "../../../data/url";
 
 /* ---------------------- COMPONENTE PRINCIPAL --------------------------- */
 export default function AuthorForm() {
@@ -27,7 +28,7 @@ export default function AuthorForm() {
       /* 1. Token actual (rol 0) para poder acceder a /authors/register */
       const oldToken = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:8080/api/authors/register", {
+      const res = await fetch(API_URL + "/authors/register", {
         method : "POST",
         headers: {
           "Content-Type": "application/json",

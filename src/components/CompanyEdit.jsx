@@ -4,6 +4,7 @@ import axios from "axios";
 import AlertSave from "./AlertSave"
 import AlertDelete from "./AlertDelete";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../data/url";
 
 const CompanyEdit = () => {
   const { user } = useAuth(); //aqui estan los datos almacneados
@@ -30,7 +31,7 @@ const CompanyEdit = () => {
 
 const handleSave = () => {
   axios.put(
-    "http://localhost:8080/api/companies/update",
+    (API_URL + "/companies/update"),
     {
       _id: companyId,
       name: companyName,
@@ -58,7 +59,7 @@ const handleSave = () => {
   };
 
   const confirmDelete = () => {
-    axios.delete(`http://localhost:8080/api/companies/delete/${companyId}`)
+    axios.delete(API_URL + `/companies/delete/${companyId}`)
       .then(() => {
         alert("Company Account Deleted");
         navigate("/");

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"; // hooks nativos de React
 import { useDispatch, useSelector } from "react-redux"; // hooks de Redux Toolkit
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk que trae las categorías
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../data/url";
 
 export default function MangaForm() {
   /* ------------------- ESTADOS LOCALES ------------------------------- */
@@ -46,7 +47,7 @@ export default function MangaForm() {
       const payload = { ...form };
 
       /* Petición POST al endpoint */
-      const res = await fetch("http://localhost:8080/api/mangas/create", {
+      const res = await fetch(API_URL + "/mangas/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

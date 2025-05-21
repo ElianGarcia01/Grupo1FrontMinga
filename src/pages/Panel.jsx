@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Check, Users, Pen } from "lucide-react";
+import { API_URL } from "../../data/url";
 
 export default function Panel() {
   const [activeTab, setActiveTab] = useState("companies");
@@ -10,10 +11,10 @@ export default function Panel() {
   const fetchData = async () => {
     try {
       const [companyRes, authorRes] = await Promise.all([
-        fetch("http://localhost:8080/api/companies/active", {
+        fetch(API_URL + "/companies/active", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:8080/api/authors/active", {
+        fetch(API_URL + "/authors/active", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -39,8 +40,8 @@ export default function Panel() {
     const updatedActive = !entity.active;
 
     const url = isCompany
-      ? "http://localhost:8080/api/companies/updateActive"
-      : "http://localhost:8080/api/authors/updateActive";
+      ? (API_URL + "http://localhost:8080/api/companies/updateActive")
+      : (API_URL + "http://localhost:8080/api/authors/updateActive");
 
     try {
       await fetch(url, {

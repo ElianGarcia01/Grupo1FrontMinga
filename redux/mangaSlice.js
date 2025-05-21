@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { API_URL } from '../data/url';
 
 export const fetchMangas = createAsyncThunk(
   'mangas/fetchMangas',
@@ -6,7 +7,7 @@ export const fetchMangas = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       
-      const res = await fetch('http://localhost:8080/api/mangas/allMangas', {
+      const res = await fetch(API_URL + '/mangas/allMangas', {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { Authorization: `Bearer ${token}` }),
@@ -39,7 +40,7 @@ export const fetchMangaById = createAsyncThunk(
     try {
       const token = localStorage.getItem('token');
       
-      const res = await fetch(`http://localhost:8080/api/mangas/${mangaId}`, {
+      const res = await fetch(API_URL + `/mangas/${mangaId}`, {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { Authorization: `Bearer ${token}` }),
