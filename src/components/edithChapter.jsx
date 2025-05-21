@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DeleteAlert from "./AlertDelete";
 import { getChaptersByManga } from "../../redux/chapterSlice";
 import { toast } from "react-toastify";
-import API_URL from "../../data/url"
+import { API_URL } from "../../data/url"
 
 const EditChapter = () => {
   const { id: mangaId } = useParams();
