@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DeleteAlert from "./AlertDelete";
 import { getChaptersByManga } from "../../redux/chapterSlice";
 import { toast } from "react-toastify";
+import { API_URL } from "../../data/url"
 
 const EditChapter = () => {
   const { id: mangaId } = useParams();
@@ -65,7 +66,7 @@ const EditChapter = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:8080/api/chapters/update",
+        `${API_URL}/chapters/update`,
         {
           method: "PUT",
           headers: {

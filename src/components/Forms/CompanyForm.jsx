@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "../../../data/url";
 
 export default function CompanyForm() {
   const [form, setForm] = useState({
@@ -24,7 +25,7 @@ export default function CompanyForm() {
       const oldToken = localStorage.getItem("token");
 
       /* 2. Petición */
-      const res = await fetch("http://localhost:8080/api/companies/register", {
+      const res = await fetch(API_URL + "/companies/register", {
         method : "POST",
         headers: {
           "Content-Type": "application/json",

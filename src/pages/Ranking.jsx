@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import RankingNavbar from "../components/ranking/RankingNavbar"
 import CategoryNav from "../components/ranking/CategoryNav"
+import { API_URL } from "../../data/url";
 
 function Ranking() {
 
@@ -15,7 +16,7 @@ function Ranking() {
     useEffect(() => {
         const fetchTopMangas = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/ranking/topMangas')
+                const response = await axios.get(API_URL + '/ranking/topMangas')
                 const data = response.data.rankings
                 const sorted = data.sort((a, b) => b.score - a.score);
                 setTopMangas(sorted)
@@ -26,10 +27,11 @@ function Ranking() {
         fetchTopMangas()
     }, [])
 
+
     useEffect(() => {
         const fetchCategoryMangas = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/ranking/topMangasByCategory/${selectedCategory}`)
+                const response = await axios.get(API_URL + `/ranking/topMangasByCategory/${selectedCategory}`)
                 const data = response.data.rankings
                 const sorted = data.sort((a, b) => b.score - a.score);
                 setCategoryMangas(sorted)

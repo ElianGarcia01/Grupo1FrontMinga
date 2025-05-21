@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../../redux/categorySlice"; // thunk
 import { fetchMangas } from "../../../redux/mangaSlice";
 import { toast } from "react-toastify";
-
+import { API_URL } from "../../../data/url"; 
 
 export default function MangaEditForm() {
   const { id: mangaId } = useParams();
@@ -39,15 +39,27 @@ export default function MangaEditForm() {
   useEffect(() => {
     dispatch(fetchCategories());
 
-    if (manga) {
-      setForm({
-        title: manga.title || "",
-        category_id: manga.category_id || "",
-        cover_photo: manga.cover_photo || "",
-        description: manga.description || "",
-      });
-    }
-  }, [dispatch, manga]);
+    const getMangaData = async () => {
+      try {
+       const res = await fetch( API_URL + `/mangas/${mangaId}`);
+        if (!res.ok) throw new Error("Cannot fetch manga data");
+        const data = await res.json();          // { response: manga }
+        const m = data.response;
+        setForm({
+          title:        m.title        ?? "",
+          category_id:  m.category_id  ?? "",
+          cover_photo:  m.cover_photo  ?? "",
+          description:  m.description  ?? "",
+        });
+      } catch (e) {
+        setMsg(e.message);
+      } finally {
+        setInitLoad(false);
+      }
+    };
+
+    getMangaData();
+  }, [dispatch, mangaId]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -62,7 +74,7 @@ export default function MangaEditForm() {
       const token = localStorage.getItem("token");
       const payload = { ...form, _id: mangaId };
 
-      const res = await fetch("http://localhost:8080/api/mangas/update", {
+      const res = await fetch(API_URL + "/mangas/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

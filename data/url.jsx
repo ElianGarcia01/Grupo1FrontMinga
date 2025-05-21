@@ -1,0 +1,1 @@
+export const API_URL = "https://grupo1backminga.onrender.com/api"

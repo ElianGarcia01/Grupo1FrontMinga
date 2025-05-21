@@ -3,6 +3,7 @@ import { useAuth } from "../../hook/useAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../data/url";
 
 const CompanyEdit = () => {
   const { user } = useAuth();
