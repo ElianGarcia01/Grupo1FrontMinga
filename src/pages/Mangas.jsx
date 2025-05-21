@@ -14,6 +14,7 @@ export default function Mangas() {
   // Selectors para leer mangas, categorías y capítulos del store
   const mangas = useSelector((state) => state.mangas.all) || [];
   const categories = useSelector((state) => state.categories.all) || [];
+  const loading = useSelector((state) => state.mangas.loading);
 
   // Estado local: búsqueda y filtro de categoría
   const [search, setSearch] = useState("");
@@ -73,37 +74,39 @@ export default function Mangas() {
         />
 
         {/* Grid de MangaCards */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {filteredMangas.map((manga) => (
-            <MangaCard
-              key={manga._id}
-              manga={manga}
-              categories={categories}
-            />
-          ))}
-        </motion.div>
-
-        {/* Estado vacío: sin resultados */}
-        {filteredMangas.length === 0 && (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-indigo-600"></div>
+          </div>
+        ) : filteredMangas.length > 0 ? (
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 md:px-12 py-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {filteredMangas.map((manga) => (
+              <MangaCard
+                key={manga._id}
+                manga={manga}
+                categories={categories}
+              />
+            ))}
+          </motion.div>
+        ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center text-xl text-gray-600 mt-10 mb-20"
           >
-            {/* Muestra mensaje si no hay resultados */}
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <FaSearch size={48} className="text-gray-500 mb-4" />
               <p className="text-xl md:text-2xl font-semibold text-gray-700">
                 Oops! No results were found for your search.
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                Try another term or select another category.{" "}
+                Try another term or select another category.
               </p>
             </div>
           </motion.div>

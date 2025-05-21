@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFavorites, removeFavorite, clearError } from "../../redux/favoritesSlice";
+import {
+  fetchFavorites,
+  removeFavorite,
+  clearError,
+} from "../../redux/favoritesSlice";
 import FavouriteCard from "../components/FavouriteCard";
 import { motion } from "framer-motion";
 
@@ -10,51 +14,55 @@ export default function Favourites() {
     items: favorites,
     loading,
     error,
-    lastRemoved
+    lastRemoved,
   } = useSelector((state) => state.favorites);
 
   const [notification, setNotification] = useState(null);
 
+  // Cargar favoritos al montar el componente
   useEffect(() => {
     dispatch(fetchFavorites());
   }, [dispatch]);
 
+  // Manejar notificaciones
   useEffect(() => {
     if (error) {
       setNotification({
-        type: 'error',
+        type: "error",
         message: error,
-        visible: true
+        visible: true,
       });
       dispatch(clearError());
     }
 
     if (lastRemoved) {
       setNotification({
-        type: 'success',
-        message: 'Removed from favorites',
-        visible: true
+        type: "success",
+        message: "Removed from favorites",
+        visible: true,
       });
-    }
-  }, [error, lastRemoved, dispatch]);
-
-  useEffect(() => {
-    if (notification?.visible) {
+      
+      // Limpiar lastRemoved después de mostrar la notificación
       const timer = setTimeout(() => {
-        setNotification(null);
+        dispatch(clearError()); // O una acción específica para resetear lastRemoved
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [notification]);
+  }, [error, lastRemoved, dispatch]);
 
-  const handleRemove = (manga_id) => {
-    dispatch(removeFavorite(manga_id));
-  };
-
+  // Cerrar notificación manualmente
   const closeNotification = () => {
     setNotification(null);
   };
 
+  const handleRemove = async (manga_id) => {
+    try {
+      await dispatch(removeFavorite(manga_id)).unwrap();
+      // No necesitamos dispatch(fetchFavorites()) aquí porque el reducer ya actualiza el estado
+    } catch (err) {
+      console.error("Failed to remove favorite:", err);
+    }
+  };
   return (
     <section
       className="relative h-[40vh] md:h-[80vh] flex items-center justify-center text-white overflow-visible"
@@ -76,10 +84,11 @@ export default function Favourites() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
-          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-md shadow-lg z-50 flex items-center ${notification.type === 'error'
-              ? 'bg-red-100 text-red-800'
-              : 'bg-green-100 text-green-800'
-            }`}
+          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-md shadow-lg z-50 flex items-center ${
+            notification.type === "error"
+              ? "bg-red-100 text-red-800"
+              : "bg-green-100 text-green-800"
+          }`}
         >
           {notification.message}
           <button
@@ -113,19 +122,18 @@ export default function Favourites() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-{favorites
-  .filter(fav => fav.manga_id !== null)
-  .map((favorite) => (
-    <FavouriteCard
-      key={favorite._id}
-      title={favorite.manga_id.title}
-      type={favorite.manga_id.category_id}
-      image={favorite.manga_id.cover_photo}
-      manga_id={favorite.manga_id._id}
-      onRemove={handleRemove}
-    />
-))}
-
+            {favorites
+              .filter((fav) => fav.manga_id !== null)
+              .map((favorite) => (
+                <FavouriteCard
+                  key={favorite._id}
+                  title={favorite.manga_id.title}
+                  type={favorite.manga_id.category_id}
+                  image={favorite.manga_id.cover_photo}
+                  manga_id={favorite.manga_id._id}
+                  onRemove={handleRemove}
+                />
+              ))}
           </motion.div>
         )}
 

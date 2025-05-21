@@ -77,6 +77,9 @@ const favoritesSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    clearLastRemoved: (state) => {  // <-- Añade este reducer
+      state.lastRemoved = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -87,27 +90,31 @@ const favoritesSlice = createSlice({
       })
       .addCase(fetchFavorites.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = action.payload || []; // Asegura que siempre sea un array
       })
       .addCase(fetchFavorites.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
-      // case of Remove Favorite
+      // Remove Favorite
       .addCase(removeFavorite.pending, (state) => {
         state.error = null;
-        state.lastRemoved = null;
+        // No limpiamos lastRemoved aquí para evitar parpadeos en la UI
       })
       .addCase(removeFavorite.fulfilled, (state, action) => {
-        state.items = state.items.filter(item => item.manga_id._id !== action.payload);
+        // Comparación más robusta
+        state.items = state.items.filter(item => 
+          String(item.manga_id._id) !== String(action.payload)
+        );
         state.lastRemoved = action.payload;
       })
       .addCase(removeFavorite.rejected, (state, action) => {
         state.error = action.payload;
+        state.lastRemoved = null; // Limpiamos lastRemoved en caso de error
       });
   },
 });
 
-export const { clearFavorites, clearError } = favoritesSlice.actions;
+export const { clearFavorites, clearError, clearLastRemoved } = favoritesSlice.actions;
 export default favoritesSlice.reducer;

@@ -1,6 +1,6 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom"; // ✅ Importar Link
+import { Link } from "react-router-dom";
 
 const categoryStyles = {
   "682026e077220ba09b4eb784": {
