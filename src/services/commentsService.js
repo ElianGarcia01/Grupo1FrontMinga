@@ -46,7 +46,7 @@ export const updateComment = async (commentId, newText, token) => {
 
   try {
     const response = await axios.put(
-      `${API_URL}/update/`,
+      `${API_URL}/comments/update`,
       { _id: commentId, message: newText },
       getHeaders(token)
     );
