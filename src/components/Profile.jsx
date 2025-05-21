@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { API_URL } from "../../data/url";
 
 
 const inputClasses =
@@ -53,7 +54,7 @@ export default function UserProfileEdit() {
 const handleSave = async () => {
   try {
     await axios.put(
-      "http://localhost:8080/api/authors/update",
+       `${API_URL}/authors/update`,
       form,
       {
         headers: {
@@ -105,7 +106,7 @@ const handleDelete = async () => {
   try {
     const authorId = user.author._id;
     const res = await axios.delete(
-      `http://localhost:8080/api/authors/delete/${authorId}`,
+      `${API_URL}/authors/delete/${authorId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

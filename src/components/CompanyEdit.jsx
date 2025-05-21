@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../hook/useAuth";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../data/url";
 
 const CompanyEdit = () => {
@@ -27,7 +26,7 @@ const CompanyEdit = () => {
 
   const handleSave = () => {
     axios.put(
-      "http://localhost:8080/api/companies/update",
+      `${API_URL}/companies/update`,
       {
         _id: companyId,
         name: companyName,
@@ -94,7 +93,7 @@ const CompanyEdit = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.delete(
-        `http://localhost:8080/api/companies/delete/${companyId}`,
+        `${API_URL}/companies/delete/${companyId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
