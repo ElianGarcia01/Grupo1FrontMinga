@@ -4,6 +4,7 @@ import axios from "axios";
 import AlertSave from "./AlertSave"
 import AlertDelete from "./AlertDelete";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../data/url";
 
 const CompanyEdit = () => {
   const { user } = useAuth(); //aqui estan los datos almacneados
@@ -30,7 +31,7 @@ const CompanyEdit = () => {
 
 const handleSave = () => {
   axios.put(
-    "http://localhost:8080/api/companies/update",
+    (API_URL + "/companies/update"),
     {
       _id: companyId,
       name: companyName,
@@ -68,46 +69,17 @@ const handleSave = () => {
     setShowDeleteAlert(true);
   };
 
-const confirmDelete = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    
-    const res = await axios.delete(
-      `http://localhost:8080/api/companies/delete/${companyId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const newToken = res.data?.token;
-    console.log(token);
-    
-    console.log(newToken);
-    
-
-    let user = JSON.parse(localStorage.getItem("user"));
-
-    user.role = 0;
-    delete user.company;
-
-    if (newToken) {
-      localStorage.setItem("token", newToken);
-      setToken(newToken)
-    }
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    alert("Company Account Deleted");
-
-    window.location.href = "/"
-
-  } catch (err) {
-    console.error(err);
-    alert("Delete Error");
-  }
-};
+  const confirmDelete = () => {
+    axios.delete(API_URL + `/companies/delete/${companyId}`)
+      .then(() => {
+        alert("Company Account Deleted");
+        navigate("/");
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Delete Error");
+      });
+  };
 
   const cancelDelete = () => {
     setShowDeleteAlert(false);

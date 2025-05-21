@@ -9,6 +9,7 @@ import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hook/useAuth";
 import { AuthContext } from "../../hook/AuthContext";
+import { API_URL } from "../../data/url";
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ const SignUpForm = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/users/create", {
+      const response = await fetch(API_URL + "/users/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

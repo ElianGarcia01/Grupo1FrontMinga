@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-
+import { API_URL } from "../../../data/url";
 
 export default function ChapterForm() {
   // El id del manga llega por la URL
@@ -38,7 +37,7 @@ export default function ChapterForm() {
         manga_id: mangaId,
       };
 
-      const res = await fetch("http://localhost:8080/api/chapters/register", {
+      const res = await fetch(API_URL + "/chapters/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

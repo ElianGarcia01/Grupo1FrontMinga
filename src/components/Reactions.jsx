@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaSurprise, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { FaFaceGrinHearts } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../data/url";
 
 export default function Reactions({ mangaId }) {
   const reactions = [
@@ -25,7 +26,7 @@ export default function Reactions({ mangaId }) {
     }
     try {
     const response = await fetch(
-      `http://localhost:8080/api/reactions/byManga?manga_id=${mangaId}`,
+      (API_URL + `/reactions/byManga?manga_id=${mangaId}`),
       {
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +60,7 @@ export default function Reactions({ mangaId }) {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/reactions/reaction",
+        (API_URL + "/reactions/reaction"),
         {
           method: "POST",
           headers: {

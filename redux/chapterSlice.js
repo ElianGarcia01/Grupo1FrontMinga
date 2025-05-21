@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { API_URL } from '../data/url.jsx';
 // Acción para obtener TODOS los capítulos
 export const getChapters = createAsyncThunk(
   "chapters/getAll",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chapters/allChapters`);
+      const response = await fetch( API_URL +`/chapters/allChapters`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al obtener capítulos');
@@ -23,7 +23,7 @@ export const getChaptersByManga = createAsyncThunk(
   "chapters/getByManga",
   async (mangaId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/chapters/allChapters?manga_id=${mangaId}`);
+      const response = await fetch( API_URL + `/chapters/allChapters?manga_id=${mangaId}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error al obtener capítulos');
@@ -42,7 +42,7 @@ export const getChapterById = createAsyncThunk(
   async (chapterId, { rejectWithValue }) => {
     try {
       // Usa la ruta de filtrado que funciona con tu backend
-      const response = await fetch(`http://localhost:8080/api/chapters/allChapters?id=${chapterId}`);
+      const response = await fetch( API_URL + `/chapters/allChapters?id=${chapterId}`);
       
       if (!response.ok) {
         const errorData = await response.json();

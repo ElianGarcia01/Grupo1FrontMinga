@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { API_URL } from '../data/url';
 
 // favoritos por usuario 
 export const fetchFavorites = createAsyncThunk(
@@ -10,7 +11,7 @@ export const fetchFavorites = createAsyncThunk(
         return rejectWithValue('No authentication token found');
       }
 
-      const response = await fetch('http://localhost:8080/api/favorites/byUser', {
+      const response = await fetch(API_URL + '/favorites/byUser', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,7 +40,7 @@ export const removeFavorite = createAsyncThunk(
         return rejectWithValue('Authentication required');
       }
 
-      const response = await fetch('http://localhost:8080/api/favorites/delete', {
+      const response = await fetch(API_URL + '/favorites/delete', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

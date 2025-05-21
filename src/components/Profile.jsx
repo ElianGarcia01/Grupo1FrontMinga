@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
-import axios from "axios";
+
+import AlertSave from "./AlertSave";
+import AlertDelete from "./AlertDelete";
+import { API_URL } from "../../data/url";
 
 const inputClasses = "w-full border-b border-gray-400 p-2 mb-4 text-sm text-black focus:outline-none placeholder-gray-500";
 const btnSave = "w-[280px] h-[68px] bg-emerald-400 hover:bg-emerald-500 text-white font-semibold py-2 rounded-full mb-4";
@@ -54,7 +57,7 @@ export default function UserProfileEdit() {
 
       const payload = { ...form, _id: user.author._id };
 
-      const res = await fetch("http://localhost:8080/api/authors/update", {
+      const res = await fetch(API_URL + "/authors/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +93,8 @@ export default function UserProfileEdit() {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
 
-      const res = await axios.delete(`http://localhost:8080/api/authors/delete/${user.author._id}`, {
+      const res = await fetch(API_URL + `/authors/delete/${user._id}`, {
+        method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
         }
