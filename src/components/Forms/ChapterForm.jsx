@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../../data/url";
+import { toast } from "react-toastify";
+
 
 export default function ChapterForm() {
   // El id del manga llega por la URL

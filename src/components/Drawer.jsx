@@ -6,7 +6,6 @@ import { useAuth } from "../../hook/useAuth";
 const Drawer = ({ open, onClose }) => {
   const { user, logout } = useAuth();
   const [animateItems, setAnimateItems] = useState(false);
-  
 
   useEffect(() => {
     if (open) {
@@ -36,7 +35,7 @@ const Drawer = ({ open, onClose }) => {
         to: "/profile",
         label: "My Profile",
         requiresAuth: true,
-        minRole: 1,
+        allowedRoles: [1, 2],
       }, // Solo rol 1,2,3
       {
         to: "/favourites",
@@ -63,6 +62,7 @@ const Drawer = ({ open, onClose }) => {
       if (item.minRole !== undefined && (role == null || role < item.minRole))
         return false;
       if (item.onlyForRole0 && role !== 0) return false;
+      if (item.allowedRoles && !item.allowedRoles.includes(role)) return false;
       return true;
     });
   };

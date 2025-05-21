@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import { API_URL } from "../../data/url";
+import Swal from 'sweetalert2';
+
 
 const MineMangasCard = ({ manga, categories, onDelete }) => {
   const { _id, title, cover_photo, category_id } = manga;

@@ -10,6 +10,8 @@ export default function MangaEditForm() {
   const { id: mangaId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [initLoad, setInitLoad] = useState(true);
+
 
     // Al montar componente: disparar fetch de mangas, categorías y capítulos
     useEffect(() => {
@@ -36,30 +38,22 @@ export default function MangaEditForm() {
   const [msg, setMsg] = useState("");
 
   // Precargar categorías y el manga si está disponible
-  useEffect(() => {
-    dispatch(fetchCategories());
+useEffect(() => {
+  dispatch(fetchCategories());
 
-    const getMangaData = async () => {
-      try {
-       const res = await fetch( API_URL + `/mangas/${mangaId}`);
-        if (!res.ok) throw new Error("Cannot fetch manga data");
-        const data = await res.json();          // { response: manga }
-        const m = data.response;
-        setForm({
-          title:        m.title        ?? "",
-          category_id:  m.category_id  ?? "",
-          cover_photo:  m.cover_photo  ?? "",
-          description:  m.description  ?? "",
-        });
-      } catch (e) {
-        setMsg(e.message);
-      } finally {
-        setInitLoad(false);
-      }
-    };
+  if (manga) {
+    setForm({
+      title:        manga.title        ?? "",
+      category_id:  manga.category_id  ?? "",
+      cover_photo:  manga.cover_photo  ?? "",
+      description:  manga.description  ?? "",
+    });
+    setInitLoad(false);
+  } else if (!initLoad && allMangas.length > 0) {
+    setMsg("Manga not found.");
+  }
+}, [dispatch, manga, allMangas, initLoad]);
 
-    getMangaData();
-  }, [dispatch, mangaId]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hook/useAuth";
-<<<<<<< HEAD
 import axios from "axios";
 import Swal from "sweetalert2";
-=======
-
-import AlertSave from "./AlertSave";
-import AlertDelete from "./AlertDelete";
-import { API_URL } from "../../data/url";
->>>>>>> 68369e5e6720e5b661be60ce1f358201d941ca35
 
 
 const inputClasses =
@@ -56,7 +49,6 @@ export default function UserProfileEdit() {
 
 
 
-<<<<<<< HEAD
 // Reemplaza alert del handleSave
 const handleSave = async () => {
   try {
@@ -64,64 +56,9 @@ const handleSave = async () => {
       "http://localhost:8080/api/authors/update",
       form,
       {
-=======
-      const payload = { ...form, _id: user.author._id };
-
-      const res = await fetch(API_URL + "/authors/update", {
-        method: "PUT",
->>>>>>> 68369e5e6720e5b661be60ce1f358201d941ca35
         headers: {
           Authorization: `Bearer ${token}`,
         },
-<<<<<<< HEAD
-=======
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) throw new Error("Error al actualizar");
-
-      const updatedUser = { ...user };
-      updatedUser.author = {
-        ...updatedUser.author,
-        ...form
-      };
-
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      setMsg("Perfil actualizado correctamente");
-      window.location.href = "/";
-    } catch (err) {
-      console.error(err);
-      setMsg(err.message || "Error inesperado");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const confirmDelete = async () => {
-    if (!window.confirm("¿Estás seguro de eliminar tu cuenta?")) return;
-
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No token found");
-
-      const res = await fetch(API_URL + `/authors/delete/${user._id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      const newToken = res.data?.token;
-
-      let updatedUser = JSON.parse(localStorage.getItem("user"));
-      updatedUser.role = 0;
-      delete updatedUser.author;
-
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      if (newToken) {
-        localStorage.setItem("token", newToken);
->>>>>>> 68369e5e6720e5b661be60ce1f358201d941ca35
       }
     );
 

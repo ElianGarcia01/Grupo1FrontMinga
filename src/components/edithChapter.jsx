@@ -5,6 +5,7 @@ import DeleteAlert from "./AlertDelete";
 import { getChaptersByManga } from "../../redux/chapterSlice";
 import { toast } from "react-toastify";
 import { API_URL } from "../../data/url"
+import Swal from "sweetalert2"; // Asegúrate de tener esto importado
 
 const EditChapter = () => {
   const { id: mangaId } = useParams();
@@ -110,11 +111,71 @@ const EditChapter = () => {
     }
   };
 
-  const handleDelete = () => {
-    console.log("Eliminando capítulo:", selectedChapterId);
-    setShowDelete(true);
-    setTimeout(() => setShowDelete(false), 3000);
-  };
+
+const handleDelete = async () => {
+  if (!selectedChapterId) return;
+
+  // Confirmación con SweetAlert
+  const confirmResult = await Swal.fire({
+    title: "Are you sure?",
+    text: "This chapter will be permanently deleted!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!"
+  });
+
+  if (!confirmResult.isConfirmed) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_URL}/chapters/delete`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ _id: selectedChapterId }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const errorMsg =
+        data.message ||
+        (data.errors && data.errors.map((e) => e.msg).join(", ")) ||
+        "Error deleting chapter";
+      throw new Error(errorMsg);
+    }
+
+    // Éxito con SweetAlert
+    await Swal.fire({
+      icon: "success",
+      title: "Deleted!",
+      text: "Chapter deleted successfully!",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+
+    // Reset y navegación
+    setSelectedChapterId("");
+    setFormData({ title: "", description: "", order: "", pages: [] });
+    dispatch(getChaptersByManga(mangaId));
+    navigate("/manager");
+
+  } catch (error) {
+    console.error("Error deleting chapter:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.message || "Something went wrong!",
+    });
+  }
+};
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
