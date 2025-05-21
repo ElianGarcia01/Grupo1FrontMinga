@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CategoryFilter from "../components/CategoryFilter";
 import { motion } from "framer-motion";
-import { FaSearch } from "react-icons/fa";
+import { FaFolderPlus, FaSearch } from "react-icons/fa";
 import MineMangasCard from "../components/mineMangasCard";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../data/url.jsx";
